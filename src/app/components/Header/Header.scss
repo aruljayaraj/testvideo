@@ -1,0 +1,81 @@
+#left-overlay-sidebar {
+  display: none;
+  width: 240px;
+  position: fixed;
+  top: 44px;
+  bottom: 44px;
+  left: 0;
+  z-index: 999;
+  -ms-overflow-y: auto;
+  overflow-y: auto;
+  background-color: var(--app-sidebar-bg-color);
+  color: #fff;
+
+  &.main-push-right{
+    display:block;
+  }
+  ion-content{
+    --ion-background-color: var(--app-sidebar-bg-color);
+    color: #fff;  
+  }
+}
+#right-overlay-sidebar {
+  display: none;
+  width: 240px;
+  position: fixed;
+  top: 44px;
+  bottom: 44px;
+  right: 0;
+  z-index: 999;
+  -ms-overflow-y: auto;
+  overflow-y: auto;
+  background-color: var(--app-sidebar-bg-color);
+  color: #fff;
+
+  &.main-push-left{
+    display:block;
+  }
+}
+#overlay.main-push-right, #overlay.main-push-left{
+  position: fixed;
+  left:0;
+  top:0px;
+  height:100%;
+  width:100%;
+  background-color: var(--app-overlay-bg-color);
+  z-index:9;
+}
+@media screen and (max-width: 992px) {
+  .visible-md {
+      display: block;
+  }
+  .hidden-sm {
+      display: none;
+  }
+  .visible-sm {
+      display: block;
+  }
+  .nav-brand {
+      width: 100%;
+  }
+//  .msidebar-overlay.main-push-right{
+//       position: fixed;
+//       left:0;
+//       top:44px;
+//       height:100%;
+//       width:100%;
+//       background-color: rgba(0,0,0,0.6);
+//       z-index:9;
+//   }
+}
+@media screen and (max-width: 768px) {
+  // .msidebar-overlay.main-push-right{
+  //     position: fixed;
+  //     left:0;
+  //     top:0;
+  //     height:100%;
+  //     width:100%;
+  //     background-color: rgba(0,0,0,0.6);
+  //     z-index:9;
+  // }
+}

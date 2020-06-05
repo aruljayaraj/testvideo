@@ -1,0 +1,8 @@
+{
+  "appId": "com.localfirstapp.com",
+  "appName": "Local First App",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {}
+}

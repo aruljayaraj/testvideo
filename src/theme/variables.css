@@ -2,10 +2,47 @@
 http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./fonts/Roboto/Roboto-Regular.ttf');
+}
+/*@font-face {
+  font-family: 'Roboto-Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./fonts/Roboto-Bold.ttf');
+}
+@font-face {
+  font-family: 'Roboto-Medium';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./fonts/Roboto-Medium.ttf');
+}
+@font-face {
+  font-family: 'Roboto-Black';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./fonts/Roboto-Black.ttf');
+}
+@font-face {
+  font-family: 'Roboto-Light';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./fonts/Roboto-Light.ttf');
+}
+@font-face {
+  font-family: 'Roboto-Thin';
+  font-style: normal;
+  font-weight: normal;
+  src: url('../fonts/Roboto-Thin.ttf');
+}*/
 :root {
-  /** primary **/
-  
+  /** Font Family **/
+  --ion-font-family: 'Roboto';
 
+  /** primary **/
   --ion-color-primary: #86c768;
   --ion-color-primary-rgb: 134,199,104;
   --ion-color-primary-contrast: #000000;
@@ -237,3 +274,14 @@ http://ionicframework.com/docs/theming/ */
   }
   
 }
+
+/* Default Style over writing */
+ion-button {
+  text-transform: none;
+}
+hr {
+  border-bottom: 1px solid #ccc;
+  margin: 10px 0;
+  width: 100%;
+}
+ion-stacked-label{ font-size: 4em; }

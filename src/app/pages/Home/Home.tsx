@@ -6,7 +6,18 @@ interface HomeState {
   
 }
 class Home extends React.Component<{}, HomeState> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      email: '',
+      password: ''
+    }
+  }
+
   render() {
+    // console.log(this.props );
+    console.log('Home Page');
     return (
       <IonPage >
         <IonContent className="ion-padding">

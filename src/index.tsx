@@ -4,6 +4,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 /* Core CSS required for Ionic components to work properly */
+// import 'bootstrap/scss/bootstrap.scss';
 import '@ionic/react/css/core.css';
 
 /* Basic CSS for apps built with Ionic */
@@ -20,13 +21,15 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 /* Theme variables */
+
 import './theme/variables.css';
 import './theme/styles.scss';
 
 import { AuthProvider } from './app/shared/context/AuthContext';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:8888/LocalFirst/trunk/rest/'; // local
+// axios.defaults.baseURL = 'http://localhost:8888/LocalFirst/trunk/rest/'; // local
+axios.defaults.baseURL = 'http://onagon.com/rest/'; // Beta
 //axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 

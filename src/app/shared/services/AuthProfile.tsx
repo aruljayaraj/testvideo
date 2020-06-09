@@ -8,45 +8,53 @@ var AuthProfile = (function() {
       return localStorage.getItem('token');;    // Or pull this from cookie/localStorage
     };
   
-    var setToken = function(token: string) {
+    var setToken = function(token: string) { console.log(token);
       //token = token; 
       localStorage.setItem('token', token);    
     };
 
     var getUser = function() {
-      const usr = JSON.parse(localStorage.getItem('user') || '{}');
-      return Object.keys(usr).length !== 0? usr : '';    // Or pull this from cookie/localStorage
+      const auth = JSON.parse(localStorage.getItem('auth') || '{}');
+      return Object.keys(auth).length !== 0? auth.user : '';    // Or pull this from cookie/localStorage
     };
   
-    var setUser = function(user: string) {
-      localStorage.setItem('user', JSON.stringify(user));    
+    var setAuth = function(auth: any) {
+      localStorage.setItem('auth', JSON.stringify(auth));    
+    };
+    var getAuth = function() {
+      const auth = JSON.parse(localStorage.getItem('auth') || '{}');
+      return Object.keys(auth).length !== 0? auth : '';    // Or pull this from cookie/localStorage
     };
 
     var onGetToken = function(user: any, onGetTokenCb: any, onLoginCb: any) { // , testFn: any
       let result: any;
       axios.post(`jwt-auth/v1/token`, user )
-        .then( (res: any) => { // console.log(res);
+        .then( (res: any) => {  console.log(res);
           if( res.status === 200 && res.statusText === 'OK'  ){
             setToken(res.data.token);
             result =  { 
-              status: true, 
-              type: 'success', 
-              msg: 'Token retrieved successfully', 
-              data: res.data,
+              status: 'SUCCESS', 
+              message: 'Token retrieved successfully', 
+              token: res.data.token,
               onLoginCb: onLoginCb,
-              user: user
+              user: user // For Login Callback sent it to back
             };  
           }else{
-            result = { 
-              status: true, 
-              type: 'error', 
-              msg: 'Token not retrieved!y'
+            result = {
+              status: 'ERROR', 
+              message: 'Token not retrieved!'
             };
-          } 
+          }
           onGetTokenCb(result);
         })
-        .catch( (error: any) => { // console.log(error, error.response);
-          if( error.response.status === 403 ){
+        .catch( (error: any) => {
+          console.log(error.message);
+          result = { 
+            type: 'ERROR', 
+            msg: error.message
+          };
+          onGetTokenCb(result);
+          /*if( error.response.status === 403 ){
             result = { 
               status: true, 
               type: 'error', 
@@ -58,8 +66,7 @@ var AuthProfile = (function() {
               type: 'error', 
               msg: 'Something went wrong! Try again.'
             };
-          }
-          onGetTokenCb(result);
+          }*/
         });
     }
 
@@ -67,25 +74,21 @@ var AuthProfile = (function() {
       let result: any;
       axios.post(`v2/login`, user )
         .then( (res: any) => { console.log(res);
-          if( res.status === 200 && res.statusText === 'OK' && res.data.status === 'SUCCESS'  ){
-            setUser(res.data);
-            result =  { 
-              status: true, 
-              type: 'success', 
-              msg: 'User LoggedIn successfully', 
-              user: res.data 
-            };  
-          }else{
-            return { 
-              status: true, 
-              type: 'error', 
-              msg: 'User Not LoggedIn!'
-            };
-          }
+          result =  { 
+            status: res.data.status, 
+            message: res.data.message,  
+            user: res.data.user
+          };
           onLoginCb(result);
         })
-        .catch( (error: any) => { console.log(error, error.response);
-          if( error.response.status === 403 ){
+        .catch( (error: any) => {
+          console.log(error.message);
+          result = { 
+            type: 'ERROR', 
+            msg: error.message
+          };
+          onLoginCb(result);
+          /*if( error.response.status === 403 ){
             result = { 
               status: true, 
               type: 'error', 
@@ -97,8 +100,35 @@ var AuthProfile = (function() {
               type: 'error', 
               msg: 'Something went wrong! Try again.'
             };
-          }
-          onLoginCb(result);
+          }*/
+        });
+    }
+
+    var onSignup = function(user: any, onSignupCb: any) {
+      let result: any;
+      axios.post(`v2/signup`, user )
+        .then( (res: any) => { console.log(res);
+          result =  res.data; 
+          onSignupCb(result);
+        })
+        .catch( (error: any) => { console.log(error);
+          console.log(error.message);
+          result = { 
+            type: 'ERROR', 
+            msg: error.message
+          };
+          onSignupCb(result);
+          /*if( error && error.response.status === 403 ){
+            result = {  
+              type: 'error', 
+              msg: 'User Not Registered!'
+            };
+          }else{
+            result = { 
+              type: 'error', 
+              msg: 'Something went wrong! Try again.'
+            };
+          }*/
         });
     }
   
@@ -107,10 +137,12 @@ var AuthProfile = (function() {
       getToken: getToken,
       setToken: setToken,
       getUser: getUser,
-      setUser: setUser,
+      setAuth: setAuth,
+      getAuth: getAuth,
       // server api
       onGetToken: onGetToken,
-      onLogin: onLogin
+      onLogin: onLogin,
+      onSignup: onSignup
     }
   
   })();

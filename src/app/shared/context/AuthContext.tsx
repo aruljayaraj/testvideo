@@ -1,49 +1,54 @@
 import React, {useState, createContext} from 'react';
-import axios from 'axios';
 import AuthProfile from '../../shared/services/AuthProfile';
 
-export const Context = createContext<any>(undefined);
+export const AuthContext = createContext<any>(undefined);
 //const Login: React.FC = () => {
 export const AuthProvider = ({ children }: { children : any }) => {
-	const [authValue, setAuthValues] = useState({ 
-        authenticated: false, 
-        user: null 
+    const auth = AuthProfile.getAuth(); console.log(auth);
+    const [authValues, setAuthValues] = useState({ 
+        authenticated: auth? auth.authenticated: false, 
+        user: auth? auth.user: null 
     });
+	
     const [token, setToken] = useState('');
-    const [showToast, setShowToast] = useState({status: false, type: '', msg: ''});
+    const [showToast, setShowToast] = useState({isShow: false, status: '', message: ''});
     const [showLoading, setShowLoading] = useState(false);
-    // const [resolve, setResolve] = useState(false);
 
     const onGetTokenFnCb = (res: any) => { console.log(res);
-        if(res.status && res.type === 'success'){
-            setToken(res.data.token);
-            AuthProfile.onLogin(res.user, res.onLoginCb);
+        if(res.status === 'SUCCESS'){
+            setToken(res.token); // Store token to AuthContet
+            const user = {
+                // Login Only accepts email and password
+                email: res.user.username,
+                password: res.user.password,
+            };
+            AuthProfile.onLogin(user, res.onLoginCb);
         }else{
             setShowLoading(false);
-            setShowToast({ status: true, type: 'error', msg: res.msg });
+            setShowToast({ isShow: true, status: res.status, message: res.message });
         }
     }
 
-    const onLoginFn = ({ username, password } : { username: string, password: string }, onLoginCb: any) => {
+    const onLoginFn = ({ email, password } : { email: string, password: string }, onLoginCb: any) => {
         const user = {
-            username: username,
+            // JWT Only accepts username not email for login
+            username: email,
             password: password,
         };
        AuthProfile.onGetToken(user, onGetTokenFnCb, onLoginCb );
-       //AuthProfile.onLogin(user, onLoginCb);
     };      
 
     const onLogoutFn = () => {
-        /*setAuthValues({
+        setAuthValues({
             authenticated: false,
             user: null
         });
-        return Promise.resolve(true);*/
+        localStorage.setItem('auth', '');
     }
     // the store object
     let state = {
         token,
-        authValue,
+        authValues,
         setAuthValues,
         onLoginFn,
         onLogoutFn,
@@ -52,7 +57,7 @@ export const AuthProvider = ({ children }: { children : any }) => {
         showLoading,
         setShowLoading
     };
-    return <Context.Provider value={state}>{children}</Context.Provider>;
+    return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
 };
 
-export default Context;
+export default AuthContext;

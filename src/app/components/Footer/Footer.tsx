@@ -10,9 +10,9 @@ import {
   IonLoading,
   IonToast
 } from '@ionic/react';
-import { logOutOutline, locateOutline } from 'ionicons/icons';
+import { logOut, locate } from 'ionicons/icons';
 import { Redirect } from 'react-router-dom';
-import AuthProfile from '../../shared/services/AuthProfile';
+// import AuthProfile from '../../shared/services/AuthProfile';
 import AuthContext from '../../shared/context/AuthContext';
 import './Footer.scss';
 interface Props {
@@ -20,33 +20,33 @@ interface Props {
 }
 
 const Footer: React.FC<Props> = () => { // { onLogin }
-  const { showToast, setShowToast, showLoading, setShowLoading } = useContext(AuthContext);
-  const [isLogout, setIsLogout] = useState(false);
-  const token = AuthProfile.getToken();
-  const user = AuthProfile.getUser(); // console.log(user);
+  const { authValues, showToast, setShowToast, showLoading, setShowLoading, onLogoutFn } = useContext(AuthContext);
+  //const token = AuthProfile.getToken();
+  //const user = AuthProfile.getUser(); // console.log(user);
+  const copyright = "Copyright ©"+new Date().getFullYear()+" Isondai Corporation - All Rights Reserved";
+  const [isLoggedOut, setIsLoggedOut] = useState(false); 
 
   function logout(e: any){
-    // onLogin(false);
-    //localStorage.clear();
-    //setIsLogout(true);
+    onLogoutFn();
+    setIsLoggedOut(true);
   }
 
   function changeLocation(e: any){
     alert("change Location");
   }
 
-  /*if( isLogout ){
+  if( isLoggedOut &&  !authValues.authenticated ) {
     return <Redirect to={'/login'} />;
-  }*/
+  }
 
   return (
     <>
       <IonFooter >
         <IonToolbar color="medium" mode="ios">
-          { token && user && 
+          { (authValues.authenticated &&  authValues.user) &&
             <IonButtons slot="start" >
               <IonButton onClick={(e) => logout(e)}>
-                <IonIcon slot="icon-only"  icon={logOutOutline}></IonIcon>
+                <IonIcon slot="icon-only"  icon={logOut}></IonIcon>
                 <IonLabel>Logout</IonLabel>
               </IonButton> 
             </IonButtons>
@@ -55,15 +55,15 @@ const Footer: React.FC<Props> = () => { // { onLogin }
           <IonButtons slot="end"> 
             <IonButton onClick={(e) => changeLocation(e)}>
               <IonLabel slot="start">Change Location</IonLabel>
-              <IonIcon slot="end" icon={locateOutline}></IonIcon>
+              <IonIcon slot="end" icon={locate}></IonIcon>
             </IonButton>
           </IonButtons>
           
-          <IonTitle size="small" class="hidden-xs hidden-sm" >Copyright ©2020 Isondai Corporation - All Rights Reserved</IonTitle>
+        <IonTitle size="small" class="hidden-xs hidden-sm" >{copyright}</IonTitle>
           
         </IonToolbar>
         <IonToolbar color="medium" mode="ios" class="hidden-md hidden-lg hidden-xl">
-          <IonTitle size="small" >Copyright ©2020 Isondai Corporation - All Rights Reserved</IonTitle>
+          <IonTitle size="small" >{copyright}</IonTitle>
         </IonToolbar>
       </IonFooter>
       <IonLoading
@@ -72,11 +72,11 @@ const Footer: React.FC<Props> = () => { // { onLogin }
           message={'Please wait...'}
       />
       <IonToast
-          isOpen={showToast.status}
-          onDidDismiss={() => setShowToast({status: false, type: '', msg: '' })}
-          message={showToast.msg}
+          isOpen={showToast.isShow}
+          onDidDismiss={() => setShowToast({isShow: false, status: '', message: '' })}
+          message={showToast.message}
           duration={5000}
-          color={showToast.type === 'error'? 'danger': 'success'}
+          color={showToast.status === 'ERROR'? 'danger': 'success'}
       />
     </> 
   );

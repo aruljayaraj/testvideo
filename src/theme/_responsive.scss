@@ -31,5 +31,12 @@
     .hidden-xl {
         display: none;
     }
+    form ion-label{
+        font-size: 18px !important;
+        ion-text {
+            padding-left: 4px;
+            font-size: 20px !important;
+        }
+    }
  }
 

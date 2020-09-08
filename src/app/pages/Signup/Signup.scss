@@ -2,6 +2,9 @@
     width:35%;
     display:block;
     margin: 0 auto;
+    ion-router-link{
+        cursor: pointer;
+    }
 }
 
 @media (max-width: 575.98px) { 

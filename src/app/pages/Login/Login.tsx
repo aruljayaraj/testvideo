@@ -6,20 +6,18 @@ import {
   IonCardSubtitle, 
   IonCardContent,
   IonItem, 
-  IonLabel,
   IonInput,
   IonButton,
   IonRouterLink,
   IonRow,
   IonCol
 } from '@ionic/react';
-import React, { useContext } from 'react';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
-
-import AuthProfile from '../../shared/services/AuthProfile';
-import AuthContext from '../../shared/context/AuthContext';
 import './Login.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import * as authActions from '../../store/reducers/auth';
 
 let initialValues = {
   email: "",
@@ -27,17 +25,14 @@ let initialValues = {
 };
 
 const Login: React.FC = () => {
-  console.log('Login Page');
-  const { onLoginFn, authValues, setAuthValues, setShowToast, setShowLoading } = useContext(AuthContext);
-  const { control, handleSubmit, formState, errors } = useForm({
+  const dispatch = useDispatch();
+  const authValues = useSelector( (state:any) => state.auth.data);
+  const { control, handleSubmit, errors } = useForm({
     defaultValues: { ...initialValues },
     mode: "onChange"
   });
-  // const [data] = useState();
-  // const [showLoading, setShowLoading] = useState(false);
-  // const [showToast, setShowToast] = useState({status: false, type: '', msg: ''});
+
   /**
-   *
    * @param _fieldName
    */
   const showError = (_fieldName: string, msg: string) => {
@@ -50,41 +45,26 @@ const Login: React.FC = () => {
       ) : null
     ) : null;
   };
-  // console.log(errors);
-
   
-  const onLoginCb = (res: any) => {
-    console.log(res);
-    setShowLoading(false);
-    if(res.status === 'SUCCESS'){
-      const data = {
-        authenticated: true, 
-        user: res.user
-      }
-      setAuthValues(data);
-      AuthProfile.setAuth(data);
-      setShowToast({ isShow: true, status: res.status, message: res.message });
-    }else{
-      setShowToast({ isShow: true, status: res.status, message: res.message });
-    }
-  }
   /**
-   *
    * @param data
    */
   const onSubmit = (data: any) => {
-    setShowLoading(true);
     const user = {
-      email: data.email,
-      password: data.password
+      // JWT Only accepts username not email for login
+      username: data.email,
+      password: data.password,
+      action: 'login'
     };
-    onLoginFn(user, onLoginCb);
+    dispatch(authActions.getToken({data: user}));
   }
 
-  if( authValues.authenticated  ){ // || localStorage.getItem('token')
-    return <Redirect to={'/layout/dashboard'} />;
+  if( authValues.authenticated && authValues.isVerified  ){
+    return <Redirect to="/layout/dashboard" />;
   }
-
+  if( authValues.authenticated && authValues.user && !authValues.isVerified  ){
+    return <Redirect to="/email-verify" />;
+  }
 
   return (
     <IonPage>
@@ -97,9 +77,8 @@ const Login: React.FC = () => {
           </IonCardHeader>
 
           <IonCardContent>
-            <form className="ion-padding" onSubmit={handleSubmit(onSubmit)}>
+            <form className="ion-padding" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
               <IonItem>
-                <IonLabel color="medium" position="stacked">Email</IonLabel>
                 <Controller
                   as={IonInput}
                   control={control}
@@ -108,6 +87,7 @@ const Login: React.FC = () => {
                     return selected.detail.value;
                   }}
                   name="email"
+                  placeholder="Email *"
                   rules={{
                     required: true,
                     pattern: {
@@ -121,7 +101,6 @@ const Login: React.FC = () => {
               {showError("email", "Email")}
 
               <IonItem>
-                <IonLabel color="medium" position="stacked">Password</IonLabel>
                 <Controller
                   as={IonInput}
                   control={control}
@@ -131,6 +110,7 @@ const Login: React.FC = () => {
                   }}
                   name="password"
                   type="password"
+                  placeholder="Password *"
                   rules={{
                     required: true,
                     minLength: {
@@ -151,7 +131,7 @@ const Login: React.FC = () => {
               {/* {errors.password && "Password is required"} */}
               {showError("password", "Password")}
               
-              <IonButton className="ion-margin-top mt-5" expand="block" type="submit" disabled={formState.isValid === false}>
+              <IonButton color="greenbg" className="ion-margin-top mt-5" expand="block" type="submit">
                 Submit
               </IonButton> 
               
@@ -159,17 +139,16 @@ const Login: React.FC = () => {
             <IonRow className="ion-padding">
                 <hr />
                 <IonCol className="ion-text-start">
-                  <IonRouterLink color="medium" href="/" className="text-left">Can't log in?</IonRouterLink>
+                  <IonRouterLink color="blackbg" href={`${process.env.REACT_APP_BASE_URL}/forget-password`} className="text-left">Can't log in?</IonRouterLink>
                 </IonCol>
                 <IonCol className="ion-text-end">
-                  <IonRouterLink color="medium" href="/signup" className="text-right">Sign up for an account</IonRouterLink>
+                  <IonRouterLink color="blackbg" href={`${process.env.REACT_APP_BASE_URL}/signup`} className="text-right">Sign up for an account</IonRouterLink>
                 </IonCol>
             </IonRow>
             
           </IonCardContent>
         </IonCard>
       </IonContent>
-    
     </IonPage>
   );
 };

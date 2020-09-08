@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React from 'react';
 import { 
   IonFooter,
   IonToolbar,
@@ -6,51 +6,32 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
-  IonLabel,
-  IonLoading,
-  IonToast
+  IonLabel
 } from '@ionic/react';
-import { logOut, locate } from 'ionicons/icons';
-import { Redirect } from 'react-router-dom';
-// import AuthProfile from '../../shared/services/AuthProfile';
-import AuthContext from '../../shared/context/AuthContext';
+import { locate } from 'ionicons/icons';
 import './Footer.scss';
+// import { useSelector } from 'react-redux';
+import Loader from '../Loader';
+import Toast from '../Toast';
+
+
 interface Props {
   // onLogin: Function
 }
 
 const Footer: React.FC<Props> = () => { // { onLogin }
-  const { authValues, showToast, setShowToast, showLoading, setShowLoading, onLogoutFn } = useContext(AuthContext);
-  //const token = AuthProfile.getToken();
-  //const user = AuthProfile.getUser(); // console.log(user);
   const copyright = "Copyright ©"+new Date().getFullYear()+" Isondai Corporation - All Rights Reserved";
-  const [isLoggedOut, setIsLoggedOut] = useState(false); 
-
-  function logout(e: any){
-    onLogoutFn();
-    setIsLoggedOut(true);
-  }
+  // const loading = useSelector( (state:any) => state.ui.loading);
+  // const showToast = useSelector( (state:any) => state.ui.toast);
 
   function changeLocation(e: any){
     alert("change Location");
   }
 
-  if( isLoggedOut &&  !authValues.authenticated ) {
-    return <Redirect to={'/login'} />;
-  }
-
   return (
     <>
       <IonFooter >
-        <IonToolbar color="medium" mode="ios">
-          { (authValues.authenticated &&  authValues.user) &&
-            <IonButtons slot="start" >
-              <IonButton onClick={(e) => logout(e)}>
-                <IonIcon slot="icon-only"  icon={logOut}></IonIcon>
-                <IonLabel>Logout</IonLabel>
-              </IonButton> 
-            </IonButtons>
-          }
+        <IonToolbar color="blackbg" mode="ios">
 
           <IonButtons slot="end"> 
             <IonButton onClick={(e) => changeLocation(e)}>
@@ -59,25 +40,15 @@ const Footer: React.FC<Props> = () => { // { onLogin }
             </IonButton>
           </IonButtons>
           
-        <IonTitle size="small" class="hidden-xs hidden-sm" >{copyright}</IonTitle>
+          <IonTitle size="small" class="hidden-xs hidden-sm" >{copyright}</IonTitle>
           
         </IonToolbar>
-        <IonToolbar color="medium" mode="ios" class="hidden-md hidden-lg hidden-xl">
+        <IonToolbar color="blackbg" mode="ios" class="hidden-md hidden-lg hidden-xl">
           <IonTitle size="small" >{copyright}</IonTitle>
         </IonToolbar>
       </IonFooter>
-      <IonLoading
-          isOpen={showLoading}
-          onDidDismiss={() => setShowLoading(false)}
-          message={'Please wait...'}
-      />
-      <IonToast
-          isOpen={showToast.isShow}
-          onDidDismiss={() => setShowToast({isShow: false, status: '', message: '' })}
-          message={showToast.message}
-          duration={5000}
-          color={showToast.status === 'ERROR'? 'danger': 'success'}
-      />
+      <Loader />
+      <Toast />
     </> 
   );
 }

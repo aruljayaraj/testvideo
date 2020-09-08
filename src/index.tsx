@@ -21,18 +21,20 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 /* Theme variables */
-
+import 'font-awesome/css/font-awesome.min.css';
 import './theme/variables.css';
 import './theme/styles.scss';
 
-import { AuthProvider } from './app/shared/context/AuthContext';
+import createStore from './app/store/configureStore';
+import { Provider } from 'react-redux';
 import axios from 'axios';
 
-// axios.defaults.baseURL = 'http://localhost:8888/LocalFirst/trunk/rest/'; // local
-axios.defaults.baseURL = 'http://onagon.com/rest/'; // Beta
+const store = createStore();
+
+axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL; // Beta
 //axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-
+// console.log(process.env);
 axios.interceptors.request.use(
     request => {
       if (!request.headers.Authorization) {
@@ -55,13 +57,10 @@ axios.interceptors.response.use(response => {
     //console.log(error);
     return Promise.reject(error);
 });
-
 ReactDOM.render(
-    <AuthProvider>
-        <App />
-    </AuthProvider>
-, 
-document.getElementById('root'));
+<Provider store={store}>
+    <App />
+</Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

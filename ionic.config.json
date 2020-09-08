@@ -1,5 +1,7 @@
 {
   "name": "localFirstApp",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "react"
 }

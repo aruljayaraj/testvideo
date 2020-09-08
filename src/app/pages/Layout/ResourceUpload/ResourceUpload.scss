@@ -1,0 +1,53 @@
+.resource-page{
+    .card-center{
+        width:96%;
+        display:block;
+        margin: 0 auto;
+    }
+    .reps-container{
+        display: flex;
+        align-items: flex-start;
+        // justify-content: center;
+        div{
+            width: 120px;
+            margin-right: 20px;
+        }
+    }
+    .video-js{
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 575.98px) { 
+    .resource-page{
+        .reps-container{
+            div{
+                width: 60px;
+            }
+        }
+    }
+ }
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) { 
+    .resource-page{
+        .reps-container{
+            div{
+                width: 70px;
+            }
+        }
+    }
+ }
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .resource-page{
+        .reps-container{
+            div{
+                width: 80px;
+            }
+        }
+    }
+ }

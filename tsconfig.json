@@ -17,9 +17,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    // "noImplicitAny": false,
   },
   "include": [
     "src"
+  ],
+  // "types":["./@types"],
+  "files": [
+    "./@types/react-view-pdf.d.ts",
+    "./@types/react-audio-player.d.ts",
+    // "./@types/*.*.ts"
   ]
 }

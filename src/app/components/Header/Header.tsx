@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState} from 'react';
 import { IonHeader,
   IonToolbar,
   IonTitle,
@@ -7,29 +7,35 @@ import { IonHeader,
   IonIcon,
   IonLabel,
   IonMenuButton,
+  IonContent,
+  IonModal,
+  IonChip,
+  IonPopover,
+  IonList,
+  // IonListHeader,
+  IonItem,
+  IonBadge
 } from '@ionic/react';
-import { IonContent, IonList, IonItem } from '@ionic/react';
-import { 
-  home, 
-  logIn,
-  speedometer,
-  create, 
-  pricetag, 
-  pricetags, 
-  calendar, 
-  newspaper, 
-  informationCircle,
-  information,
+import {
   search,
-  mail
+  personCircleOutline,
+  close,
+  searchOutline,
+  checkmarkOutline,
+  notificationsOutline
 } from 'ionicons/icons';
-// import AuthProfile from '../../shared/services/AuthProfile';
-import AuthContext from '../../shared/context/AuthContext';
+import { useSelector } from 'react-redux';
 import './Header.scss';
+import LeftMenu from './LeftMenu';
+import RightMenu from './RightMenu';
 
 const Header: React.FC = () => {
   
-  const { authValues } = useContext(AuthContext);
+  const authValues = useSelector( (state:any) => state.auth.data);
+  const [showModal, setShowModal] = useState(false);
+  const [basename] = useState(process.env.REACT_APP_BASENAME);
+  const [showPopover, setShowPopover] = useState(false);
+
   const [hSidemenu] = useState({
     pushRightClass: 'main-push-right',
     pushLeftClass: 'main-push-left'
@@ -77,111 +83,127 @@ const Header: React.FC = () => {
   return (
     <>
       <IonHeader>
-        <IonToolbar color="primary" mode="ios">
+        <IonToolbar 
+          color={ (authValues.authenticated && authValues.isVerified)? "blackbg": "greenbg" }
+          mode="ios">
           
           <IonButtons slot="start">
             <IonMenuButton autoHide={false} onClick={(e) => toggleLeftOverlaySidebar(e)}/>
           </IonButtons>
-          <IonButtons slot="secondary">
+          {/* <IonButtons slot="secondary">
             
             <IonButton>Default</IonButton>
-          </IonButtons>
+          </IonButtons> */}
           
           <IonButtons slot="primary">
-            <IonButton onClick={(e) => toggleRightOverlaySidebar(e)}>
+            <IonButton onClick={() => setShowModal(true)}>
               <IonIcon slot="icon-only" icon={search}></IonIcon>
-              </IonButton>
+            </IonButton>
+            <IonButton className="notify-icon-wrap" onClick={() => setShowPopover(true)}>
+              <IonIcon slot="icon-only" icon={notificationsOutline}></IonIcon>
+              <IonBadge color="warning">25</IonBadge>
+            </IonButton>
           </IonButtons>
+          { (authValues.authenticated && authValues.isVerified &&  authValues.user) &&
+            <IonButtons slot="end">
+              <IonButton onClick={(e) => toggleRightOverlaySidebar(e)}>
+                <IonIcon slot="icon-only" icon={personCircleOutline}></IonIcon>
+              </IonButton>  
+            </IonButtons>
+          }
           
-          <IonTitle>Local <IonIcon icon={search}></IonIcon> First</IonTitle>
+          <IonTitle>
+            <img 
+              src={ (authValues.authenticated && authValues.isVerified)? `${basename}/assets/img/Logo-WH.svg`: `${basename}/assets/img/Logo-BK.svg`} 
+              title="Logo" alt="Logo" width="200" height="32"/>
+          </IonTitle>
             
         </IonToolbar>
+
       </IonHeader>
       <div id="overlay" onClick={ (e) => removeOverlay(e) }></div>
       <div id="left-overlay-sidebar">
-      
-        <IonContent>
-          <IonList>
-            <IonItem button color="medium" routerLink="/" onClick={ (e) => removeOverlay(e) }>
-              <IonIcon slot="start" icon={home}></IonIcon>
-              <IonLabel>Home</IonLabel>
-            </IonItem>
-            { !authValues.authenticated && 
-              (<>
-                <IonItem button color="medium" routerLink="/login" onClick={ (e) => removeOverlay(e) }>
-                  <IonIcon slot="start" icon={logIn}></IonIcon>
-                  <IonLabel>Login</IonLabel>
-                </IonItem>
-                <IonItem button color="medium" routerLink="/signup" onClick={ (e) => removeOverlay(e) }>
-                  <IonIcon slot="start" icon={create}></IonIcon>
-                  <IonLabel>Signup</IonLabel>
-                </IonItem>
-              </>)
-            }
-            { authValues.authenticated &&
-              <IonItem button color="medium" routerLink="/layout/dashboard" onClick={ (e) => removeOverlay(e) }>
-                <IonIcon slot="start" icon={speedometer}></IonIcon>
-                <IonLabel>Dashboard</IonLabel>
-              </IonItem>
-            }
-            <IonItem button color="medium" routerLink="/layout/dailydeals" onClick={ (e) => removeOverlay(e) }>
-              <IonIcon slot="start" icon={pricetag}></IonIcon>
-              <IonLabel>Daily Deals</IonLabel>
-            </IonItem>
-            <IonItem button color="medium" routerLink="/layout/onlydeals" onClick={ (e) => removeOverlay(e) }>
-              <IonIcon slot="start" icon={pricetags}></IonIcon>
-              <IonLabel>Only Deals</IonLabel>
-            </IonItem>
-            <IonItem button color="medium" routerLink="/layout/events" onClick={ (e) => removeOverlay(e) }>
-              <IonIcon slot="start" icon={calendar}></IonIcon>
-              <IonLabel>Events</IonLabel>
-            </IonItem>
-            <IonItem button color="medium" routerLink="/layout/busines-news" onClick={ (e) => removeOverlay(e) }>
-              <IonIcon slot="start" icon={newspaper}></IonIcon>
-              <IonLabel>Business News</IonLabel>
-            </IonItem>
-            <IonItem button color="medium" routerLink="/layout/about" onClick={ (e) => removeOverlay(e) }>
-              <IonIcon slot="start" icon={informationCircle}></IonIcon>
-              <IonLabel>About</IonLabel>
-            </IonItem>
-            <IonItem button color="medium" routerLink="/layout/privacy" onClick={ (e) => removeOverlay(e) }>
-              <IonIcon slot="start" icon={information}></IonIcon>
-              <IonLabel>Privacy</IonLabel>
-            </IonItem>
-            <IonItem button color="medium" routerLink="/layout/contact-us" onClick={ (e) => removeOverlay(e) }>
-              <IonIcon slot="start" icon={mail}></IonIcon>
-              <IonLabel>Contact Us</IonLabel>
-            </IonItem>
-            
-                          { /* 
-                          <Route
-            exact
-            path="/dashboard"
-            render={props => {
-              return isAuthed ? <DashboardPage {...props} /> : <LoginPage />;
-            }}
-          />
-                          */ }
-            
-            {/* <IonItem color="medium">Local-First Deals</IonItem>
-            <IonItem color="medium">Business Events</IonItem>
-            <IonItem color="medium">Business News</IonItem>
-            <IonItem color="medium">About Local-First</IonItem>
-            <IonItem color="medium">Privacy</IonItem>
-            <IonItem color="medium">Contact Us</IonItem> */}
-          </IonList>
-        </IonContent>
-      
+        <LeftMenu removeOverlay={removeOverlay} />
       </div>
       <div id="right-overlay-sidebar">
-        <p>
-          <span className="p-0 m-0">LocalFirst right</span>
-        </p>
+        
+          <RightMenu removeOverlay={removeOverlay} />
+        
       </div>
+
+      <IonModal isOpen={showModal} cssClass='search-modal'>
+        <IonContent fullscreen>
+          <IonToolbar>
+            <IonButtons slot="end">
+                <IonButton onClick={() => setShowModal(false)}>
+                    <IonIcon icon={close} slot="icon-only"></IonIcon>
+                </IonButton>
+            </IonButtons>
+          </IonToolbar>
+          <form className="searchbar" >
+            
+            <div className="inner-form">
+                <div className="basic-search">
+                  <div className="input-field">
+                      <div className="icon-wrap">
+                        <IonIcon icon={searchOutline} slot="icon-only"></IonIcon>
+                      </div>
+                      <input id="search" type="text" placeholder="Search..." />
+                  </div>
+                </div>
+                <div className="advance-search mt-3">
+                  <div>
+                    <IonChip color="primary" className="mr-3 my-3">
+                      <IonIcon icon={checkmarkOutline}></IonIcon>
+                      <IonLabel>Product & Service</IonLabel>
+                    </IonChip>
+                    <IonChip className="mr-3 my-3">
+                      <IonLabel>Business Name</IonLabel>
+                    </IonChip>
+                    <IonChip className="mr-3 my-3">
+                      <IonLabel>Current Deals</IonLabel>
+                    </IonChip>
+                    <IonChip className="mr-3 my-3">
+                      <IonLabel>Events</IonLabel>
+                    </IonChip>
+                    <IonChip className="mr-3 my-3">
+                      <IonLabel>Classifieds</IonLabel>
+                    </IonChip>
+                    <IonChip className="mr-3 my-3">
+                      <IonLabel>Business News</IonLabel>
+                    </IonChip>
+                    <IonChip className="mr-3 my-3">
+                      <IonLabel>Business Resources</IonLabel>
+                    </IonChip>
+
+                  </div>
+                  <IonButton className="ion-margin-top mt-5" expand="block" type="submit">
+                    Search
+                  </IonButton>
+                </div>
+            </div>
+
+          </form>      
+        </IonContent>
+      </IonModal>
+
+      <IonPopover
+        isOpen={showPopover}
+        cssClass='my-custom-class'
+        onDidDismiss={e => setShowPopover(false)}
+        >
+        <div className="arrow" style={{left: '124px'}}></div>  
+        <IonList>
+            {/* <IonListHeader>Ionic</IonListHeader> */}
+            <IonItem button>Complete Rep Profile</IonItem>
+            <IonItem lines="none" button>Complete Company Profile</IonItem>
+            {/* <IonItem button>Showcase</IonItem>
+            <IonItem button>GitHub Repo</IonItem>
+            <IonItem lines="none" button >Close</IonItem> */}
+        </IonList>
+      </IonPopover>   
     </> 
   );
 }
-
-
 
 export default Header;

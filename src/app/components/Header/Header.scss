@@ -35,6 +35,10 @@
   &.main-push-left{
     display:block;
   }
+  ion-content{
+    --ion-background-color: var(--app-sidebar-bg-color);
+    color: #fff;  
+  }
 }
 #overlay.main-push-right, #overlay.main-push-left{
   position: fixed;
@@ -45,6 +49,32 @@
   background-color: var(--app-overlay-bg-color);
   z-index:9;
 }
+.notify-icon-wrap{
+  /*margin-right: 15px !important;*/
+  /*padding-right: 0 !important;*/
+  ion-badge{
+    position: absolute;
+    right: -5px; 
+    top: 0px;
+  }
+}
+.popover-wrapper{
+  .popover-content{
+    top:45px !important;
+    right:20px !important;
+    left: auto !important;
+  }
+  .arrow {
+      top: calc((.5rem + 1px) * -1);
+      position: absolute;
+      display: block;
+      width: 1rem;
+      height: .5rem;
+      margin: 0 .3rem;
+      background-color: red;
+  }
+}
+
 @media screen and (max-width: 992px) {
   .visible-md {
       display: block;
@@ -78,4 +108,64 @@
   //     background-color: rgba(0,0,0,0.6);
   //     z-index:9;
   // }
+}
+.search-modal{
+  ion-content{
+    --ion-background-color:var(--app-popup-bg-color);
+  }
+  .searchbar {
+    // min-height: 100vh;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    
+    padding: 15px;
+    font-family: 'Roboto', sans-serif;
+    .inner-form {
+      width: 100%;
+      .basic-search {
+        margin-bottom: 5px;
+        box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+        .input-field{
+          width: 100%;
+          position: relative;
+          .icon-wrap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-pack: end;
+            justify-content: flex-end;
+            -ms-flex-align: center;
+            align-items: center;
+            width: 60px;
+            height: 100%;
+            ion-icon {
+              font-size: 32px;
+              color: #999;
+            }
+          }
+          input {
+            padding: 10px 110px 10px 70px;
+            height: 100%;
+            border: 0;
+            background: #fff;
+            display: block;
+            width: 100%;
+            // padding: 10px 32px 10px 70px;
+            font-size: 18px;
+            color: #666;
+            border-radius: 3px;
+            height: 70px;
+            color: #555;
+        
+          }
+        }
+      }
+    }
+  }
 }

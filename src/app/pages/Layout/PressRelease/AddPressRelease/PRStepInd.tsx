@@ -9,7 +9,7 @@ const PRStepInd: React.FC = () => {
   const authUser = useSelector( (state:any) => state.auth.data.user);
   const pr = useSelector( (state:any) => state.pr.pressRelease);
   const { basename } = lfConfig;
-  let { id, step } = useParams();
+  let { id, step } = useParams<any>();
 
   return (<>
     { pr && Object.keys(pr).length > 0 && 

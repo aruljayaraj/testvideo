@@ -4,7 +4,7 @@ export const getToken = async (user) => {
         const response = await axios.request({
             method: 'POST',
             url: `jwt-auth/v1/token`, 
-            data: user }); console.log(response);
+            data: user }); // console.log(response);
         return response.data;
     }catch(error){
         return error;

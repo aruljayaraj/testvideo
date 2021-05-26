@@ -15,9 +15,15 @@ import {
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
+// import { ErrorMessage } from "@hookform/error-message";
 import './Login.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as authActions from '../../store/reducers/auth';
+
+type FormInputs = {
+  email: string;
+  password: string
+}
 
 let initialValues = {
   email: "",
@@ -27,29 +33,15 @@ let initialValues = {
 const Login: React.FC = () => {
   const dispatch = useDispatch();
   const authValues = useSelector( (state:any) => state.auth.data);
-  const { control, handleSubmit, errors } = useForm({
+  const { register, control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
     defaultValues: { ...initialValues },
     mode: "onChange"
   });
-
-  /**
-   * @param _fieldName
-   */
-  const showError = (_fieldName: string, msg: string) => {
-    let error = (errors as any)[_fieldName];
-    return error ? (
-      (error.ref.name === _fieldName)? (
-        <div className="invalid-feedback">
-        {error.message || `${msg} is required`}
-      </div>
-      ) : null
-    ) : null;
-  };
   
   /**
    * @param data
    */
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: any) => { // console.log(JSON.stringify(data));
     const user = {
       // JWT Only accepts username not email for login
       username: data.email,
@@ -58,6 +50,8 @@ const Login: React.FC = () => {
     };
     dispatch(authActions.getToken({data: user}));
   }
+  
+  // console.log(errors);
 
   if( authValues.authenticated && authValues.isVerified  ){
     return <Redirect to="/layout/dashboard" />;
@@ -67,7 +61,7 @@ const Login: React.FC = () => {
   }
 
   return (
-    <IonPage>
+    <IonPage className="login-page">
       <IonContent className="ion-padding">
         <IonCard className="card-center mt-2">
           <IonCardHeader>
@@ -79,15 +73,15 @@ const Login: React.FC = () => {
           <IonCardContent>
             <form className="ion-padding" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
               <IonItem>
-                <Controller
+                {/* <Controller
                   as={IonInput}
                   control={control}
-                  onChangeName="onIonChange"
-                  onChange={([selected]) => {
+                  // onChangeName="onIonChange"
+                  onChange={([selected]: any) => {
                     return selected.detail.value;
                   }}
                   name="email"
-                  placeholder="Email *"
+                  // placeholder="Email *"
                   rules={{
                     required: true,
                     pattern: {
@@ -95,13 +89,33 @@ const Login: React.FC = () => {
                       message: "Invalid Email Address"
                     }
                   }}
+                /> */}
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field: {onChange, onBlur} }) => {
+                    return <IonInput 
+                      type="email"
+                      placeholder="Email *"
+                      onIonChange={onChange} 
+                      onBlur={onBlur} />
+                  }}
+                  rules={{
+                    required: {
+                      value: true,
+                      message: "Email is required"
+                    },
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                      message: "Invalid Email Address"
+                    }
+                  }}
                 />
               </IonItem>
-              {/* {errors.username && "Username is required"} */}
-              {showError("email", "Email")}
+              {errors.email && <div className="invalid-feedback">{errors.email.message}</div>}
 
               <IonItem>
-                <Controller
+                {/* <Controller
                   as={IonInput}
                   control={control}
                   onChangeName="onIonChange"
@@ -109,8 +123,8 @@ const Login: React.FC = () => {
                     return selected.detail.value;
                   }}
                   name="password"
-                  type="password"
-                  placeholder="Password *"
+                  // type="password"
+                  // placeholder="Password *"
                   rules={{
                     required: true,
                     minLength: {
@@ -126,10 +140,33 @@ const Login: React.FC = () => {
                       message: "Invalid Password"
                     }
                   }}
+                /> */}
+                <Controller 
+                    name="password"
+                    control={control}
+                    render={({ field: {onChange, onBlur} }) => {
+                      return <IonInput 
+                        type="password"
+                        placeholder="Password *"
+                        onIonChange={onChange} 
+                        onBlur={onBlur} />
+                    }}
+                    rules={{
+                        // validate: {
+                        //   beginSpace: (value) => /^\S/.test(value)
+                        // },
+                        required: {
+                          value: true,
+                          message: "Password is required"
+                        },
+                        pattern: {
+                          value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
+                          message: "Invalid Password"
+                        }
+                    }}
                 />
               </IonItem>
-              {/* {errors.password && "Password is required"} */}
-              {showError("password", "Password")}
+              {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
               
               <IonButton color="greenbg" className="ion-margin-top mt-5" expand="block" type="submit">
                 Submit

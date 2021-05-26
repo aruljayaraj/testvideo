@@ -20,9 +20,9 @@ const RepProfile: React.FC = () => {
   const repProfile = useSelector( (state:any) => state.rep.repProfile);
   const memOpts = useSelector( (state:any) => state.auth.memOptions );
   // const [member, setMember] = useState<null | IntfMember>(null);
-  let { repid,memid } = useParams();
+  let { repid, memid } = useParams<any>();
 
-  const onGetMemberCb = useCallback((res: any) => {
+  const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
       dispatch(repActions.setMemberProfile({ data: res.data.user }));
       if(res.data.b2b){
@@ -31,6 +31,8 @@ const RepProfile: React.FC = () => {
       if(res.data.b2c){
         dispatch(repActions.setB2C({ data: res.data.b2c }));
       }
+    }else{
+      dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }
     dispatch(uiActions.setShowLoading({ loading: false }));
   }, [dispatch]);
@@ -43,18 +45,17 @@ const RepProfile: React.FC = () => {
         memID: memid,
         repID: repid
       };
-      CoreService.onPostFn('get_member', data, onGetMemberCb);
+      CoreService.onPostFn('get_member', data, onCallbackFn);
     }
-  }, [dispatch, onGetMemberCb, memid, repid]);
+  }, [dispatch, onCallbackFn, memid, repid]);
 
   return (
     <IonPage className="repprofile-page">
       { repProfile && Object.keys(repProfile).length > 0 && 
         <IonContent>
-          { +(repProfile.suspended_by) !== 0 && 
+          { [2,3].includes(parseInt(repProfile.is_active)) && 
           <div className="alert alert-warning" role="alert">
-            
-            { +(repProfile.suspended_by) === 1? `Rep Profile was suspended by Primary member` : `Rep Profile was suspended by Admin`  }
+            { +(repProfile.is_active) === 2? `Rep Profile was suspended by Primary member` : `Rep Profile was suspended by Admin`  }
           </div>}
           <ProfileAndLogo />
           <ProfileInfo />

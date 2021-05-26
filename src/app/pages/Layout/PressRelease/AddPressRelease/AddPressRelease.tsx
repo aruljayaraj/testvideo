@@ -23,7 +23,7 @@ const AddPressRelease: React.FC = () => {
   const dispatch = useDispatch();
   const authUser = useSelector( (state:any) => state.auth.data.user );
   const pr = useSelector( (state:any) => state.pr.pressRelease);
-  let { id, mem_id, step } = useParams();
+  let { id, mem_id, step } = useParams<any>();
 
   // Press Release deafult to load callback
   const onPrBuscatCb = useCallback((res: any) => {

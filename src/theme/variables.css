@@ -146,6 +146,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-menuhlbg-shade: #404446;
   --ion-color-menuhlbg-tint: #5b5f61;
 
+  /** App menu sub Item starts **/
+  --ion-color-menu-sub-item: #cccccc;
+  --ion-color-menu-sub-item-rgb: 204,204,204;
+  --ion-color-menu-sub-item-contrast: #000000;
+  --ion-color-menu-sub-item-contrast-rgb: 0,0,0;
+  --ion-color-menu-sub-item-shade: #b4b4b4;
+  --ion-color-menu-sub-item-tint: #d1d1d1;
+
   /** App Custom Color Starts **/
   --app-sidebar-bg-color: #424648;
   --app-overlay-bg-color: #B1B1B1;
@@ -153,6 +161,28 @@ http://ionicframework.com/docs/theming/ */
   --app-greenbg: #86c768;
   --app-blackbg: #424648;
   --app-titlebg: #f5f6f9;
+  --app-gray: #aaa;
+  --app-text: #424242;
+  --app-link: #6975FE;
+  /*--app-green: #09d3ac;*/
+
+  /** Location Colors **/
+  --location_loc: #195e83;
+  --location_reg: #edb879;
+  --location_nat:#e07b39;
+  --location_int: #80391e;
+
+  /** Status Colors **/
+  --status_pending: #195e83;
+  --status_revised: #FF847C;
+  --status_approved: #ffc000;
+  --status_cancelled:#dd2121;
+  --status_withdrawn: #7D0633;
+  --status_completed:#158467;
+
+  /** Menu Colors **/
+  --menu_sub_header:#9A9A9A;
+  --menu_sub_item:#CCCCCC;
 
   /** App Custom Color Ends **/
 }
@@ -189,7 +219,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-shade: var(--ion-color-menuhlbg-shade);
   --ion-color-tint: var(--ion-color-menuhlbg-tint);
 }
-
+.ion-color-menu-sub-item {
+  --ion-color-base: var(--ion-color-menu-sub-item);
+  --ion-color-base-rgb: var(--ion-color-menu-sub-item-rgb);
+  --ion-color-contrast: var(--ion-color-menu-sub-item-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-menu-sub-item-contrast-rgb);
+  --ion-color-shade: var(--ion-color-menu-sub-item-shade);
+  --ion-color-tint: var(--ion-color-menu-sub-item-tint);
+}
 
 @media (prefers-color-scheme: dark) {
   /*

@@ -17,7 +17,9 @@ import {
 import React, { useState, useCallback } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
 import { Editor } from '@tinymce/tinymce-react';
+import { format } from 'date-fns';
 
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
@@ -27,12 +29,20 @@ import CoreService from '../../../../shared/services/CoreService';
 import { lfConfig } from '../../../../../Constants';
 import PRStepInd from './PRStepInd';
 
+type FormInputs = {
+    pr_headline: string;
+    pr_date: string;
+    pr_overview: string;
+    pr_quote: string;
+    pr_desc: string;
+}
+
 const CreatePressRelease: React.FC = () => {
     const dispatch = useDispatch();
     const authValues = useSelector( (state:any) => state.auth.data.user);
     const pr = useSelector( (state:any) => state.pr.pressRelease);
     const [addPR, setAddPR] = useState({ status: false, memID: '', ID: '' });
-    let { id, step } = useParams(); 
+    let { id, step } = useParams<any>(); 
 
     let initialValues = {
         pr_headline: (pr && Object.keys(pr).length > 0) ? pr.pr_name : '',
@@ -41,25 +51,10 @@ const CreatePressRelease: React.FC = () => {
         pr_quote: (pr && Object.keys(pr).length > 0) ? pr.pr_quote : '',
         pr_desc: (pr && Object.keys(pr).length > 0) ? pr.pr_desc : '',
     };
-    const { control, errors, handleSubmit } = useForm({
+    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
-
-    /**
-     *
-     * @param _fieldName
-     */
-    const showError = (_fieldName: string, msg: string) => {
-        let error = (errors as any)[_fieldName];
-        return error ? (
-        (error.ref.name === _fieldName)? (
-            <div className="invalid-feedback">
-            {error.message || `${msg} is required`}
-        </div>
-        ) : null
-        ) : null;
-    };
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -92,7 +87,7 @@ const CreatePressRelease: React.FC = () => {
         <PRStepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle >Create a Press Release</IonCardTitle>
+                <IonCardTitle className="fs-18">Create a Press Release</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -102,22 +97,27 @@ const CreatePressRelease: React.FC = () => {
                     <IonCol sizeMd="6" sizeXs="12">
                         <IonItem class="ion-no-padding">
                         <IonLabel position="stacked">Headline (Maximum 10 Words)  <IonText color="danger">*</IonText></IonLabel>
-                        <Controller
-                            as={IonInput}
-                            control={control}
-                            onChangeName="onIonChange"
-                            onChange={([selected]) => {
-                                return selected.detail.value
-                            }}
-                            onKeyUp={(e: any) => {
-                                var str = e.target.value;
-                                if( str.split(/\s+/).length > 10 ){
-                                    e.target.value = str.split(/\s+/).slice(0, 10).join(" ");
-                                }
-                            }}
+                        <Controller 
                             name="pr_headline"
+                            control={control}
+                            render={({ field: {onChange, onBlur, value} }) => {
+                                return <IonInput type="text"
+                                    onKeyUp={(e: any) => {
+                                        var str = e.target.value;
+                                        if( str.split(/\s+/).length > 10 ){
+                                            e.target.value = str.split(/\s+/).slice(0, 10).join(" ");
+                                        }
+                                    }} 
+                                    onIonChange={(e: any) => onChange(e.target.value)}
+                                    onBlur={onBlur}
+                                    value={value}
+                                />
+                            }}
                             rules={{
-                                required: true,
+                                required: {
+                                    value: true,
+                                    message: "Headline is required"
+                                },
                                 pattern: {
                                     value: /^\W*(\w+(\W+|$)){1,10}$/i,
                                     message: "Headline shoud be lessthan 10 words"
@@ -125,139 +125,172 @@ const CreatePressRelease: React.FC = () => {
                             }}
                         />
                         </IonItem>
-                        {showError("pr_headline", "Headline")}
+                        <ErrorMessage
+                            errors={errors}
+                            name="pr_headline"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                     </IonCol>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
                                 <IonLabel position="stacked">Date (Enter Actual Release Date)</IonLabel>
-                                <Controller
-                                as={IonDatetime}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    return selected.detail.value;
-                                }}
-                                name="pr_date"
-                                rules={{
-                                    required: true
-                                }}
+                                <Controller 
+                                    name="pr_date"
+                                    control={control}
+                                    render={({ field: {onChange, onBlur, value} }) => {
+                                        return <IonDatetime
+                                            displayFormat="DD-MMM-YYYY" 
+                                            min={format(new Date(), 'yyyy-MM-dd')}
+                                            onIonChange={(e: any) => onChange(e.target.value)}
+                                            onBlur={onBlur}
+                                            value={value}
+                                        />
+                                    }}
+                                    rules={{ 
+                                        required: {
+                                            value: true,
+                                            message: "Date is required"
+                                        }
+                                    }}
                                 />
                             </IonItem>
                             <IonText>Your release will not be live until the selected date</IonText>
-                            {showError("pr_date", "Date")}
+                            <ErrorMessage
+                                errors={errors}
+                                name="pr_date"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
                         </IonCol>
                     </IonRow>
                     <IonRow>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
                                 <IonLabel position="stacked">Overview (Maximum 50 Words)</IonLabel>
-                                <Controller
-                                as={IonTextarea}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    return selected.detail.value;
-                                }}
-                                onKeyUp={(e: any) => {
-                                    var str = e.target.value;
-                                    if( str.split(/\s+/).length > 50 ){
-                                        e.target.value = str.split(/\s+/).slice(0, 50).join(" ");
-                                    }
-                                }}
-                                name="pr_overview"
-                                rules={{
-                                    required: false,
-                                    pattern: {
-                                        value: /^\W*(\w+(\W+|$)){1,50}$/i,
-                                        message: "Overview shoud be lessthan 50 words"
-                                    }
-                                }}
+                                <Controller 
+                                    name="pr_overview"
+                                    control={control}
+                                    render={({ field: {onChange, onBlur, value} }) => {
+                                        return <IonTextarea 
+                                            onKeyUp={(e: any) => {
+                                                var str = e.target.value;
+                                                if( str.split(/\s+/).length > 50 ){
+                                                    e.target.value = str.split(/\s+/).slice(0, 50).join(" ");
+                                                }
+                                            }}
+                                            onIonChange={(e: any) => onChange(e.target.value)}
+                                            onBlur={onBlur}
+                                            value={value}
+                                        />
+                                    }}
+                                    rules={{
+                                        pattern: {
+                                            value: /^\W*(\w+(\W+|$)){1,50}$/i,
+                                            message: "Overview shoud be lessthan 50 words"
+                                        }
+                                    }}
                                 />
                             </IonItem>
-                            {showError("pr_overview", "Overview")}
+                            <ErrorMessage
+                                errors={errors}
+                                name="pr_overview"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
                         </IonCol>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
                                 <IonLabel position="stacked">Quote (Maximum 25 Words)</IonLabel>
-                                <Controller
-                                as={IonTextarea}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    return selected.detail.value;
-                                }}
-                                onKeyUp={(e: any) => {
-                                    var str = e.target.value;
-                                    if( str.split(/\s+/).length > 25 ){
-                                        e.target.value = str.split(/\s+/).slice(0, 25).join(" ");
-                                    }
-                                }}
-                                name="pr_quote"
-                                rules={{
-                                    required: false,
-                                    pattern: {
-                                        value: /^\W*(\w+(\W+|$)){1,25}$/i,
-                                        message: "Quote shoud be lessthan 25 words"
-                                    }
-                                }}
+                                <Controller 
+                                    name="pr_quote"
+                                    render={({ field: {onChange, onBlur, value} }) => {
+                                        return <IonTextarea 
+                                            onKeyUp={(e: any) => {
+                                                var str = e.target.value;
+                                                if( str.split(/\s+/).length > 25 ){
+                                                    e.target.value = str.split(/\s+/).slice(0, 25).join(" ");
+                                                }
+                                            }}
+                                            onIonChange={(e: any) => onChange(e.target.value)}
+                                            onBlur={onBlur}
+                                            value={value}
+                                        />
+                                    }}
+                                    defaultValue=""
+                                    control={control}
+                                    rules={{
+                                        pattern: {
+                                            value: /^\W*(\w+(\W+|$)){1,25}$/i,
+                                            message: "Quote shoud be lessthan 25 words"
+                                        }
+                                    }}
                                 />
                             </IonItem>
-                            {showError("pr_quote", "Quote")}
+                            <ErrorMessage
+                                errors={errors}
+                                name="pr_quote"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
                         </IonCol>
                     </IonRow>
                     <IonRow>
                         <IonCol>
                             <IonItem lines="none" class="ion-no-padding">
                                 <IonLabel className="mb-3" position="stacked">Press Release Description <IonText color="danger">*</IonText></IonLabel>
-                                <Controller
-                                    as={
-                                        <Editor
-                                        apiKey="p5k59vuava18l9axn125wa4fl2qsmhmwsxfs6krrtffntke8"
-                                        initialValue=""
-                                        init={{
-                                            max_chars: lfConfig.tinymceMaxLength, // max. allowed chars
-                                            
-                                            init_instance_callback: function (editor: any) {
-                                                editor.on('change', function (e: Event) {
-                                                    let content = editor.contentDocument.body.innerText;
-                                                    // console.log(content.split(/[\w\u2019\'-]+/).length);
-                                                    if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceMaxLength){
-                                                        editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceMaxLength).join(" ");
-                                                    }
-                                                });
-                                            },
-                                            branding: false,
-                                            height: 300,
-                                            width: '100%',
-                                            menubar: false,
-                                            mobile: {
-                                                menubar: true
-                                            },
-                                            plugins: [
-                                                'advlist autolink lists link image charmap print preview anchor',
-                                                'searchreplace visualblocks code fullscreen',
-                                                'insertdatetime media table paste code help wordcount'
-                                            ],
-                                            toolbar:
-                                                'undo redo | formatselect | bold italic backcolor | \
-                                                alignleft aligncenter alignright alignjustify | \
-                                                bullist numlist outdent indent | removeformat | help'
-                                        }}
-                                        // onEditorChange={handleEditorChange}
-                                    />
-                                    }
-                                    className="mt-3"
-                                    control={control}
-                                    onChange={([cdata]) => {
-                                        return cdata.level.content;
-                                    }}
+                                <Controller 
                                     name="pr_desc"
+                                    control={control}
+                                    render={({ field: {onChange, onBlur, value} }) => {
+                                        return <Editor
+                                            value={value}
+                                            apiKey={lfConfig.tinymceKey}
+                                            initialValue=""
+                                            init={{
+                                                max_chars: lfConfig.tinymceMaxLength, // max. allowed chars
+                                                
+                                                init_instance_callback: function (editor: any) {
+                                                    editor.on('change', function (e: Event) {
+                                                        let content = editor.contentDocument.body.innerText;
+                                                        // console.log(content.split(/[\w\u2019\'-]+/).length);
+                                                        if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceMaxLength){
+                                                            editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceMaxLength).join(" ");
+                                                        }
+                                                    });
+                                                },
+                                                branding: false,
+                                                height: 300,
+                                                width: '100%',
+                                                menubar: false,
+                                                mobile: {
+                                                    menubar: true
+                                                },
+                                                plugins: [
+                                                    'advlist autolink lists link image charmap print preview anchor',
+                                                    'searchreplace visualblocks code fullscreen',
+                                                    'insertdatetime media table paste code help wordcount'
+                                                ],
+                                                toolbar:
+                                                    'undo redo | formatselect | bold italic backcolor | \
+                                                    alignleft aligncenter alignright alignjustify | \
+                                                    bullist numlist outdent indent | removeformat | help'
+                                            }}
+                                            onEditorChange={(val: any) =>{
+                                                onChange(val);
+                                            }}
+                                            onBlur={onBlur}
+                                        />
+                                    }}
                                     rules={{
-                                        required: true
+                                        required: {
+                                            value: true,
+                                            message: "Press Release Description is required"
+                                        }
                                     }}
                                 />
                             </IonItem>
-                            {showError("pr_desc", "Press Release Description")}
+                            <ErrorMessage
+                                errors={errors}
+                                name="pr_desc"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
                         </IonCol>
                         
                     </IonRow>

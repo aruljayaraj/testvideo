@@ -16,7 +16,7 @@ import {
 import React, { useState, useCallback, useEffect } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
-
+import { ErrorMessage } from '@hookform/error-message';
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as prActions from '../../../../store/reducers/dashboard/pr';
@@ -24,39 +24,28 @@ import '../PressRelease.scss';
 import CoreService from '../../../../shared/services/CoreService';
 import PRStepInd from './PRStepInd';
 
+type FormInputs = {
+    reps: string;
+}
+
 const AssignRep: React.FC = () => {
-    let listReps = null;
+    let listReps: any = null;
     const dispatch = useDispatch();
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const pr = useSelector( (state:any) => state.pr.pressRelease);
     const [addPR, setAddPR] = useState({ status: false, memID: '', ID: '' });
     const [ reps, setReps ] = useState([]);
-    let { id } = useParams(); 
+    let { id } = useParams<any>(); 
 
     let initialValues = {
         reps: (pr && Object.keys(pr).length > 0 && pr.pr_reps) ? (pr.pr_reps).split(",") : [] // 
     };
-    const { control, errors, handleSubmit } = useForm({
+    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
 
-    /**
-     *
-     * @param _fieldName
-     */
-    const showError = (_fieldName: string, msg: string) => {
-        let error = (errors as any)[_fieldName];
-        return error ? (
-        (error.ref.name === _fieldName)? (
-            <div className="invalid-feedback">
-            {error.message || `${msg} is required`}
-        </div>
-        ) : null
-        ) : null;
-    };
-
-    // For State default to load
+    // For Reps default to load
     const onProfileCb = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
             setReps([]);
@@ -64,7 +53,6 @@ const AssignRep: React.FC = () => {
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
     }, [dispatch, setReps]);
-    // For Country default to load
     useEffect(() => {
         if( pr && Object.keys(pr).length > 0 ){
             dispatch(uiActions.setShowLoading({ loading: true }));
@@ -111,7 +99,7 @@ const AssignRep: React.FC = () => {
         <PRStepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle >Assign Representative Profile</IonCardTitle>
+                <IonCardTitle className="fs-18">Assign Representative Profile</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -122,30 +110,37 @@ const AssignRep: React.FC = () => {
                             <IonItem class="ion-no-padding">
                                 <IonLabel position="stacked">Select Rep(s) <IonText color="danger">*</IonText></IonLabel>
                                 { pr && Object.keys(pr).length > 0 && listReps && 
-                                    <Controller
-                                    as={
-                                        <IonSelect name="reps" 
-                                            placeholder="Select Rep Profile" 
-                                            multiple>
-                                            {listReps}
-                                        </IonSelect>
-                                    }
-                                    control={control}
-                                    onChangeName="onIonChange"
-                                    onChange={([selected]) => {
-                                        return selected.detail.value;
-                                    }}
-                                    name="reps"
-                                    rules={{
-                                        required: true,
-                                        validate: value => {
-                                            return Array.isArray(value) && value.length > 0;
-                                        }
-                                    }}
-                                />}
+                                    <Controller 
+                                        name="reps"
+                                        control={control}
+                                        render={({ field: {onChange, onBlur, value} }) => {
+                                            return <IonSelect multiple
+                                                placeholder="Select Rep Profile"
+                                                onIonChange={(selected: any) =>{
+                                                    onChange(selected.detail.value);
+                                                }}
+                                                onBlur={onBlur}
+                                                value={value}
+                                            >{listReps}</IonSelect>
+                                        }}
+                                        rules={{
+                                            required: {
+                                                value: true,
+                                                message: "Representative Profile is required"
+                                            },
+                                            validate: value => {
+                                                return Array.isArray(value) && value.length > 0;
+                                            }
+                                        }}
+                                    />
+                                }
                                 
                             </IonItem>
-                            {showError("reps", "Representative Profile")}
+                            <ErrorMessage
+                                errors={errors}
+                                name="reps"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
                         </IonCol>
                         
                     </IonRow>

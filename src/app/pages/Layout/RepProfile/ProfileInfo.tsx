@@ -26,8 +26,8 @@ const ProfileInfo: React.FC = () => {
         { Object.keys(repProfile).length > 0 &&
         <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle onClick={() => setShowProfileModal(true)}>
-                    <span>Profile Information</span>
+                <IonCardTitle className="fs-18" onClick={() => setShowProfileModal(true)}>
+                    <span >Profile Information</span>
                     <i className="fa fa-pencil float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>
                 

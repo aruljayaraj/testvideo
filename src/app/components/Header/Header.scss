@@ -24,11 +24,12 @@
   width: 240px;
   position: fixed;
   top: 44px;
-  bottom: 44px;
+  /* bottom: 88px;*/
+  bottom: 142px;
   right: 0;
   z-index: 999;
   -ms-overflow-y: auto;
-  overflow-y: auto;
+  overflow-y: none;
   background-color: var(--app-sidebar-bg-color);
   color: #fff;
 
@@ -38,6 +39,30 @@
   ion-content{
     --ion-background-color: var(--app-sidebar-bg-color);
     color: #fff;  
+    // --overflow: hidden;
+    --overflow-y: auto;
+  }
+  .custom-list-sidemenu{
+    .custom-list-header{
+        font-size: 15px;
+        padding-left: 32px;
+        background-color: var(--menu_sub_header);
+        color: #fff;
+    }
+    .custom-list-item{
+        padding-left: 16px;
+        font-size: 14px;
+        background-color: var(--menu_sub_item);
+        &:hover{
+          background-color: #C4C4C4;
+        }
+    }
+  }
+}
+// Firefox only target
+@-moz-document url-prefix() {
+  #right-overlay-sidebar {
+    bottom: 144px;
   }
 }
 #overlay.main-push-right, #overlay.main-push-left{
@@ -58,7 +83,7 @@
     top: 0px;
   }
 }
-.popover-wrapper{
+/*.popover-wrapper{
   .popover-content{
     top:45px !important;
     right:20px !important;
@@ -73,42 +98,9 @@
       margin: 0 .3rem;
       background-color: red;
   }
-}
+}*/
 
-@media screen and (max-width: 992px) {
-  .visible-md {
-      display: block;
-  }
-  .hidden-sm {
-      display: none;
-  }
-  .visible-sm {
-      display: block;
-  }
-  .nav-brand {
-      width: 100%;
-  }
-//  .msidebar-overlay.main-push-right{
-//       position: fixed;
-//       left:0;
-//       top:44px;
-//       height:100%;
-//       width:100%;
-//       background-color: rgba(0,0,0,0.6);
-//       z-index:9;
-//   }
-}
-@media screen and (max-width: 768px) {
-  // .msidebar-overlay.main-push-right{
-  //     position: fixed;
-  //     left:0;
-  //     top:0;
-  //     height:100%;
-  //     width:100%;
-  //     background-color: rgba(0,0,0,0.6);
-  //     z-index:9;
-  // }
-}
+
 .search-modal{
   ion-content{
     --ion-background-color:var(--app-popup-bg-color);
@@ -168,4 +160,53 @@
       }
     }
   }
+}
+
+@media (max-width: 575.98px) { 
+  #right-overlay-sidebar {
+    bottom: 188px;
+  }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) { 
+  #right-overlay-sidebar {
+    bottom: 188px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  // .msidebar-overlay.main-push-right{
+  //     position: fixed;
+  //     left:0;
+  //     top:0;
+  //     height:100%;
+  //     width:100%;
+  //     background-color: rgba(0,0,0,0.6);
+  //     z-index:9;
+  // }
+}
+
+@media screen and (max-width: 992px) {
+  .visible-md {
+      display: block;
+  }
+  .hidden-sm {
+      display: none;
+  }
+  .visible-sm {
+      display: block;
+  }
+  .nav-brand {
+      width: 100%;
+  }
+  //  .msidebar-overlay.main-push-right{
+  //       position: fixed;
+  //       left:0;
+  //       top:44px;
+  //       height:100%;
+  //       width:100%;
+  //       background-color: rgba(0,0,0,0.6);
+  //       z-index:9;
+  //   }
 }

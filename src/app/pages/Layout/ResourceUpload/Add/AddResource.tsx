@@ -23,7 +23,7 @@ const AddResource: React.FC = () => {
   const dispatch = useDispatch();
   const authUser = useSelector( (state:any) => state.auth.data.user );
   const resource = useSelector( (state:any) => state.res.resource);
-  let { id, mem_id, step, res_type } = useParams();
+  let { id, mem_id, step, res_type } = useParams<any>();
 
   // Press Release deafult to load callback
   const onCallbackFn = useCallback((res: any) => {

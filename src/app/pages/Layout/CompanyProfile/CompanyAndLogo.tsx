@@ -44,7 +44,7 @@ const CompanyAndLogo: React.FC = () => {
             frmId: (Object.keys(comProfile).length > 0)? comProfile.id: ''
         });
     }
-    const logoImage = (Object.keys(comProfile).length > 0 && comProfile.company_logo) ? `${apiBaseURL}uploads/member/${comProfile.mem_id}/${comProfile.company_logo}` : `${basename}/assets/img/placeholder.png`
+    const logoImage = (Object.keys(comProfile).length > 0 && comProfile.company_logo) ? `${apiBaseURL}uploads/member/${comProfile.mem_id}/${comProfile.company_logo}` : `${basename}/assets/img/placeholder.png`;
     return (<>
         { Object.keys(comProfile).length > 0 &&
         <IonCard className="card-center mt-4">
@@ -52,7 +52,7 @@ const CompanyAndLogo: React.FC = () => {
             <IonCardContent>
                 <IonRow>
                     <IonCol sizeMd="6" sizeXs="12" >
-                    <IonCardTitle className="text-center">
+                        <IonCardTitle className="text-center fs-18 mb-3">
                             <span>Logo</span>
                         </IonCardTitle>
                         <IonList>

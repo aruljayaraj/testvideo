@@ -39,8 +39,7 @@ export interface IntfMember{
     rep_end_date: string,
     rep_autopay: number,
     is_active: number,
-    suspended_by: number,
-    isprimery: number,
+    is_primary: number,
     added_date:string,
     modified_date:string
      //reg_ip:string

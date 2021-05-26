@@ -6,8 +6,6 @@ import {
     IonRow,
     IonCol,
     IonText,
-    IonSelect,
-    IonSelectOption,
     IonToolbar,
     IonTitle,
     IonButtons,
@@ -19,15 +17,20 @@ import {
 import { close } from 'ionicons/icons';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useForm, Controller } from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
 import { isPlatform } from '@ionic/react';
+import Select from 'react-select';
 
 import CoreService from '../../shared/services/CoreService';
 import './Category.scss';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as repActions from '../../store/reducers/dashboard/rep';
 import * as uiActions from '../../store/reducers/ui';
 import * as prActions from '../../store/reducers/dashboard/pr';
 import * as resActions from '../../store/reducers/dashboard/resource';
+import * as dealActions from '../../store/reducers/dashboard/deal';
+import * as qqActions from '../../store/reducers/dashboard/qq';
+import { DropDown } from '../../interfaces/Common';
 
 // Note 
 /* isOpen: false,
@@ -35,33 +38,59 @@ import * as resActions from '../../store/reducers/dashboard/resource';
     type: '', // 0 or 1 ==> (B2B or B2C)
     formType: '', //  Rep or Company or Resource
     actionType: '', // new or edit
-    formId: '', // id or resource id
+    formId: '', // id or any resource id
     repId: '', // repprofile id 
     memId: '', // Member id
 */
+
 interface Props {
     showCategoryModal: any,
     setShowCategoryModal: Function,
     selectedItem: any
 }
+
+type FormInputs = {
+    category: {
+        value: number|string;
+        label: string;
+    };
+    subCategory: {
+        value: number|string;
+        label: string;
+    };
+    keywords: string;
+}
+
+
 const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModal, selectedItem}) => {
 
-    let listCategory = null;
-    let listSubCategory = null;
+    let listCategory: DropDown[]  = [];
+    let listSubCategory: DropDown[] = [];
     
     let { title, type, actionType, formType, formId, repId, memId } = showCategoryModal;
-    let { id, buscat_id: catId, subBuscat_id: subcatId, keywords } = selectedItem || {};
+    let { id, buscat_id: catId, catname, subBuscat_id: subcatId, sub_catname, keywords } = selectedItem || {};
+
+    const customStyles = {
+        menu: (provided: any, state: any) => ({
+            ...provided,
+            // width: state.selectProps.width,
+            // borderBottom: '1px dotted pink',
+            color: state.selectProps.menuColor,
+            padding: 20,
+            zIndex: 1001
+        })
+    }
     
     const dispatch = useDispatch();
-    const repProfile = useSelector( (state:any) => state.rep.repProfile);
+    // const repProfile = useSelector( (state:any) => state.rep.repProfile);
     const [ category, setCategory ] = useState([]);
     const [ subCategory, setSubCategory ] = useState([]);
     let initialValues = {
-        category: catId? catId : '',
-        subCategory: subcatId? subcatId: '',
+        category: catId? { value: catId, label: catname }  : { value: '', label: 'Select Category' },
+        subCategory: subcatId? { value: subcatId, label: sub_catname }: { value: '', label: 'Select Sub Category' },
         keywords: keywords? keywords: '',
     };
-    const { control, errors, handleSubmit } = useForm({
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
@@ -72,14 +101,15 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
         // reset keywords if need
     // };
 
-    // For Country Change Call Back to load States
+    // For Category Change Call Back to load States
     const onCategoryChangeCb = useCallback((res: any) => {
-        if(res.status === 'SUCCESS'){
+        if(res.status === 'SUCCESS'){ 
             setSubCategory([]);
             setSubCategory(res.data);
+            setValue('subCategory', { value: '', label: 'Select Sub Category' }, { shouldValidate: true });
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
-    }, [dispatch, setSubCategory]);
+    }, [dispatch, setSubCategory, setValue]);
     const onCategoryChange = (pid: string) => {
         if( pid ){
             dispatch(uiActions.setShowLoading({ loading: true }));
@@ -87,6 +117,18 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
         }
     };
 
+    // For Sub Category default to load callback
+    const onSubCategoryCb = useCallback((res: any) => {
+        if(res.status === 'SUCCESS'){
+            if(res.status === 'SUCCESS'){ 
+                setSubCategory([]);
+                setSubCategory(res.data);
+            }
+            dispatch(uiActions.setShowLoading({ loading: false }));
+        }else{
+            dispatch(uiActions.setShowLoading({ loading: false }));
+        }
+    }, [dispatch, setSubCategory]);
     // For Category default to load callback
     const onCategoryCb = useCallback((res: any) => {
         dispatch(uiActions.setShowLoading({ loading: false }));
@@ -95,7 +137,7 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
             setCategory([]);
             setSubCategory([]);
             if( catId ){
-                CoreService.onPostFn('get_buscat', {'action': 'get_buscat_sub_categories', pid: catId}, onCategoryChangeCb);
+                CoreService.onPostFn('get_buscat', {'action': 'get_buscat_sub_categories', pid: catId}, onSubCategoryCb);
             }else{
                 dispatch(uiActions.setShowLoading({ loading: false }));
             }
@@ -104,7 +146,7 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
         }else{
             dispatch(uiActions.setShowLoading({ loading: false }));
         }
-    }, [dispatch, setCategory, setSubCategory, catId, onCategoryChangeCb]);
+    }, [dispatch, setCategory, setSubCategory, catId, onSubCategoryCb]);
     // For Category default to load
     useEffect(() => {
         if( showCategoryModal.isOpen === true ){
@@ -112,17 +154,6 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
             CoreService.onPostFn('get_buscat', {'action': 'get_buscat_categories', type: type}, onCategoryCb);
         }
     }, [dispatch, onCategoryCb, type, showCategoryModal]);
-
-    const showError = (_fieldName: string, msg: string) => {
-        let error = (errors as any)[_fieldName];
-        return error ? (
-          (error.ref.name === _fieldName)? (
-            <div className="invalid-feedback">
-            {error.message || `${msg} is required`}
-          </div>
-          ) : null
-        ) : null;
-    };
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -137,26 +168,36 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
                 dispatch(prActions.setBuscat({ data: res.data }));
             }else if( ['document','article', 'audio', 'video'].includes(formType) ){
                 dispatch(resActions.setBuscat({ data: res.data }));
+            }else if( formType === 'dailyDeal' ){
+                dispatch(dealActions.setBuscat({ data: res.data }));
+            }else if( formType === 'localquote' ){
+                dispatch(qqActions.setBuscat({ data: res.data }));
             }
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }, [dispatch, showCategoryModal, setShowCategoryModal, formType, type]);
     const onSubmit = (data: any) => {
-        dispatch(uiActions.setShowLoading({ loading: true }));
-        // console.log(showCategoryModal);
-        const formData = {
-            formId: formId,
-            repId: repId,
-            memId: memId,
-            type: type,
-            action: 'update_buscat',
-            actionType: actionType,
-            formType: formType,
-            id: id,
-            ...data
-        }; //console.log(formData);
-        CoreService.onPostFn('update_buscat', formData, onCallbackFn);
+        if( data.category.value && data.subCategory.value ){
+            dispatch(uiActions.setShowLoading({ loading: true }));
+        
+            const formData = {
+                formId: formId,
+                repId: repId,
+                memId: memId,
+                type: type,
+                action: 'update_buscat',
+                actionType: actionType,
+                formType: formType,
+                id: id,
+                category: data.category.value,
+                subCategory: data.subCategory.value,
+                keywords: data.keywords
+            }; //console.log(formData);
+            CoreService.onPostFn('update_buscat', formData, onCallbackFn);
+        }else{
+            dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: "Category/Sub Category should not be empty!" }));
+        }
     } 
 
     // Buscat Delete
@@ -174,7 +215,6 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
     }, [dispatch, showCategoryModal, setShowCategoryModal, type]); */
     const deleteBuscatFn = (did: number, dcatId: number, dsubcatId: number) => {
         dispatch(uiActions.setShowLoading({ loading: true }));
-        // console.log(showCategoryModal);
         const formData = {
             formId: formId,
             repId: repId,
@@ -191,21 +231,24 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
     }
 
     if( category.length > 0 ){
-        listCategory = category.map((cat: any) =>
-            <IonSelectOption value={cat.id} key={cat.id}>{cat.catname}</IonSelectOption> 
-        );
+        category.map((cat: any) => {
+            listCategory.push({ value: cat.id, label: cat.catname });
+            return cat;
+        });
     }
     if( subCategory.length > 0 ){
-        listSubCategory = subCategory.map((scat: any) =>
-            <IonSelectOption value={scat.id} key={scat.id}>{scat.catname}</IonSelectOption> 
-        );
+        subCategory.map((scat: any) => {
+            listSubCategory.push({ value: scat.id, label: scat.catname });
+            return scat;
+        });
     }
-
+    
     return (<>
+    
         <form onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
                 <IonToolbar color="greenbg">
-                    <IonButtons slot={ isPlatform('desktop') || isPlatform('tablet')? 'end': 'start' }>
+                    <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowCategoryModal({
                             ...showCategoryModal, 
                             isOpen: false
@@ -224,60 +267,75 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
                 </IonToolbar>
                 
             </IonHeader>
-            <IonContent fullscreen className="ion-padding">
+            <IonContent id="buscat-form-wrap" fullscreen className="ion-padding">
             <IonGrid>
-
+                
                 <IonRow>
                     <IonCol>
-                        <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">Category <IonText color="danger">*</IonText></IonLabel>
-                            { repProfile && listCategory && 
-                                <Controller
-                                as={
-                                    <IonSelect name="country" placeholder="Select Category">
-                                        {listCategory}
-                                    </IonSelect>
-                                }
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    onCategoryChange(selected.detail.value);
-                                    return selected.detail.value;
-                                }}
+                        <IonLabel className="mb-2">Category <IonText color="danger">*</IonText></IonLabel>
+                        <div className="mt-2">
+                            <Controller 
                                 name="category"
-                                rules={{
-                                    required: true
-                                }}
-                            />}
-                            
-                        </IonItem>
-                        {showError("category", "Category")}
-                    </IonCol>
-                </IonRow>
-                { listSubCategory && <>
-                <IonRow>    
-                    <IonCol>
-                        <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">Sub Category <IonText color="danger">*</IonText></IonLabel>
-                            <Controller
-                                as={
-                                    <IonSelect name="state" placeholder="Select Sub Category">
-                                        {listSubCategory}
-                                    </IonSelect>
-                                }
                                 control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    // onStateChange(selected.detail.value);
-                                    return selected.detail.value;
+                                render={({ field }) => {
+                                    return <Select
+                                        {...field}
+                                        placeholder="Select Category"
+                                        options={listCategory}
+                                        onChange={(selected: any) =>{
+                                            onCategoryChange(selected.value);
+                                            field.onChange(selected);
+                                        }}
+                                        styles={customStyles}
+                                    />
                                 }}
-                                name="subCategory"
-                                rules={{
-                                    required: true
+                                rules={{ 
+                                    required: {
+                                        value: true,
+                                        message: "Category is required"
+                                    }
                                 }}
                             />
-                        </IonItem>
-                        {showError("subCategory", "Sub Category")}
+                        </div>
+                        <ErrorMessage
+                            errors={errors}
+                            name="category"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
+                    </IonCol>
+                </IonRow> 
+                { listSubCategory.length > 0 && <>
+                <IonRow>    
+                    <IonCol>
+                    <IonLabel className="mb-2">Sub Category <IonText color="danger">*</IonText></IonLabel>
+                        <div className="mt-2">
+                            <Controller 
+                                name="subCategory"
+                                control={control}
+                                render={({ field }) => {
+                                    return <Select
+                                        {...field}
+                                        placeholder="Select Sub Category"
+                                        options={listSubCategory}
+                                        onChange={(selected: any) =>{
+                                            field.onChange(selected);
+                                        }}
+                                        styles={customStyles}
+                                    />
+                                }}
+                                rules={{ 
+                                    required: {
+                                        value: true,
+                                        message: "Sub Category is required"
+                                    }
+                                }}
+                            />
+                        </div>
+                        <ErrorMessage
+                            errors={errors}
+                            name="subCategory"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                   </IonCol>
                 </IonRow>
                  
@@ -285,17 +343,32 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
                     <IonCol>
                         <IonItem class="ion-no-padding">
                             <IonLabel position="stacked">Keywords</IonLabel>
-                            <Controller
+                            {/* <Controller
                                 as={IonTextarea}
                                 control={control}
                                 onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    // onSubCategoryChange(selected.detail.value);
+                                onChange={([selected]: any) => {
                                     return selected.detail.value;
                                 }}
                                 name="keywords"
                                 rules={{
                                     required: false
+                                }}
+                            /> */}
+                            <Controller 
+                                name="keywords"
+                                control={control}
+                                render={({ field }) => {
+                                    return <IonTextarea
+                                        {...field}
+                                        onIonChange={(e: any) => field.onChange(e.target.value)}
+                                    />
+                                }}
+                                rules={{
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9,\- ]{2,100}$/i,
+                                        message: "Invalid Keyword"
+                                    }
                                 }}
                             />
                         </IonItem>
@@ -304,14 +377,18 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
                             Add keywords to describe your products and services. Keywords or sets of Keywords must be separated by a comma(),. eg: green football, red football, green footbal tape. 
                             </IonText>
                         </p>
-                        {showError("keywords", "Keywords")}
+                        <ErrorMessage
+                            errors={errors}
+                            name="keywords"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                 
                   </IonCol>
                 </IonRow>
                 </>}
                 
                 <div className="mt-4">           
-                { (isPlatform('desktop') || isPlatform('tablet')) && 
+                { (isPlatform('desktop')) && 
                     <>
                         { actionType === 'edit' && 
                         <IonButton color="medium" className="ion-margin-top mt-4 mb-3 float-left" onClick={() => deleteBuscatFn(id, catId, subcatId)}>
@@ -322,7 +399,7 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
                         </IonButton>
                     </>
                 }
-                { (!isPlatform('desktop') || !isPlatform('tablet')) &&  actionType === 'edit' &&
+                { (!isPlatform('desktop')) &&  actionType === 'edit' &&
                     <IonButton expand="block" fill="clear" color="medium" 
                         className="ion-margin-top mt-5"
                         onClick={() => deleteBuscatFn(id, catId, subcatId)}

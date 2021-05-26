@@ -17,6 +17,7 @@ import {
   import { close } from 'ionicons/icons';
 import React, { useCallback } from 'react';
 import { useForm, Controller } from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
 import { isPlatform } from '@ionic/react';
 import { Editor } from '@tinymce/tinymce-react';
 
@@ -26,6 +27,10 @@ import './CompanyProfile.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 import * as uiActions from '../../../store/reducers/ui';
+
+type FormInputs = {
+    description: string;
+}
 
 interface Props {
     showAboutCompanyModal: boolean
@@ -38,23 +43,12 @@ const AboutCompanyModal: React.FC<Props> = ({showAboutCompanyModal, setShowAbout
     const comProfile = useSelector( (state:any) => state.rep.comProfile);
     const memid = useSelector( (state:any) => state.auth.data.user.ID);
     let initialValues = {
-        profileDesc: (comProfile)? comProfile.description: ''
+        description: (comProfile)? comProfile.description: ''
     };
-    const { control, errors, handleSubmit } = useForm({
+    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
-
-    const showError = (_fieldName: string, msg: string) => {
-        let error = (errors as any)[_fieldName];
-        return error ? (
-          (error.ref.name === _fieldName)? (
-            <div className="invalid-feedback">
-            {error.message || `${msg} is required`}
-          </div>
-          ) : null
-        ) : null;
-    };
 
     const onCallbackFn = useCallback((res: any) => {
         dispatch(uiActions.setShowLoading({ loading: false }));
@@ -81,7 +75,7 @@ const AboutCompanyModal: React.FC<Props> = ({showAboutCompanyModal, setShowAbout
         <form onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
                 <IonToolbar color="greenbg">
-                    <IonButtons slot={ isPlatform('desktop') || isPlatform('tablet')? 'end': 'start' }>
+                    <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowAboutCompanyModal(false)}>
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
                         </IonButton>
@@ -104,64 +98,123 @@ const AboutCompanyModal: React.FC<Props> = ({showAboutCompanyModal, setShowAbout
                     <IonCol>
                         <IonItem lines="none" class="ion-no-padding">
                             <IonLabel className="mb-3" position="stacked">Company Description <IonText color="danger">*</IonText></IonLabel>
-                            { showAboutCompanyModal === true && <Controller
-                                as={
-                                    <Editor
-                                    apiKey="p5k59vuava18l9axn125wa4fl2qsmhmwsxfs6krrtffntke8"
-                                    initialValue=""
-                                    init={{
-                                        max_chars: lfConfig.tinymceMaxLength, // max. allowed chars
-                                        /*setup: function(editor: any) {
-                                            editor.on('click', function(e: any) {
-                                              console.log('Editor was clicked');
-                                            });
-                                          },*/
-                                        init_instance_callback: function (editor: any) {
-                                            editor.on('change', function (e: Event) {
-                                                let content = editor.contentDocument.body.innerText;
-                                                // console.log(content.split(/[\w\u2019\'-]+/).length);
-                                                if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceMaxLength){
-                                                    editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceMaxLength).join(" ");
-                                                }
-                                            });
-                                        },
-                                        branding: false,
-                                        height: 300,
-                                        menubar: false,
-                                        mobile: {
-                                            menubar: true
-                                        },
-                                        plugins: [
-                                            'advlist autolink lists link image charmap print preview anchor',
-                                            'searchreplace visualblocks code fullscreen',
-                                            'insertdatetime media table paste code help wordcount'
-                                        ],
-                                        toolbar:
-                                            'undo redo | formatselect | bold italic backcolor | \
-                                            alignleft aligncenter alignright alignjustify | \
-                                            bullist numlist outdent indent | removeformat | help'
-                                    }}
-                                    // onEditorChange={handleEditorChange}
-                                />
-                                }
-                                className="mt-3"
+                            { showAboutCompanyModal === true && 
+                            //     <Controller
+                            //     as={
+                            //         <Editor
+                            //         apiKey="p5k59vuava18l9axn125wa4fl2qsmhmwsxfs6krrtffntke8"
+                            //         initialValue=""
+                            //         init={{
+                            //             max_chars: lfConfig.tinymceMaxLength, // max. allowed chars
+                            //             //setup: function(editor: any) {
+                            //             //  editor.on('click', function(e: any) {
+                            //             //  console.log('Editor was clicked');
+                            //             // });
+                            //             //  },
+                            //             init_instance_callback: function (editor: any) {
+                            //                 editor.on('change', function (e: Event) {
+                            //                     let content = editor.contentDocument.body.innerText;
+                            //                     // console.log(content.split(/[\w\u2019\'-]+/).length);
+                            //                     if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceMaxLength){
+                            //                         editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceMaxLength).join(" ");
+                            //                     }
+                            //                 });
+                            //             },
+                            //             branding: false,
+                            //             height: 300,
+                            //             menubar: false,
+                            //             mobile: {
+                            //                 menubar: true
+                            //             },
+                            //             plugins: [
+                            //                 'advlist autolink lists link image charmap print preview anchor',
+                            //                 'searchreplace visualblocks code fullscreen',
+                            //                 'insertdatetime media table paste code help wordcount'
+                            //             ],
+                            //             toolbar:
+                            //                 'undo redo | formatselect | bold italic backcolor | \
+                            //                 alignleft aligncenter alignright alignjustify | \
+                            //                 bullist numlist outdent indent | removeformat | help'
+                            //         }}
+                            //         // onEditorChange={handleEditorChange}
+                            //     />
+                            //     }
+                            //     className="mt-3"
+                            //     control={control}
+                            //     onChange={([cdata]) => {
+                            //         return cdata.level.content;
+                            //     }}
+                            //     name="profileDesc"
+                            //     rules={{
+                            //         required: true
+                            //     }}
+                            // />
+                            <Controller 
+                                name="description"
                                 control={control}
-                                onChange={([cdata]) => {
-                                    return cdata.level.content;
+                                render={({ field: {onChange, onBlur, value} }) => {
+                                    return <Editor
+                                        value={value}
+                                        apiKey={lfConfig.tinymceKey}
+                                        init={{
+                                            max_chars: lfConfig.tinymceMaxLength, // max. allowed chars
+                                            //setup: function(editor: any) {
+                                            //  editor.on('click', function(e: any) {
+                                            //  console.log('Editor was clicked');
+                                            // });
+                                            //  },
+                                            init_instance_callback: function (editor: any) {
+                                                editor.on('change', function (e: Event) {
+                                                    let content = editor.contentDocument.body.innerText;
+                                                    // console.log(content.split(/[\w\u2019\'-]+/).length);
+                                                    if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceMaxLength){
+                                                        editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceMaxLength).join(" ");
+                                                    }
+                                                });
+                                            },
+                                            branding: false,
+                                            height: 300,
+                                            menubar: false,
+                                            mobile: {
+                                                menubar: true
+                                            },
+                                            plugins: [
+                                                'advlist autolink lists link image charmap print preview anchor',
+                                                'searchreplace visualblocks code fullscreen',
+                                                'insertdatetime media table paste code help wordcount'
+                                            ],
+                                            toolbar:
+                                                'undo redo | formatselect | bold italic backcolor | \
+                                                alignleft aligncenter alignright alignjustify | \
+                                                bullist numlist outdent indent | removeformat | help'
+                                        }}
+                                        // onEditorChange={handleEditorChange}
+                                        onEditorChange={(val: any) =>{
+                                            onChange(val);
+                                        }}
+                                        onBlur={onBlur}
+                                    />
                                 }}
-                                name="profileDesc"
                                 rules={{
-                                    required: true
+                                    required: {
+                                        value: true,
+                                        message: "Company Description is required"
+                                    }
                                 }}
-                            />}
+                            />
+                            }
                             <IonNote className="mt-2">Write a profile of your skills that will be seen on our system: (maximum 500 words)</IonNote><br />
                         </IonItem>
-                        {showError("profileDesc", "Company Description")}
+                        <ErrorMessage
+                            errors={errors}
+                            name="description"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                     </IonCol>
                     
                 </IonRow>
 
-                { (isPlatform('desktop') || isPlatform('tablet')) && 
+                { (isPlatform('desktop')) && 
                     <IonButton color="greenbg" className="ion-margin-top mt-5 mb-3 float-right" type="submit" >
                         Submit
                     </IonButton>

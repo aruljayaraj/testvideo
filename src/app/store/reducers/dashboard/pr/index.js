@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-let state = {}
+let state = {
+    pressRelease: {},
+    pressReleases: []
+}
 
 const slice = createSlice({
     name: "pr",

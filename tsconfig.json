@@ -17,16 +17,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
-    // "noImplicitAny": false,
+    "jsx": "react-jsx",
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "src"
   ],
-  // "types":["./@types"],
   "files": [
     "./@types/react-view-pdf.d.ts",
     "./@types/react-audio-player.d.ts",
-    // "./@types/*.*.ts"
+    "./@types/react-select.d.ts",
+    "./@types/react-xmasonry.d.ts"
   ]
 }

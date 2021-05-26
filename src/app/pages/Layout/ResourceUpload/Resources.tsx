@@ -15,24 +15,24 @@ import ListSkeleton from '../../../components/Skeleton/ListSkeleton';
 
 const Resources: React.FC = () => {
   const dispatch = useDispatch();
-  const loading = useSelector( (state:any) => state.ui.loading);
+  const skeleton = useSelector( (state:any) => state.ui.skeleton);
   const authUser = useSelector( (state:any) => state.auth.data.user);
   const resources = useSelector( (state:any) => state.res.resources);
   const { basename } = lfConfig;
   const [showAlert, setShowAlert] = useState({status: false, id: '', mem_id: '' });
-  let { res_type } = useParams();
+  let { res_type } = useParams<any>();
   const resTypeText = res_type ? res_type.charAt(0).toUpperCase() + res_type.slice(1): '';
 
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
       dispatch(resActions.setResources({ data: res.data }));
     }
-    dispatch(uiActions.setShowLoading({ loading: false }));
+    dispatch(uiActions.setShowSkeleton({ skeleton: false }));
   }, [dispatch]);
 
   useEffect(() => { 
     if( authUser && authUser.ID ){
-      dispatch(uiActions.setShowLoading({ loading: true }));
+      dispatch(uiActions.setShowSkeleton({ skeleton: true }));
       const data = {
         action: 'get_resources',
         resType: res_type,
@@ -46,12 +46,12 @@ const Resources: React.FC = () => {
     if(res.status === 'SUCCESS'){
       dispatch(resActions.setResources({ data: res.data }));
     }
-    dispatch(uiActions.setShowLoading({ loading: false }));
+    dispatch(uiActions.setShowSkeleton({ skeleton: false }));
     dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
   }, [dispatch]);
 
   const onDeleteFn = (id: number, mem_id: number) => {
-    dispatch(uiActions.setShowLoading({ loading: true }));
+    dispatch(uiActions.setShowSkeleton({ skeleton: true }));
     const fd = {
         action: 'res_delete',
         resType: res_type,
@@ -63,11 +63,11 @@ const Resources: React.FC = () => {
 
   return (
     <IonPage className="resource-page">
-      { !loading.showLoading && resources ? ( 
+      { !skeleton.showSkeleton && resources ? ( 
         <IonContent>
           <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle >
+                <IonCardTitle className="fs-18">
                   { res_type && res_type === 'document'? 'Documents': '' }
                   { res_type && res_type === 'article'? 'Articles': '' }
                   { res_type && res_type === 'audio'? 'Audio': '' }
@@ -106,6 +106,7 @@ const Resources: React.FC = () => {
           />
           
       </IonContent>) : ( <ListSkeleton /> )}
+      <ListSkeleton />
   
     </IonPage>
   );

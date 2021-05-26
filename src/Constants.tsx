@@ -1,11 +1,15 @@
 export const lfConfig =  {
     // baseURL : 'http://localhost:8100',
+    // tinymceKey: 'p5k59vuava18l9axn125wa4fl2qsmhmwsxfs6krrtffntke8', // Arul account limited
+    tinymceKey: 'pny4jwf7rrrkuio08hit5ojxslw59l941fvv1wvzsfileta1', // Rod Account
     tinymceMaxLength: 500,
     tinymceResourceMaxLength: 250,
     apiBaseURL: process.env.REACT_APP_API_URL,
     basename: process.env.REACT_APP_BASENAME,
     baseurl: process.env.REACT_APP_BASE_URL,
-    acceptedDocTypes: 'doc, docx, pdf, rtf, txt, ppt, pptx, xls, xlsx, odt, odp, ods, tif, tiff, csv, png, jpg, gif',
+    acceptedDocSize: '104857600',
+    acceptedDocSizeMB: '100MB',
+    acceptedDocTypes: 'doc, docx, pdf, rtf, txt, ppt, pptx, xls, xlsx, odt, odp, ods, tif, tiff, csv, png, jpg, jpeg, gif',
     acceptedDocumentTypes: [
         //  doc, docx, pdf, rtf, txt, ppt, pptx, xls, xlsx, odt, odp, ods, tif, tiff, csv, png, jpg, gif // MIME Names are there
         // 'odf','odg','sxw','sxi','sxc','sxd','ps','pps','ppsx' No MIME name - doubtful
@@ -27,16 +31,20 @@ export const lfConfig =  {
         'image/jpeg', // jpg | jpeg
         'image/gif' // gif
     ],
+    acceptedAudSize: '157286400',
+    acceptedAudSizeMB: '150MB',
     acceptedAudTypes: 'mp3, wma, wav,  ra, ram, rm, mid, ogg', // dct,
     acceptedAudioTypes: [
         'audio/mpeg', // mp3
         'video/x-ms-wma', // wma
-        'audio/wav', // wav
+        'audio/x-wav', // wav
         'audio/x-realaudio', // ra
         'audio/x-pn-realaudio', // rm | ram
         'audio/midi', // mid
         'audio/ogg' // ogg
     ],
+    acceptedVidSize: '314572800',
+    acceptedVidSizeMB: '300MB',
     acceptedVidTypes: 'mp4, avi, wmv, swf, mpg, flv, mov, webm, ogg, mts, MTS',
     acceptedVideoTypes: [
         'video/mp4', // mp4
@@ -50,5 +58,11 @@ export const lfConfig =  {
         'video/ogg', // ogg,
         'video/vnd.mts', // mts
         'video/mts' // mts | MTS
-    ]
+    ],
+    acceptedQQDocSize: '104857600',
+    acceptedQQDocSizeMB: '100MB',
+    acceptedQQAudSize: '104857600',
+    acceptedQQAudSizeMB: '100MB',
+    acceptedQQVidSize: '104857600',
+    acceptedQQVidSizeMB: '100MB',
 }; 

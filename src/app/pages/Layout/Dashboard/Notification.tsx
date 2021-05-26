@@ -21,7 +21,7 @@ const Notification: React.FC = () => {
     return (<>
         <IonCard className="card-center mt-4">
             <IonCardHeader color="light">
-                <IonCardTitle>Dashboard</IonCardTitle>
+                <IonCardTitle className="fs-18">Dashboard</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -34,7 +34,7 @@ const Notification: React.FC = () => {
         ) &&
         <IonCard className="card-center mt-4">
             <IonCardHeader color="light">
-                <IonCardTitle color="medium" className="ion-text-center">
+                <IonCardTitle color="medium" className="ion-text-center fs-18">
                     Complete Your Profile Set Up
                 </IonCardTitle>
             </IonCardHeader>
@@ -44,7 +44,7 @@ const Notification: React.FC = () => {
                     <IonText>In order to serve better need the following things to complete.</IonText>
                 </p>
                 { repProfile && (!repProfile.country || !repProfile.phone || !repProfile.profile_description) && 
-                    <p><IonRouterLink href={`${basename}/layout/rep-profile/${repProfile.id}/${repProfile.mem_id}`}>Complete your { parseInt(memOpts.profile) === 2? 'Profile': 'Rep Profile'}</IonRouterLink></p>
+                    <p><IonRouterLink href={`${basename}/layout/rep-profile/${repProfile.mem_id}/${repProfile.id}`}>Complete your { parseInt(memOpts.profile) === 2? 'Profile': 'Rep Profile'}</IonRouterLink></p>
                 }
                 { comProfile && (!comProfile.country || !comProfile.description) && authValues.user.accType === 'full' &&
                     <p><IonRouterLink href={`${basename}/layout/company-profile`}>Complete your Company Profile</IonRouterLink></p> 

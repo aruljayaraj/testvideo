@@ -7,8 +7,6 @@ import {
     IonRow,
     IonCol,
     IonText,
-    IonSelect,
-    IonSelectOption,
     IonToolbar,
     IonTitle,
     IonButtons,
@@ -19,13 +17,51 @@ import {
   import { close } from 'ionicons/icons';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useForm, Controller } from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
 import { isPlatform } from '@ionic/react';
+import Select from 'react-select';
 
 import CoreService from '../../../shared/services/CoreService';
 import './CompanyProfile.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 import * as uiActions from '../../../store/reducers/ui';
+import * as frmdataActions from '../../../store/reducers/dashboard/formdata';
+import { DropDown } from '../../../interfaces/Common';
+
+type FormInputs = {
+    company_name: string;
+    email: string;
+    firstname: string;
+    lastname: string;
+    address1: string;
+    address2: string;
+    country: {
+        value: string; 
+        label: string
+    };
+    state: {
+        value: string; 
+        label: string
+    };
+    city: {
+        value: string; 
+        label: string
+    };
+    postal: string;
+    phone_code: {
+        value: string; 
+        label: string
+    };
+    phone: string;
+    fax: string;
+    mobile_code: {
+        value: string; 
+        label: string
+    };
+    mobile: string;
+    website: string;
+}
 
 interface Props {
     showCompanyModal: boolean,
@@ -34,12 +70,25 @@ interface Props {
 
 const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModal}) => {
 
-    let listCountry= null;
-    let listState = null;
-    let listCity = null; 
+    let listCountry: DropDown[] = [];
+    let listState: DropDown[] = [];
+    let listCity: DropDown[] = []; 
+    let listCodes: DropDown[] = [];
+    const customStyles = {
+        menu: (provided: any, state: any) => ({ 
+            ...provided,
+            // width: state.selectProps.width,
+            // borderBottom: '1px dotted pink',
+            boxShadow: "none !important",
+            color: state.selectProps.menuColor,
+            padding: "0 10 10 10",
+            zIndex: 1001
+        })
+    }
     
     const dispatch = useDispatch();
     const comProfile = useSelector( (state:any) => state.rep.comProfile);
+    const isdCodes = useSelector( (state:any) => state.formdata.isdCodes);
     const [ country, setCountry ] = useState([]);
     const [ state, setState ] = useState([]);
     const [ city, setCity ] = useState([]);
@@ -50,21 +99,44 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
         lastname: (Object.keys(comProfile).length > 0)? comProfile.lastname: '',
         address1: (Object.keys(comProfile).length > 0)? comProfile.address1: '',
         address2: (Object.keys(comProfile).length > 0)? comProfile.address2: '',
-        country: (Object.keys(comProfile).length > 0)? comProfile.country_code: '',
-        state: (Object.keys(comProfile).length > 0)? comProfile.state_code: '',
-        city: (Object.keys(comProfile).length > 0)? comProfile.city: '',
+        country: (Object.keys(comProfile).length > 0 && comProfile.country_code)? { value: comProfile.country_code, label: comProfile.country }: { value: '', label: 'Select Country' },
+        state: (Object.keys(comProfile).length > 0 && comProfile.state_code)? { value: comProfile.state_code, label: comProfile.state }: { value: '', label: 'Select State' },
+        city: (Object.keys(comProfile).length > 0 && comProfile.city)? { value: comProfile.city, label: comProfile.city }: { value: '', label: 'Select City' },
         postal: (Object.keys(comProfile).length > 0)? comProfile.postal: '',
+        phone_code: (Object.keys(comProfile).length > 0 && comProfile.phone_code)? { value: comProfile.phone_code, label: comProfile.phone_code_label } : { value: '', label: 'Select Code' },
         phone: (Object.keys(comProfile).length > 0)? comProfile.phone: '',
         fax: (Object.keys(comProfile).length > 0)? comProfile.fax: '',
+        mobile_code: (Object.keys(comProfile).length > 0 && comProfile.mobile_code)? { value: comProfile.mobile_code, label: comProfile.mobile_code_label } : { value: '', label: 'Select Code' },
+        mobile: (comProfile)? comProfile.mobile: '',
         website: (Object.keys(comProfile).length > 0)? comProfile.website: '',
     };
-    const { control, errors, handleSubmit } = useForm({
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
 
+    const onComCbFn = useCallback((res: any) => {
+        if(res.status === 'SUCCESS'){
+            dispatch(frmdataActions.setFormData({ data: res.data.isd_codes, key: 'isdCodes' }));
+        }else{
+          dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
+        }
+        dispatch(uiActions.setShowLoading({ loading: false }));
+    }, [dispatch]);
+    
+    useEffect(() => { 
+        if( isdCodes.length === 0  ){
+          dispatch(uiActions.setShowLoading({ loading: true }));
+          const data = {
+            action: 'get_isd_codes'
+          };
+          CoreService.onPostFn('get_formdata', data, onComCbFn);
+        }
+    }, [dispatch, onComCbFn, isdCodes]);
+
     const onStateChangeCb = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
+            setValue('city', { value: '', label: 'Select City' }, { shouldValidate: true });
             setCity(res.data);
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
@@ -80,6 +152,8 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
     // For Country Change Call Back to load States
     const onCountryChangeCb = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
+            setValue('state', { value: '', label: 'Select State' }, { shouldValidate: true });
+            setValue('city', { value: '', label: 'Slect City' }, { shouldValidate: true });
             setState([]);
             setState(res.data);
             setCity([]);
@@ -94,10 +168,16 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
     };
 
     // For Cities default to load
+    const onStateChangedCb = useCallback((res: any) => {
+        if(res.status === 'SUCCESS'){
+            setCity(res.data);
+        }
+        dispatch(uiActions.setShowLoading({ loading: false }));
+    }, [dispatch, setCity]);
     const onStateCb = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
             if(comProfile.state_code){
-                CoreService.onPostFn('get_location', {'action': 'get_all_cities', state_code: comProfile.state_code}, onStateChangeCb);
+                CoreService.onPostFn('get_location', {'action': 'get_all_cities', state_code: comProfile.state_code}, onStateChangedCb);
             }else{
                 dispatch(uiActions.setShowLoading({ loading: false }));
             }
@@ -106,7 +186,7 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
         }else{
             dispatch(uiActions.setShowLoading({ loading: false }));
         }
-    }, [dispatch, setState, comProfile, onStateChangeCb]);
+    }, [dispatch, setState, comProfile, onStateChangedCb]);
 
     // For State default to load
     const onCountryCb = useCallback((res: any) => {
@@ -133,17 +213,6 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
         }
     }, [dispatch, onCountryCb, showCompanyModal]);
 
-    const showError = (_fieldName: string, msg: string) => {
-        let error = (errors as any)[_fieldName];
-        return error ? (
-          (error.ref.name === _fieldName)? (
-            <div className="invalid-feedback">
-            {error.message || `${msg} is required`}
-          </div>
-          ) : null
-        ) : null;
-    };
-
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
             setShowCompanyModal(false);
@@ -163,27 +232,51 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
         CoreService.onPostFn('company_update', user, onCallbackFn);
     }
 
+    // if( country.length > 0 ){
+    //     listCountry = country.map((ctry: any) =>
+    //         <IonSelectOption value={ctry.Country_str_code} key={ctry.Country_str_code}>{ctry.Country_str_name}</IonSelectOption> 
+    //     );
+    // }
+    // if( state.length > 0 ){
+    //     listState = state.map((st: any) =>
+    //         <IonSelectOption value={st.Admin1_str_code} key={st.Admin1_str_code}>{st.Admin1_str_name}</IonSelectOption> 
+    //     );
+    // }
+    // if( city.length > 0 ){
+    //     listCity = city.map((ct: any, index) =>
+    //         <IonSelectOption value={ct.Feature_str_name} key={index}>{ct.Feature_str_name}</IonSelectOption> 
+    //     );
+    // }
     if( country.length > 0 ){
-        listCountry = country.map((ctry: any) =>
-            <IonSelectOption value={ctry.Country_str_code} key={ctry.Country_str_code}>{ctry.Country_str_name}</IonSelectOption> 
-        );
+        country.map((ctry: any) => {
+            listCountry.push({ value: ctry.Country_str_code, label: ctry.Country_str_name });
+            // <IonSelectOption value={ctry.Country_str_code} key={ctry.Country_str_code}>{ctry.Country_str_name}</IonSelectOption> 
+        });
     }
     if( state.length > 0 ){
-        listState = state.map((st: any) =>
-            <IonSelectOption value={st.Admin1_str_code} key={st.Admin1_str_code}>{st.Admin1_str_name}</IonSelectOption> 
-        );
+        state.map((st: any) => {
+            listState.push({ value: st.Admin1_str_code, label: st.Admin1_str_name });
+            // <IonSelectOption value={st.Admin1_str_code} key={st.Admin1_str_code}>{st.Admin1_str_name}</IonSelectOption> 
+        });
     }
     if( city.length > 0 ){
-        listCity = city.map((ct: any, index) =>
-            <IonSelectOption value={ct.Feature_str_name} key={index}>{ct.Feature_str_name}</IonSelectOption> 
-        );
+        city.map((ct: any) => {
+            listCity.push({ value: ct.Feature_str_name, label: ct.Feature_str_name });
+            // <IonSelectOption value={ct.Feature_str_name} key={index}>{ct.Feature_str_name}</IonSelectOption> 
+        });
+    }
+
+    if( isdCodes.length > 0 ){ 
+        isdCodes.map((cd: any) => {
+            listCodes.push({ value: cd.isd_code, label: cd.display_name });
+        });
     }
 
     return (<>
         <form onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
                 <IonToolbar color="greenbg">
-                    <IonButtons slot={ isPlatform('desktop') || isPlatform('tablet')? 'end': 'start' }>
+                    <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowCompanyModal(false)}>
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
                         </IonButton>
@@ -205,38 +298,48 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
                   <IonCol sizeMd="6" sizeXs="12">
                     <IonItem class="ion-no-padding">
                         <IonLabel position="stacked">Company Name <IonText color="danger">*</IonText></IonLabel>   
-                        <Controller
-                            as={IonInput}
-                            control={control}
-                            onChangeName="onIonChange"
-                            onChange={([selected]) => {
-                            return selected.detail.value;
-                            }}
+                        <Controller 
                             name="company_name"
+                            control={control}
+                            render={({ field }) => {
+                                return <IonInput 
+                                    {...field}
+                                    type="text"
+                                    onIonChange={(e: any) => field.onChange(e.target.value)}
+                                />
+                            }}
                             rules={{
-                            required: true,   
-                            pattern: {
-                                value: /^[A-Z0-9!@#$&-_() ]{2,100}$/i,
-                                message: "Invalid Company Name"
-                            }
+                                required: {
+                                    value: true,
+                                    message: "Company Name is required"
+                                },
+                                pattern: {
+                                    value: /^[A-Z0-9!@#$&-_() ]{2,100}$/i,
+                                    message: "Invalid Company Name"
+                                }
                             }}
                         />
                     </IonItem>
-                    {showError("company_name", "Company Name")}
+                    <ErrorMessage
+                        errors={errors}
+                        name="company_name"
+                        render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    />
                   </IonCol>
                   <IonCol sizeMd="6" sizeXs="12">
                         <IonItem class="ion-no-padding">
                             <IonLabel position="stacked">Website</IonLabel>
-                            <Controller
-                                as={IonInput}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                return selected.detail.value;
-                                }}
+                            <Controller 
                                 name="website"
+                                control={control}
+                                render={({ field }) => {
+                                    return <IonInput 
+                                        {...field}
+                                        type="url"
+                                        onIonChange={(e: any) => field.onChange(e.target.value)}
+                                    />
+                                }}
                                 rules={{
-                                    required: false,
                                     pattern: {
                                         value: /^(http[s]?:\/\/){0,1}(w{3,3}\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/,
                                         message: "Invalid Website"
@@ -244,7 +347,11 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
                                 }}
                             />
                         </IonItem>
-                        {showError("website", "Website")}
+                        <ErrorMessage
+                            errors={errors}
+                            name="website"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                     </IonCol>
                 </IonRow>
 
@@ -252,46 +359,64 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
                     <IonCol sizeMd="6" sizeXs="12">
                         <IonItem class="ion-no-padding">
                             <IonLabel position="stacked">First Name <IonText color="danger">*</IonText></IonLabel>
-                            <Controller
-                                as={IonInput}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                return selected.detail.value;
-                                }}
+                            <Controller 
                                 name="firstname"
-                                rules={{
-                                required: true,
-                                pattern: {
-                                    value: /^[A-Z0-9 ]{2,25}$/i,
-                                    message: "Invalid First Name"
-                                }
-                                }}
-                            />
-                        </IonItem>
-                        {showError("firstname", "First Name")}
-                    </IonCol>
-                    <IonCol>
-                        <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">Last Name <IonText color="danger">*</IonText></IonLabel>
-                            <Controller
-                                as={IonInput}
                                 control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    return selected.detail.value;
+                                render={({ field }) => {
+                                    return <IonInput 
+                                        {...field}
+                                        type="text"
+                                        onIonChange={(e: any) => field.onChange(e.target.value)}
+                                    />
                                 }}
-                                name="lastname"
                                 rules={{
-                                    required: true,
+                                    required: {
+                                        value: true,
+                                        message: "Firstname is required"
+                                    },
                                     pattern: {
-                                    value: /^[A-Z0-9 ]{1,25}$/i,
-                                    message: "Invalid Last Name"
+                                        value: /^[A-Z0-9 ]{2,25}$/i,
+                                        message: "Invalid Firstname"
                                     }
                                 }}
                             />
                         </IonItem>
-                        {showError("lastname", "Last Name")}
+                        <ErrorMessage
+                            errors={errors}
+                            name="firstname"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
+                    </IonCol>
+                    <IonCol>
+                        <IonItem class="ion-no-padding">
+                            <IonLabel position="stacked">Last Name <IonText color="danger">*</IonText></IonLabel>
+                            <Controller 
+                                name="lastname"
+                                control={control}
+                                render={({ field }) => {
+                                    return <IonInput 
+                                        {...field}
+                                        type="text"
+                                        onIonChange={(e: any) => field.onChange(e.target.value)}
+                                    />
+                                }}
+                                rules={{
+                                    required: {
+                                        value: true,
+                                        message: "Lastname is required"
+                                    },
+                                    pattern: {
+                                        value: /^[A-Z0-9 ]{2,25}$/i,
+                                        message: "Invalid Last Name"
+                                    }
+                                }}
+                            />
+                        </IonItem>
+                        <ErrorMessage
+                            errors={errors}
+                            name="lastname"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                   </IonCol>
                 </IonRow>
 
@@ -299,192 +424,355 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
                     <IonCol sizeMd="6" sizeXs="12">
                         <IonItem class="ion-no-padding">
                             <IonLabel position="stacked">Address Line 1 <IonText color="danger">*</IonText></IonLabel>
-                            <Controller
-                                as={IonInput}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                return selected.detail.value;
-                                }}
+                            <Controller 
                                 name="address1"
+                                control={control}
+                                render={({ field }) => {
+                                    return <IonInput 
+                                        {...field}
+                                        type="text"
+                                        onIonChange={(e: any) => field.onChange(e.target.value)}
+                                    />
+                                }}
                                 rules={{
-                                required: true,
-
-                                minLength: {
-                                    value: 3,
-                                    message: "Address1 minlength should be 3 characters"
-                                }
+                                    required: {
+                                        value: true,
+                                        message: "Address1 is required"
+                                    },
+                                    minLength: {
+                                        value: 3,
+                                        message: "Address1 minlength should be 3 characters"
+                                    },
+                                    maxLength: {
+                                        value: 100,
+                                        message: "Address1 maxlength should be less than 100 characters"
+                                    }
                                 }}
                             />
                         </IonItem>
-                        {showError("address1", "Address 1")}
+                        <ErrorMessage
+                            errors={errors}
+                            name="address1"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                     </IonCol>
                     <IonCol>
                         <IonItem class="ion-no-padding">
                             <IonLabel position="stacked">Address Line 2</IonLabel>
-                            <Controller
-                                as={IonInput}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    return selected.detail.value;
-                                }}
+                            <Controller 
                                 name="address2"
+                                control={control}
+                                render={({ field }) => {
+                                    return <IonInput 
+                                        {...field}
+                                        type="text"
+                                        onIonChange={(e: any) => field.onChange(e.target.value)}
+                                    />
+                                }}
                                 rules={{
-                                    required: false
+                                    minLength: {
+                                        value: 3,
+                                        message: "Address2 minlength should be 3 characters"
+                                    },
+                                    maxLength: {
+                                        value: 100,
+                                        message: "Address2 maxlength should be less than 100 characters"
+                                    }
                                 }}
                             />
                         </IonItem>
-                        {showError("address2", "Address2")}
+                        <ErrorMessage
+                            errors={errors}
+                            name="address2"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                   </IonCol>
                 </IonRow>
 
                 <IonRow>
                     <IonCol sizeMd="6" sizeXs="12">
-                        <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">Country <IonText color="danger">*</IonText></IonLabel>
-                            { comProfile && listCountry && 
-                                <Controller
-                                as={
-                                    <IonSelect name="country" placeholder="Select Country">
-                                        {listCountry}
-                                    </IonSelect>
-                                }
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    onCountryChange(selected.detail.value);
-                                    return selected.detail.value;
-                                }}
-                                name="country"
-                                rules={{
-                                    required: true
-                                }}
-                            />}
-                            
-                        </IonItem>
-                        {showError("country", "Country")}
+                        <IonLabel className="fs-12" position="stacked">Country <IonText color="danger">*</IonText></IonLabel>
+                        <div className="mt-1">
+                            { comProfile && listCountry.length > 0 &&
+                                <Controller 
+                                    name="country"
+                                    control={control}
+                                    render={({ field }) => {
+                                        return <Select
+                                            {...field}
+                                            placeholder="Select Country"
+                                            options={listCountry}
+                                            onChange={(selected: any) =>{
+                                                onCountryChange(selected.value);
+                                                field.onChange(selected);
+                                            }}
+                                            styles={customStyles}
+                                        />
+                                    }}
+                                    rules={{ 
+                                        required: {
+                                            value: true,
+                                            message: "Country is required"
+                                        }
+                                    }}
+                                />
+                            }
+                        </div>
+                        <ErrorMessage
+                            errors={errors}
+                            name="country"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                     </IonCol>
                     <IonCol>
-                        <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">State <IonText color="danger">*</IonText></IonLabel>
-                            { listState && 
-                            <Controller
-                                as={
-                                    <IonSelect name="state" placeholder="Select State">
-                                        {listState}
-                                    </IonSelect>
-                                }
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    onStateChange(selected.detail.value);
-                                    return selected.detail.value;
-                                }}
-                                name="state"
-                                rules={{
-                                    required: true
-                                }}
-                            />}
-                        </IonItem>
-                        {showError("state", "State")}
+                        <IonLabel className="fs-12" position="stacked">State <IonText color="danger">*</IonText></IonLabel>
+                        <div className="mt-1">
+                            {/* { listState.length > 0 && */}
+                                <Controller 
+                                    name="state"
+                                    control={control}
+                                    render={({ field }) => {
+                                        return <Select
+                                            {...field}
+                                            placeholder="Select State"
+                                            options={listState}
+                                            onChange={(selected: any) =>{
+                                                onStateChange(selected.value);
+                                                field.onChange(selected);
+                                            }}
+                                            styles={customStyles}
+                                        />
+                                    }}
+                                    rules={{ 
+                                        required: {
+                                            value: true,
+                                            message: "State is required"
+                                        }
+                                    }}
+                                />
+                            {/* } */}
+                        </div>
+                        <ErrorMessage
+                            errors={errors}
+                            name="state"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                   </IonCol>
                 </IonRow>
 
                 <IonRow>
                     <IonCol sizeMd="6" sizeXs="12">
-                        <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">City <IonText color="danger">*</IonText></IonLabel>
-                            { listCity &&
-                            <Controller
-                                as={
-                                    <IonSelect name="city" placeholder="Select City">
-                                        {listCity}
-                                    </IonSelect>
-                                }
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                return selected.detail.value;
-                                }}
+                        <IonLabel className="fs-12" position="stacked">City <IonText color="danger">*</IonText></IonLabel>
+                        <div className="mt-1">
+                            <Controller 
                                 name="city"
-                                rules={{
-                                    required: true
+                                control={control}
+                                render={({ field }) => {
+                                    return <Select
+                                        {...field}
+                                        placeholder="Select City"
+                                        options={listCity}
+                                        onChange={(selected: any) =>{
+                                            field.onChange(selected);
+                                        }}
+                                        styles={customStyles}
+                                    />
                                 }}
-                            />}
-                        </IonItem>
-                        {showError("city", "City")}
+                                rules={{ 
+                                    required: {
+                                        value: true,
+                                        message: "City is required"
+                                    }
+                                }}
+                            />
+                        </div>
+                        <ErrorMessage
+                            errors={errors}
+                            name="city"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                     </IonCol>
                     <IonCol>
                         <IonItem class="ion-no-padding">
                             <IonLabel position="stacked">Postal/ZipCode <IonText color="danger">*</IonText></IonLabel>
-                            <Controller
-                                as={IonInput}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    return selected.detail.value;
-                                }}
+                            <Controller 
                                 name="postal"
+                                control={control}
+                                render={({ field }) => {
+                                    return <IonInput 
+                                        {...field}
+                                        type="text"
+                                        onIonChange={(e: any) => field.onChange(e.target.value)}
+                                    />
+                                }}
                                 rules={{
-                                    required: true,
+                                    required: {
+                                        value: true,
+                                        message: "Postal is required"
+                                    },
                                     pattern: {
-                                    value: /^[A-Z0-9 ]{1,10}$/i,
-                                    message: "Invalid Postal"
+                                        value: /^[A-Z0-9 ]{1,10}$/i,
+                                        message: "Invalid Postal"
                                     }
                                 }}
                             />
                         </IonItem>
-                        {showError("postal", "Postal")}
+                        <ErrorMessage
+                            errors={errors}
+                            name="postal"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
                   </IonCol>
                 </IonRow>
 
                 <IonRow>
                     <IonCol sizeMd="6" sizeXs="12">
+                        <IonLabel className="fs-12" position="stacked">Phone Code <IonText color="danger">*</IonText></IonLabel>
+                        <div className="mt-1">
+                            { comProfile && listCodes.length > 0 &&
+                                <Controller 
+                                    name="phone_code"
+                                    control={control}
+                                    render={({ field }) => {
+                                        return <Select
+                                            {...field}
+                                            placeholder="Select Code"
+                                            options={listCodes}
+                                            onChange={(selected: any) =>{
+                                                field.onChange(selected);
+                                            }}
+                                            styles={customStyles}
+                                        />
+                                    }}
+                                    rules={{ 
+                                        required: {
+                                            value: true,
+                                            message: "Phone Code is required"
+                                        }
+                                    }}
+                                />
+                            }
+                        </div>
+                        <ErrorMessage
+                            errors={errors}
+                            name="phone_code"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
+                    </IonCol>
+                    <IonCol sizeMd="6" sizeXs="12">    
                         <IonItem class="ion-no-padding">
                             <IonLabel position="stacked">Phone <IonText color="danger">*</IonText></IonLabel>
-                            <Controller
-                                as={IonInput}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                return selected.detail.value;
-                                }}
+                            <Controller 
                                 name="phone"
-                                rules={{
-                                required: true,
-                                pattern: {
-                                    value: /^[0-9 ]{5,15}$/i,
-                                    message: "Invalid Phone No"
-                                }
-                                }}
-                            />
-                        </IonItem>
-                        {showError("phone", "Phone No")}
-                    </IonCol>
-                    <IonCol>
-                        <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">Fax</IonLabel>
-                            <Controller
-                                as={IonInput}
                                 control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    return selected.detail.value;
+                                defaultValue=""
+                                render={({ field }) => {
+                                    return <IonInput 
+                                        {...field}
+                                        type="tel"
+                                        onIonChange={(e: any) => field.onChange(e.target.value)}
+                                    />
                                 }}
-                                name="fax"
                                 rules={{
+                                    required: {
+                                        value: true,
+                                        message: "Phone No is required"
+                                    },
                                     pattern: {
-                                    value: /^[0-9]{3,15}$/i,
-                                    message: "Invalid Fax"
+                                        value: /^[0-9 ]{5,15}$/i,
+                                        message: "Invalid Phone No"
                                     }
                                 }}
                             />
                         </IonItem>
-                        {showError("fax", "Fax")}
-                  </IonCol>
+                        <ErrorMessage
+                            errors={errors}
+                            name="phone"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
+                    </IonCol>
                 </IonRow>
-                { (isPlatform('desktop') || isPlatform('tablet')) && 
+                <IonRow>
+                    <IonCol sizeMd="6" sizeXs="12">
+                        <IonLabel className="fs-12" position="stacked">Mobile Code </IonLabel>
+                        <div className="mt-1">
+                            { comProfile && listCodes.length > 0 &&
+                                <Controller 
+                                    name="mobile_code"
+                                    control={control}
+                                    render={({ field }) => {
+                                        return <Select
+                                            {...field}
+                                            placeholder="Select Code"
+                                            options={listCodes}
+                                            onChange={(selected: any) =>{
+                                                field.onChange(selected);
+                                            }}
+                                            styles={customStyles}
+                                        />
+                                    }}
+                                />
+                            }
+                        </div>
+                    </IonCol>
+                        <IonCol sizeMd="6" sizeXs="12">
+                            <IonItem class="ion-no-padding">
+                                <IonLabel position="stacked">Mobile No </IonLabel>
+                                <Controller 
+                                    name="mobile"
+                                    control={control}
+                                    render={({ field }) => {
+                                        return <IonInput 
+                                            {...field}
+                                            type="tel"
+                                            onIonChange={(e: any) => field.onChange(e.target.value)}
+                                        />
+                                    }}
+                                    rules={{
+                                        pattern: {
+                                            value: /^[0-9]{7,12}$/i,
+                                            message: "Invalid Mobile No"
+                                        }
+                                    }}
+                                />
+                            </IonItem>
+                            <ErrorMessage
+                                errors={errors}
+                                name="mobile"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
+                    </IonCol>
+                </IonRow>
+                <IonRow>
+                    <IonCol sizeMd="6" sizeXs="12">
+                        <IonItem class="ion-no-padding">
+                            <IonLabel position="stacked">Fax</IonLabel>
+                            <Controller 
+                                name="fax"
+                                control={control}
+                                render={({ field }) => {
+                                    return <IonInput 
+                                        {...field}
+                                        type="tel"
+                                        onIonChange={(e: any) => field.onChange(e.target.value)}
+                                    />
+                                }}
+                                rules={{
+                                    pattern: {
+                                        value: /^[0-9]{3,15}$/i,
+                                        message: "Invalid Fax"
+                                    }
+                                }}
+                            />
+                        </IonItem>
+                        <ErrorMessage
+                            errors={errors}
+                            name="fax"
+                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                        />
+                    </IonCol>
+                </IonRow>
+                { (isPlatform('desktop')) && 
                     <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 float-right" type="submit" >
                         Submit
                     </IonButton>

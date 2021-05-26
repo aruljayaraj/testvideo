@@ -32,7 +32,7 @@ const ContactInfo: React.FC = () => {
         { Object.keys(repProfile).length > 0 &&
         <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle onClick={() => setShowContactModal(true)}>
+                <IonCardTitle className="fs-18" onClick={() => setShowContactModal(true)}>
                     <span>Contact Information</span>
                     <i className="fa fa-pencil float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>
@@ -51,9 +51,9 @@ const ContactInfo: React.FC = () => {
                             <IonIcon color="greenbg" size="large" icon={callOutline}></IonIcon>
                         </IonAvatar>
                         <IonLabel>
-                            { repProfile.phone && <h2>{`Phone: ${repProfile.phone}`}</h2> }
+                            { (repProfile.phone_code && repProfile.phone) && <h2>{`Phone: ${repProfile.phone_code} ${repProfile.phone}`}</h2> }
                             { repProfile.phoneext && <p>{`Ext: ${repProfile.phoneext}`}</p>}
-                            { repProfile.mobile && <p>{`Mobile: ${repProfile.mobile}`}</p>}
+                            { (repProfile.mobile_code && repProfile.mobile) && <p>{`Mobile: ${repProfile.mobile_code} ${repProfile.mobile}`}</p>}
                             { repProfile.fax && <p>{`Fax: ${repProfile.fax}`}</p>}
                         </IonLabel>
                     </IonItem>}
@@ -63,15 +63,15 @@ const ContactInfo: React.FC = () => {
                         </IonAvatar>
                         <IonLabel>
                             { repProfile.advcontacttype && 
-                                <h2>{ (isPlatform('desktop') || isPlatform('tablet'))? 'Best ': ''}Ways to Contact:  
+                                <h2>{ (isPlatform('desktop'))? 'Best ': ''}Ways to Contact:  
                                     <span style={{ textTransform:'capitalize'}}> {repProfile.advcontacttype.replace(/,/g, ', ')}</span>
                                 </h2> 
                             }
                             { repProfile.advdaystxt && 
-                                <p>{ (isPlatform('desktop') || isPlatform('tablet'))? 'Best ': ''}Days to Contact:  {repProfile.advdaystxt}</p>
+                                <p>{ (isPlatform('desktop'))? 'Best ': ''}Days to Contact:  {repProfile.advdaystxt}</p>
                             }
                             { repProfile.advtimetxt && 
-                                <p>{ (isPlatform('desktop') || isPlatform('tablet'))? 'Best ': ''}Time to Contact:  {repProfile.advtimetxt}</p>
+                                <p>{ (isPlatform('desktop'))? 'Best ': ''}Time to Contact:  {repProfile.advtimetxt}</p>
                             }
                             { repProfile.newsletteryn && <p>{`Newsletter: ${repProfile.newsletteryn === 'Y'? 'Yes': 'No' }`}</p>}
                         </IonLabel>

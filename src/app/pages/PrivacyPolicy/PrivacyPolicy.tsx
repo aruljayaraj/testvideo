@@ -45,7 +45,7 @@ const PrivacyPolicy: React.FC = () => {
       <IonContent className="ion-padding">
         <IonCard className="card-center mt-2 mb-4">
           <IonCardHeader>
-            <IonCardTitle>{page.title}</IonCardTitle>
+            <IonCardTitle className="fs-18">{page.title}</IonCardTitle>
           </IonCardHeader>
 
           <IonCardContent>

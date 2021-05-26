@@ -1,6 +1,7 @@
 .press-release-page {
   .card-center {
     width: 90%;
+    margin: 0 auto;
   }
   .border-right {
     border-right: 2px dashed #ccc;
@@ -17,11 +18,6 @@
   }
 }
 
-$wizard-color-neutral: #ccc !default;
-$wizard-color-active: #4183d7 !default;
-$wizard-color-complete: #87d37c !default;
-$wizard-step-width-height: 64px !default;
-$wizard-step-font-size: 24px !default;
 
 .addpr-page {
   .card-center {
@@ -43,101 +39,13 @@ $wizard-step-font-size: 24px !default;
     .profile-logo {
       margin: 0 auto;
       i {
-        position: absolute;
-        bottom: 15px;
-        right: 25px;
+        position: relative;
+        bottom: 10px;
+        right: 8px;
       }
     }
   }
-  .step-indicator {
-    border-collapse: separate;
-    display: table;
-    margin-left: 0px;
-    position: relative;
-    table-layout: fixed;
-    text-align: center;
-    vertical-align: middle;
-    padding-left: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    li {
-      display: table-cell;
-      position: relative;
-      float: none;
-      padding: 0;
-      width: 1%;
-
-      &:after {
-        background-color: $wizard-color-neutral;
-        content: "";
-        display: block;
-        height: 1px;
-        position: absolute;
-        width: 100%;
-        top: $wizard-step-width-height/2;
-      }
-
-      &:after {
-        left: 50%;
-      }
-
-      &:last-child {
-        &:after {
-          display: none;
-        }
-      }
-
-      &.active {
-        .step {
-          border-color: $wizard-color-active;
-          color: $wizard-color-active;
-        }
-
-        .caption {
-          color: $wizard-color-active;
-        }
-      }
-
-      &.complete {
-        &:after {
-          background-color: $wizard-color-complete;
-        }
-
-        .step {
-          border-color: $wizard-color-complete;
-          color: $wizard-color-complete;
-        }
-
-        .caption {
-          color: $wizard-color-complete;
-        }
-      }
-    }
-
-    .step {
-      background-color: #fff;
-      border-radius: 50%;
-      border: 1px solid $wizard-color-neutral;
-      color: $wizard-color-neutral;
-      font-size: $wizard-step-font-size;
-      height: $wizard-step-width-height;
-      line-height: $wizard-step-width-height;
-      margin: 0 auto;
-      position: relative;
-      width: $wizard-step-width-height;
-      z-index: 1;
-
-      &:hover {
-        cursor: pointer;
-      }
-    }
-
-    .caption {
-      color: $wizard-color-neutral;
-      padding: 11px 16px;
-    }
-  }
+  
 }
 .preview-wrap{
   .ion-card{
@@ -151,3 +59,4 @@ $wizard-step-font-size: 24px !default;
 .preview-card{
   width:96% !important;
 }
+

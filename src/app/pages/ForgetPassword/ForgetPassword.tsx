@@ -16,12 +16,19 @@ import {
 import React, { useState, useRef, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
-
+import { ErrorMessage } from '@hookform/error-message';
 import { useDispatch } from 'react-redux';
 // import * as authActions from '../../store/reducers/auth';
 import * as uiActions from '../../store/reducers/ui';
 import CoreService from '../../shared/services/CoreService';
 import './ForgetPassword.scss';
+
+type FormInputs = {
+  email: string;
+  pin: string;
+  password: string;
+  confirm_password: string;
+}
 
 let initialValues = {
   email: "",
@@ -31,11 +38,10 @@ let initialValues = {
 }
 
 const ForgetPassword: React.FC = () => {
-  console.log('Forget Password Page');
   const dispatch = useDispatch(); 
   const history = useHistory();
   // const authValues = useSelector( (state:any) => state.auth.data);
-  const { control, handleSubmit, formState, errors, watch } = useForm({
+  const { control, handleSubmit, formState, watch, formState: { errors } } = useForm<FormInputs>({
     defaultValues: { ...initialValues },
     mode: "onChange"
   });
@@ -43,23 +49,9 @@ const ForgetPassword: React.FC = () => {
   const [regEmail, setRegEmail] = useState(''); 
   const password = useRef({});
   password.current = watch("password", "");
-  /**
-   *
-   * @param _fieldName
-   */
-  const showError = (_fieldName: string, msg: string) => {
-    let error = (errors as any)[_fieldName];
-    return error ? (
-      (error.ref.name === _fieldName)? (
-        <div className="invalid-feedback">
-        {error.message || `${msg} is required`}
-      </div>
-      ) : null
-    ) : null;
-  };
 
   // For Forget Success callback Function
-  const onForgetCbFn = useCallback((res: any) => { console.log(res);
+  const onForgetCbFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
       setIsForgetPwdSent(true);
     }
@@ -67,7 +59,7 @@ const ForgetPassword: React.FC = () => {
     dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
   }, [dispatch, setIsForgetPwdSent]);
   // For Reset Success callback Function
-  const onResetCbFn = useCallback((res: any) => { console.log(res);
+  const onResetCbFn = useCallback((res: any) => { 
     dispatch(uiActions.setShowLoading({ loading: false }));
     dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     if(res.status === 'SUCCESS'){
@@ -100,9 +92,8 @@ const ForgetPassword: React.FC = () => {
       dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: 'Email should not be empty!' }));
     }
   }
-
   return (
-    <IonPage>
+    <IonPage className="forget-password-page">
       <IonContent className="ion-padding">
         <IonCard className="card-center mt-2">
           <IonCardHeader>
@@ -125,25 +116,34 @@ const ForgetPassword: React.FC = () => {
               <form className="ion-padding" onSubmit={handleSubmit(onForgetSubmit)}>
                 <IonItem>
                   <IonLabel color="medium" position="stacked">Email</IonLabel>
-                  <Controller
-                    as={IonInput}
-                    control={control}
-                    onChangeName="onIonChange"
-                    onChange={([selected]) => {
-                      return selected.detail.value;
-                    }}
-                    name="email"
-                    rules={{
-                      required: true,
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                        message: "Invalid Email Address"
-                      }
-                    }}
+                  <Controller 
+                      name="email"
+                      control={control}
+                      render={({ field: {onChange, onBlur, value} }) => {
+                        return <IonInput 
+                          type="email"
+                          onIonChange={(e: any) => onChange(e.target.value)}
+                          onBlur={onBlur}
+                          value={value} />
+                      }}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Email is required"
+                        },
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                          message: "Invalid Email Address"
+                        }
+                      }}
                   />
                 </IonItem>
-                {showError("email", "Email")}
-                <IonButton color="greenbg" className="ion-margin-top mt-5" expand="block" type="submit" disabled={formState.isValid === false}>
+                <ErrorMessage
+                    errors={errors}
+                    name="email"
+                    render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                />
+                <IonButton color="greenbg" className="ion-margin-top mt-5" expand="block" type="submit">
                   Submit
                 </IonButton>    
               </form> 
@@ -161,87 +161,112 @@ const ForgetPassword: React.FC = () => {
               <form className="ion-padding" onSubmit={handleSubmit(onResetSubmit)}>
                 <IonItem>
                   <IonLabel color="medium" position="stacked">6 Digit Verification Pin</IonLabel>
-                  <Controller
-                    as={IonInput}
-                    control={control}
-                    onChangeName="onIonChange"
-                    onChange={([selected]) => {
-                      return selected.detail.value;
-                    }}
-                    name="pin"
-                    rules={{
-                      required: true,
-                      pattern: {
-                        value: /^[0-9]{6,6}$/i,
-                        message: "Invalid Pin"
-                      }
-                    }}
+                  <Controller 
+                      name="pin"
+                      control={control}
+                      render={({ field: {onChange, onBlur, value} }) => {
+                        return <IonInput 
+                          type="number"
+                          onIonChange={(e: any) => onChange(e.target.value)}
+                          onBlur={onBlur}
+                          value={value} />
+                      }}
+                      rules={{
+                          required: {
+                            value: true,
+                            message: "Verification Pin is required"
+                          },
+                          pattern: {
+                            value: /^[0-9]{6,6}$/i,
+                            message: "Invalid Verification Pin"
+                          }
+                      }}
                   />
                 </IonItem>
-                {showError("pin", "Verification Pin")}
+                <ErrorMessage
+                    errors={errors}
+                    name="pin"
+                    render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                />
 
                 <IonItem>
                   <IonLabel color="medium" position="stacked">Password</IonLabel>
-                  <Controller
-                    as={IonInput}
-                    control={control}
-                    onChangeName="onIonChange"
-                    onChange={([selected]) => {
-                      return selected.detail.value;
-                    }}
-                    name="password"
-                    type="password"
-                    rules={{
-                      required: true,
-                      minLength: {
-                        value: 5,
-                        message: "Password must have at least 5 characters"
-                      },
-                      maxLength: {
-                        value: 15,
-                        message: "Password must consist of at maximum 15 characters"
-                      },
-                      pattern: {
-                        value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
-                        message: "Invalid Password"
-                      }
-                    }}
+                  <Controller 
+                      name="password"
+                      control={control}
+                      render={({ field: {onChange, onBlur} }) => {
+                        return <IonInput 
+                          type="password"
+                          placeholder="Password *"
+                          onIonChange={onChange} 
+                          onBlur={onBlur} />
+                      }}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Password is required"
+                        },
+                        minLength: {
+                          value: 5,
+                          message: "Password must have at least 5 characters"
+                        },
+                        maxLength: {
+                          value: 15,
+                          message: "Password must consist of at maximum 15 characters"
+                        },
+                        pattern: {
+                          value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
+                          message: "Invalid Password"
+                        }
+                      }}
                   />
                 </IonItem>
-                {showError("password", "Password")}
+                <ErrorMessage
+                  errors={errors}
+                  name="password"
+                  render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                />
 
                 <IonItem>
                   <IonLabel color="medium" position="stacked">Confirm Password</IonLabel>
-                  <Controller
-                    as={IonInput}
-                    control={control}
-                    onChangeName="onIonChange"
-                    onChange={([selected]) => {
-                      return selected.detail.value;
-                    }}
-                    name="confirm_password"
-                    type="password"
-                    rules={{
-                      required: true,
-                      minLength: {
-                        value: 5,
-                        message: "Password must have at least 5 characters"
-                      },
-                      maxLength: {
-                        value: 15,
-                        message: "Password must consist of at maximum 15 characters"
-                      },
-                      pattern: {
-                        value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
-                        message: "Invalid Confirm Password"
-                      },
-                      validate: value => ( value === password.current || "The passwords do not match" )
-                    }}
+                  <Controller 
+                      name="confirm_password"
+                      control={control}
+                      render={({ field: {onChange, onBlur} }) => {
+                        return <IonInput 
+                          type="password"
+                          placeholder="Confirm Password *"
+                          onIonChange={onChange} 
+                          onBlur={onBlur} />
+                      }}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Confirm Password is required"
+                        },
+                        minLength: {
+                          value: 5,
+                          message: "Password must have at least 5 characters"
+                        },
+                        maxLength: {
+                          value: 15,
+                          message: "Password must consist of at maximum 15 characters"
+                        },
+                        pattern: {
+                          value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
+                          message: "Invalid Confirm Password"
+                        },
+                        validate: value => ( value === password.current || "The passwords do not match" )
+                      }}
                   />
                 </IonItem>
-                {showError("confirm_password", "Confirm Password")}
+                <ErrorMessage
+                  errors={errors}
+                  name="confirm_password"
+                  render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                />
 
-                <IonButton color="greenbg" className="ion-margin-top mt-5" expand="block" type="submit" disabled={formState.isValid === false}>
+                <IonButton color="greenbg" className="ion-margin-top mt-5" expand="block" type="submit">
                   Submit
                 </IonButton>    
               </form> 

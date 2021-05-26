@@ -6,18 +6,25 @@ import {
     IonCardContent,
     IonList,
     IonRow,
-    IonCol
-  } from '@ionic/react';
-  
-import React, { useState } from 'react';
+    IonCol,
+    IonActionSheet
+} from '@ionic/react';
+import { cameraOutline, ellipsisHorizontalOutline, imageOutline, close } from 'ionicons/icons';
+import React, { useState, useCallback } from 'react';  
 import { isPlatform } from '@ionic/react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './RepProfile.scss';
-import { useSelector } from 'react-redux';
 // import * as uiActions from '../../../store/reducers/ui';
 // import { IntfMember } from '../../../interfaces/Member';
 import { lfConfig } from '../../../../Constants';
 import ImageModal from '../../../components/Image/ImageModal';
+import { useCameraPhoto } from '../../../hooks/useCameraPhoto';
+import * as uiActions from '../../../store/reducers/ui';
+import * as repActions from '../../../store/reducers/dashboard/rep';
+import CoreService from '../../../shared/services/CoreService';
+
+
 let initialValues = {
     isOpen: false,
     title: '',
@@ -28,10 +35,13 @@ let initialValues = {
 
 const ProfileAndLogo: React.FC = () => {
     // console.log('Profile Logo Page');
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const { takePhoto } = useCameraPhoto();
+    const authUser = useSelector( (state:any) => state.auth.data.user);
     const repProfile = useSelector( (state:any) => state.rep.repProfile);
     const [basename] = useState(process.env.REACT_APP_BASENAME);
     const [showImageModal, setShowImageModal] = useState(initialValues);
+    const [showProfileActSheet, setShowProfileActSheet] = useState(false);
     const { apiBaseURL } = lfConfig;
 
     const imageModalFn = (title: string, actionType: string) => {
@@ -44,20 +54,48 @@ const ProfileAndLogo: React.FC = () => {
             frmId: (repProfile && Object.keys(repProfile).length > 0)? repProfile.id: ''
         });
     }
-    const repImage = (Object.keys(repProfile).length > 0 && repProfile.profile_image) ? `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.profile_image}` : `${basename}/assets/img/avatar.svg`
-    const logoImage = (Object.keys(repProfile).length > 0 && repProfile.profile_logo) ? `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.profile_logo}` : `${basename}/assets/img/placeholder.png`
+
+    // Upload Camera Picture callback
+    const uploadCameraPhotoCbFn = useCallback((res:any)=> {
+        if(res.status === 'SUCCESS'){
+            dispatch(repActions.setRepProfile({ data: res.data }));
+            imageModalFn('Edit Profile Picture', 'rep_profile');
+        }else{
+            dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
+        }
+        dispatch(uiActions.setShowLoading({ loading: false }));
+        
+    },[dispatch]);
+    // Upload Camera Picture
+    const uploadCameraPhotoFn = (u8Image: any) => {
+        if(u8Image){
+            dispatch(uiActions.setShowLoading({ loading: true }));
+            const fileName = new Date().getTime() + '.jpg';
+            const fd = new FormData();
+            fd.append("dataFile", new Blob([ u8Image ], {type: "image/jpg"}), fileName);
+            fd.append('memId', authUser.ID);
+            fd.append('formId', authUser.repID);
+            fd.append('action', 'rep_profile' );
+            CoreService.onUploadFn('file_upload', fd, uploadCameraPhotoCbFn);
+        }else{
+            dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: 'Image Capture error!' }));
+        }
+    }    
+
+    const repImage = (Object.keys(repProfile).length > 0 && repProfile.profile_image) ? `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.profile_image}` : `${basename}/assets/img/avatar.svg`;
+    const logoImage = (Object.keys(repProfile).length > 0 && repProfile.profile_logo) ? `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.profile_logo}` : `${basename}/assets/img/placeholder.png`;
     return (<>
         { repProfile && Object.keys(repProfile).length > 0 &&
         <IonCard className="card-center mt-4">
             
             <IonCardContent>
                 <IonRow>
-                    <IonCol sizeMd="6" sizeXs="12" className={(isPlatform('desktop') || isPlatform('tablet')) ? 'border-right': 'my-3 border-bottom' }>
-                        <IonCardTitle className="text-center">
+                    <IonCol sizeMd="6" sizeXs="12" className={(isPlatform('desktop')) ? 'border-right': 'my-3 border-bottom' }>
+                        <IonCardTitle className="text-center mb-3 fs-18">
                             <span>Profile Picture</span>
                         </IonCardTitle>
                         <IonList>
-                            <IonItem className="profile-image-wrap p-0" lines="none" onClick={() => imageModalFn('Edit Profile Picture', 'rep_profile')}>
+                            <IonItem className="profile-image-wrap p-0" lines="none" onClick={() => setShowProfileActSheet(true)}>
                                 <div className="profile-image">
                                     <img src={repImage} alt="Rep Profile" />
                                     <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true"></i>
@@ -66,7 +104,7 @@ const ProfileAndLogo: React.FC = () => {
                         </IonList>
                     </IonCol>
                     <IonCol sizeMd="6" sizeXs="12">
-                        <IonCardTitle className="text-center">
+                        <IonCardTitle className="text-center mb-3 fs-18">
                             <span>Logo</span>
                         </IonCardTitle>
                         <IonList>
@@ -83,6 +121,33 @@ const ProfileAndLogo: React.FC = () => {
                 
             </IonCardContent>
         </IonCard>}
+        <IonActionSheet
+            isOpen={showProfileActSheet}
+            onDidDismiss={() => setShowProfileActSheet(false)}
+            cssClass=''
+            buttons={[{
+                text: 'Take Photo',
+                icon: cameraOutline,
+                handler: () => {
+                    // console.log('Take Photo clicked');
+                    takePhoto(uploadCameraPhotoFn);
+                }
+            }, {
+                text: (Object.keys(repProfile).length > 0 && repProfile.profile_image) ? 'Edit Photo': 'Browse',
+                icon: (Object.keys(repProfile).length > 0 && repProfile.profile_image) ? imageOutline : ellipsisHorizontalOutline,
+                handler: () => {
+                    imageModalFn('Edit Profile Picture', 'rep_profile');
+                }
+            }, {
+                text: 'Cancel',
+                icon: close,
+                role: 'cancel',
+                handler: () => {
+                    // console.log('Cancel clicked');
+                }
+            }]}
+        >
+        </IonActionSheet>
         <IonModal isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
             { repProfile && Object.keys(repProfile).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}

@@ -16,6 +16,14 @@ import {
   
   import CoreService from '../../shared/services/CoreService';
 
+  type FormInputs = {
+    name: string;
+    email: string;
+    company: string;
+    phone: string;
+    message: string
+  }
+
   const defaultValues = {
     name: "",
     email: "",
@@ -26,21 +34,10 @@ import {
   
   const ContactForm: React.FC = () => {
     const dispatch = useDispatch();
-    const { control, errors, handleSubmit, reset  } = useForm({
+    const { control, handleSubmit, reset, formState: { errors }  } = useForm<FormInputs>({
       defaultValues: { ...defaultValues },
       mode: "onChange"
     });
-  
-    const showError = (_fieldName: string, msg: string) => { 
-      let error = (errors as any)[_fieldName];
-      return error ? (
-        (error.ref.name === _fieldName)? (
-          <div className="invalid-feedback">
-          {error.message || `${msg} is required`}
-        </div>
-        ) : null
-      ) : null;
-    };
   
     const onContactCb = useCallback((res: any) => {
         dispatch(uiActions.setShowLoading({loading: false}));
@@ -59,134 +56,153 @@ import {
         <form onSubmit={handleSubmit(onSubmit)}>
             <IonGrid>
                 <IonRow>
-                <IonCol>
-                    <IonItem class="ion-no-padding">
-                        <IonLabel position="stacked">Name <IonText color="danger">*</IonText></IonLabel>    
-                        <Controller
-                            as={IonInput}
-                            control={control}
-                            onChangeName="onIonChange"
-                            onChange={([selected]) => {
-                            return selected.detail.value;
-                            }}
-                            name="name"
-                            placeholder="John"
-                            defaultValue=""
-                            rules={{
-                            required: true,
-                            pattern: {
-                                value: /^[A-Z0-9 ]{2,25}$/i,
-                                message: "Invalid Name"
-                            }
-                            }}
-                        />
-                    </IonItem>
-                    {showError("name", "Name")}
-                </IonCol>
+                    <IonCol>
+                        <IonItem class="ion-no-padding">
+                            <IonLabel position="stacked">Name <IonText color="danger">*</IonText></IonLabel>    
+                            <Controller 
+                                name="name"
+                                control={control}
+                                render={({ field: {onChange, onBlur} }) => {
+                                    return <IonInput 
+                                    type="text"
+                                    placeholder="John"
+                                    onIonChange={onChange} 
+                                    onBlur={onBlur} />
+                                }}
+                                rules={{
+                                    required: {
+                                        value: true,
+                                        message: "Name is required"
+                                    },
+                                    pattern: {
+                                        value: /^[A-Z0-9 ]{2,25}$/i,
+                                        message: "Invalid Name"
+                                    }
+                                }}
+                            />
+                        </IonItem>
+                        {errors.name && <div className="invalid-feedback">{errors.name.message}</div>}
+                    </IonCol>
                 </IonRow>
 
                 <IonRow>
-                <IonCol>
-                    <IonItem class="ion-no-padding">
-                        <IonLabel position="stacked">Email <IonText color="danger">*</IonText></IonLabel>
-                        <Controller
-                            as={IonInput}
-                            control={control}
-                            onChangeName="onIonChange"
-                            onChange={([selected]) => {
-                            return selected.detail.value;
-                            }}
-                            name="email"
-                            placeholder="john@example.com"
-                            rules={{
-                            required: true,
-                            pattern: {
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                                message: "Invalid Email Address"
-                            }
-                            }}
-                        />
-                        </IonItem>
-                        {showError("email", "Email")}
-                </IonCol>
+                    <IonCol>
+                        <IonItem class="ion-no-padding">
+                            <IonLabel position="stacked">Email <IonText color="danger">*</IonText></IonLabel>
+                            <Controller 
+                                name="email"
+                                control={control}
+                                render={({ field: {onChange, onBlur} }) => {
+                                    return <IonInput 
+                                    type="email"
+                                    placeholder="john@example.com"
+                                    onIonChange={onChange} 
+                                    onBlur={onBlur} />
+                                }}
+                                rules={{
+                                    required: {
+                                        value: true,
+                                        message: "Email is required"
+                                    },
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                                        message: "Invalid Email Address"
+                                    }
+                                }}
+                            />
+                            </IonItem>
+                            {errors.email && <div className="invalid-feedback">{errors.email.message}</div>}
+                    </IonCol>
                 </IonRow>
                 
                 <IonRow>
-                <IonCol >
-                    <IonItem class="ion-no-padding">
-                        <IonLabel position="stacked">Company Name</IonLabel> 
-                        <Controller
-                            as={IonInput}
-                            control={control}
-                            onChangeName="onIonChange"
-                            onChange={([selected]) => {
-                            return selected.detail.value;
-                            }}
-                            name="company"
-                            placeholder="Isondai Corporation"
-                            rules={{
-                            required: false,
-                            minLength: {
-                                value: 3,
-                                message: "Invalid Company Name"
-                            },
-                            maxLength: {
-                                value: 150,
-                                message: "Company Name must consist of at maximum 150 characters"
-                            }
-                            }}
-                        />
-                    </IonItem>
-                    {showError("company", "Company Name")}
-                </IonCol>
+                    <IonCol >
+                        <IonItem class="ion-no-padding">
+                            <IonLabel position="stacked">Company Name</IonLabel> 
+                            <Controller 
+                                name="company"
+                                control={control}
+                                render={({ field: {onChange, onBlur} }) => {
+                                    return <IonInput 
+                                    type="text"
+                                    placeholder="Isondai Corporation"
+                                    onIonChange={onChange} 
+                                    onBlur={onBlur} />
+                                }}
+                                rules={{
+                                    minLength: {
+                                        value: 3,
+                                        message: "Invalid Company Name"
+                                    },
+                                    maxLength: {
+                                        value: 150,
+                                        message: "Company Name must consist of at maximum 150 characters"
+                                    }
+                                }}
+                            />
+                        </IonItem>
+                        {errors.company && <div className="invalid-feedback">{errors.company.message}</div>}
+                    </IonCol>
                 </IonRow>
 
                 <IonRow>
-                <IonCol>
-                    <IonItem class="ion-no-padding">
-                        <IonLabel position="stacked">Phone <IonText color="danger">*</IonText></IonLabel>    
-                        <Controller
-                            as={IonInput}
-                            control={control}
-                            onChangeName="onIonChange"
-                            onChange={([selected]) => {
-                            return selected.detail.value;
-                            }}
-                            name="phone"
-                            placeholder="1.306.525.1655"
-                            rules={{
-                            required: true,
-                            pattern: {
-                                value: /^[0-9. ]{8,15}$/i,
-                                message: "Invalid Phone No"
-                            }
-                            }}
-                        />
-                    </IonItem>
-                    {showError("phone", "Phone No")}
-                </IonCol>
+                    <IonCol>
+                        <IonItem class="ion-no-padding">
+                            <IonLabel position="stacked">Phone <IonText color="danger">*</IonText></IonLabel>    
+                            <Controller 
+                                name="phone"
+                                control={control}
+                                render={({ field: {onChange, onBlur} }) => {
+                                    return <IonInput 
+                                    type="tel"
+                                    placeholder="1.306.525.1655"
+                                    onIonChange={onChange} 
+                                    onBlur={onBlur} />
+                                }}
+                                rules={{
+                                    required: {
+                                        value: true,
+                                        message: "Phone No is required"
+                                    },
+                                    pattern: {
+                                        value: /^[0-9. ]{8,15}$/i,
+                                        message: "Invalid Phone No"
+                                    }
+                                }}
+                            />
+                        </IonItem>
+                        {errors.phone && <div className="invalid-feedback">{errors.phone.message}</div>}
+                    </IonCol>
                 </IonRow>  
                 
                 <IonRow>
-                <IonCol>
-                    <IonItem class="ion-no-padding">
-                        <IonLabel position="stacked">Message <IonText color="danger">*</IonText></IonLabel>    
-                        <Controller
-                            as={IonTextarea}
-                            control={control}
-                            onChangeName="onIonChange"
-                            onChange={([selected]) => {
-                            return selected.detail.value;
-                            }}
-                            name="message"
-                            placeholder="Enter your query here..."
-                            rules={{
-                            required: true
-                            }}
-                        />
-                    </IonItem>
-                    {showError("message", "Message")}
-                </IonCol>
+                    <IonCol>
+                        <IonItem class="ion-no-padding">
+                            <IonLabel position="stacked">Message <IonText color="danger">*</IonText></IonLabel>    
+                            <Controller 
+                                name="message"
+                                control={control}
+                                render={({ field: {onChange, onBlur} }) => {
+                                    return <IonInput 
+                                    type="text"
+                                    placeholder="Enter your query here..."
+                                    onIonChange={onChange} 
+                                    onBlur={onBlur} />
+                                }}
+                                rules={{
+                                    required: {
+                                        value: true,
+                                        message: "Message is required"
+                                    },
+                                    maxLength: {
+                                        value: 250,
+                                        message: "Message must consist of at maximum 250 characters"
+                                    }
+                                }}
+                            />
+                        </IonItem>
+                        {errors.message && <div className="invalid-feedback">{errors.message.message}</div>}
+                    </IonCol>
                 </IonRow> 
                     
             </IonGrid>

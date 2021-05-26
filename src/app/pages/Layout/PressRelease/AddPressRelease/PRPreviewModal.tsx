@@ -1,7 +1,6 @@
 import { IonContent, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonButton, IonGrid, IonRow, IonCol, IonHeader, IonToolbar, IonButtons, IonIcon, IonTitle } from '@ionic/react';
 import React, {useCallback, useEffect} from 'react';
 import { isPlatform } from '@ionic/react';
-import { format } from 'date-fns'
 import { close } from 'ionicons/icons';
 import '../PressRelease.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +8,7 @@ import * as uiActions from '../../../../store/reducers/ui';
 import * as prActions from '../../../../store/reducers/dashboard/pr';
 import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
+import CommonService from '../../../../shared/services/CommonService';
 
 interface Props {
     prPreviewModal: any,
@@ -40,14 +40,14 @@ const PRPreviewModal: React.FC<Props> = ({ prPreviewModal, setPrPreviewModal }) 
         }
     }, [dispatch, memID, prID, onPrBuscatCb]);
 
-    const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/press_release/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
+    const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
 
     return (<>
         { pr && Object.keys(pr).length > 0 && 
         <>
         <IonHeader translucent>
             <IonToolbar color="greenbg">
-                <IonButtons slot={ isPlatform('desktop') || isPlatform('tablet')? 'end': 'start' }>
+                <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                     <IonButton onClick={() => setPrPreviewModal({
                         ...prPreviewModal, 
                         isOpen: false
@@ -62,8 +62,8 @@ const PRPreviewModal: React.FC<Props> = ({ prPreviewModal, setPrPreviewModal }) 
         <IonContent fullscreen className="ion-padding">
           <IonCard className="preview-card card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle > {pr.pr_name}</IonCardTitle>
-                <IonText className="mt-2 fs-12" color="medium">{ format(new Date(pr.pr_date), 'MMMM dd, yyyy') }</IonText>
+                <IonCardTitle className="fs-18"> {pr.pr_name}</IonCardTitle>
+                <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(pr.pr_date)}</IonText>
                 <IonText className="fs-12" color={ +(pr.pr_active) === 1? 'success': 'danger'}> { +(pr.pr_active) === 1? '(Active)': '(Pending)'}</IonText>
             </IonCardHeader>
             <IonCardContent className="pt-3">

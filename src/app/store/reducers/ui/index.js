@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const state = {
     loading: { showLoading: false },
+    skeleton: { showSkeleton: false  },
     toast: {isShow: false, status: '', message: ''}
 }
 
@@ -15,6 +16,9 @@ const slice = createSlice({
                 uiState.loading.msg = action.payload.msg;
             }
         },
+        setShowSkeleton: (uiState, action) => {
+            uiState.skeleton.showSkeleton = action.payload.skeleton;
+        },
         setShowToast: (uiState, action) => {
             uiState.toast.isShow = action.payload.isShow;
             uiState.toast.status = action.payload.status;
@@ -23,5 +27,5 @@ const slice = createSlice({
     }
 });
 
-export const {setShowLoading, setShowToast} = slice.actions;
+export const {setShowLoading, setShowSkeleton, setShowToast} = slice.actions;
 export default slice.reducer;

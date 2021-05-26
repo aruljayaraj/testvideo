@@ -4,27 +4,18 @@ const tokenLocalData = sessionStorage.getItem('token') || '';
 const userLocalData = JSON.parse(sessionStorage.getItem('auth') || '{}');
 const menuLocalData = JSON.parse(sessionStorage.getItem('menu') || '{}');
 const optionsLocalData = JSON.parse(sessionStorage.getItem('options') || '{}');
-// return Object.keys(auth).length !== 0? auth.user : ''; 
-let state = {};     
-if( Object.keys(userLocalData).length !== 0 ){
-    state = {
-        ...state, 
-        token: tokenLocalData,
-        data: userLocalData,
-        menu: menuLocalData,
-        memOptions: optionsLocalData
-    }; 
-}else{
-    state = {
-        token: '',
-        data: {
-            authenticated: false,
-            isVerified: false,
-            user: {}
-        },
-        menu: {},
-        memOptions:{}
-    }
+const locationLocalData = JSON.parse(localStorage.getItem('location') || '{}');
+    
+let state = {
+    token: Object.keys(tokenLocalData).length !== 0? tokenLocalData: '',
+    data: Object.keys(userLocalData).length !== 0? userLocalData: {
+        authenticated: false,
+        isVerified: false,
+        user: {}
+    },
+    menu: Object.keys(menuLocalData).length !== 0? menuLocalData: {},
+    memOptions: Object.keys(optionsLocalData).length !== 0? optionsLocalData: {},
+    location: Object.keys(locationLocalData).length !== 0? locationLocalData: {}
 }
 
 const slice = createSlice({
@@ -41,7 +32,7 @@ const slice = createSlice({
                 authState.token = action.payload.token;
             }
         },
-        setUser: (authState, action) => { console.log(action.payload);
+        setUser: (authState, action) => { // console.log(action.payload);
             const user = action.payload.user;
             if( user ){
                 authState.data.user = user;
@@ -53,15 +44,6 @@ const slice = createSlice({
         signIn: (state, action) =>  {
             // console.log(action);
         },
-        /*onSignup: (authState, action) =>  {
-            const user = action.payload.data;
-            if(data){
-                authState.data.user = user;
-                authState.data.authenticated =  parseInt(user.approved) === 1? true: false;
-                authState.data.isVerified = parseInt(user.email_verified) === 1? true : false;
-                sessionStorage.setItem('auth', JSON.stringify(authState.data)); 
-            }
-        },*/
         logout: (authState, action) => {
             authState.data = {};
             sessionStorage.removeItem('auth'); 
@@ -85,6 +67,12 @@ const slice = createSlice({
                 authState.memOptions = action.payload.options;
                 sessionStorage.setItem('options', JSON.stringify(authState.memOptions));
             }
+        },
+        setLocation: (authState, action) => {
+            if( action.payload.location ){
+                authState.location = action.payload.location;
+                localStorage.setItem('location', JSON.stringify(authState.location));
+            }
         }
     }
 });
@@ -94,10 +82,10 @@ export const {
     setToken, 
     setUser,  
     signIn, 
-    // onSignup, 
     logout, 
     onEmailVerify,
     setMenu,
-    setMemOptions
+    setMemOptions,
+    setLocation
 } = slice.actions;
 export default slice.reducer;

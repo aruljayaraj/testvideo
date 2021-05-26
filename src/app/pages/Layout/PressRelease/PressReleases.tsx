@@ -1,20 +1,22 @@
 import { IonContent, IonPage, IonList, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonItemSliding, IonItemOptions, IonThumbnail, IonRouterLink, IonAlert, IonItemOption} from '@ionic/react';
 import React, {useCallback, useState, useEffect} from 'react';
 import { useHistory } from "react-router-dom";
-import { isPlatform } from '@ionic/react';
-import { format } from 'date-fns'
+import { isPlatform, getPlatforms } from '@ionic/react';
 import './PressRelease.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../store/reducers/ui';
 import * as prActions from '../../../store/reducers/dashboard/pr';
 import { lfConfig } from '../../../../Constants';
 import CoreService from '../../../shared/services/CoreService';
+import CommonService from '../../../shared/services/CommonService';
 import ListSkeleton from '../../../components/Skeleton/ListSkeleton';
+import Status from '../../../components/Common/Status';
+
 
 const PressReleases: React.FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const loading = useSelector( (state:any) => state.ui.loading);
+  const skeleton = useSelector( (state:any) => state.ui.skeleton);
   const authUser = useSelector( (state:any) => state.auth.data.user);
   const prs = useSelector( (state:any) => state.pr.pressReleases);
   const { apiBaseURL, basename } = lfConfig;
@@ -23,13 +25,15 @@ const PressReleases: React.FC = () => {
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
       dispatch(prActions.setPressReleases({ data: res.data }));
+    }else{
+      dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }
-    dispatch(uiActions.setShowLoading({ loading: false }));
+    dispatch(uiActions.setShowSkeleton({ skeleton: false }));
   }, [dispatch]);
 
   useEffect(() => { 
     if( authUser && authUser.ID ){
-      dispatch(uiActions.setShowLoading({ loading: true }));
+      dispatch(uiActions.setShowSkeleton({ skeleton: true }));
       const data = {
         action: 'get_press_releases',
         memID: authUser.ID
@@ -42,12 +46,12 @@ const PressReleases: React.FC = () => {
     if(res.status === 'SUCCESS'){
       dispatch(prActions.setPressReleases({ data: res.data }));
     }
-    dispatch(uiActions.setShowLoading({ loading: false }));
+    dispatch(uiActions.setShowSkeleton({ skeleton: false }));
     dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
   }, [dispatch]);
 
   const onDeleteFn = (id: number, mem_id: number) => {
-    dispatch(uiActions.setShowLoading({ loading: true }));
+    dispatch(uiActions.setShowSkeleton({ skeleton: true }));
     const fd = {
         action: 'pr_delete',
         memID: mem_id,
@@ -59,14 +63,16 @@ const PressReleases: React.FC = () => {
   const slideEdit = (item: any) => {
     history.push(`/layout/add-press-release/${item.pr_id}/${item.pr_mem_id}/1`);
   }
+  
+  // console.log(getPlatforms());
 
   return (
     <IonPage className="press-release-page">
-      { !loading.showLoading && prs ? ( 
+      { !skeleton.showSkeleton && prs ? ( 
         <IonContent>
-          <IonCard className="card-center mt-4">
+          <IonCard className="card-center my-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle >Press Releases
+                <IonCardTitle className="fs-18">Press Releases
                   <IonRouterLink color="greenbg" href={`${basename}/layout/add-press-release`} className="float-right router-link-anchor">
                     <i className="fa fa-plus green cursor" aria-hidden="true"></i>
                   </IonRouterLink>  
@@ -86,8 +92,9 @@ const PressReleases: React.FC = () => {
                         <IonLabel>
                           <h2>{item.pr_name} </h2>
                           { item.pr_quote && <h3><IonText color="medium">{item.pr_quote}</IonText></h3> }
-                          <p>{ format(new Date(item.pr_date), 'MMM dd, yyyy') } 
-                            <IonText className="fs-12" color={ +(item.pr_active) === 1? 'success': 'danger'}> { +(item.pr_active) === 1? '(Active)': '(Pending)'}</IonText>
+                          <p>
+                          <Status is_active={+(item.pr_active)} type="press_release" />
+                          {` `+CommonService.dateFormat(item.pr_date)} 
                           </p>
                         </IonLabel>
                       </IonItem>
@@ -97,7 +104,7 @@ const PressReleases: React.FC = () => {
                       </IonItemOptions>
                     </IonItemSliding>
                   }
-                  { (isPlatform('desktop') || isPlatform('tablet')) &&
+                  { (isPlatform('desktop')) &&
                   <IonItem lines={ (prs.length === index+1)? "none": "inset" }>
                     <IonThumbnail slot="start" color="greenbg">
                       <IonRouterLink href={`${basename}/member/${item.pr_mem_id}/${item.pr_id}`}>
@@ -109,8 +116,9 @@ const PressReleases: React.FC = () => {
                       <h2>{item.pr_name} </h2>
                       </IonRouterLink>
                       { item.pr_quote && <h3><IonText color="medium">{item.pr_quote}</IonText></h3> }
-                      <p>{ format(new Date(item.pr_date), 'MMM dd, yyyy') } 
-                        <IonText className="fs-12" color={ +(item.pr_active) === 1? 'success': 'danger'}> { +(item.pr_active) === 1? '(Active)': '(Pending)'}</IonText>
+                      <p>
+                        <Status is_active={+(item.pr_active)} type="press_release" />
+                        {` `+CommonService.dateFormat(item.pr_date)} 
                       </p>
                     </IonLabel>
                     

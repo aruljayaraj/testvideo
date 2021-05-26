@@ -1,34 +1,55 @@
 ion-content ion-toolbar {
   --background: translucent;
 }
-.dashboard-page{
+.company-profile-page{
   .card-center{
-    width: 50%;
+    width: 90%;
+    margin: 0 auto;
+  }
+  .profile-logo-wrap{
+    img{
+      width:280px;
+      border-radius: 15px;
+      margin: 0 auto;
+    }
+    .profile-logo{
+      margin: 0 auto;
+      i{
+        position: relative;
+        bottom: 10px;
+        right: 8px;
+      }
+    }
   }
 }
 
 @media (max-width: 575.98px) { 
-  .dashboard-page{
+  .company-profile-page{
     .card-center{
         width:90%;
+    }
+    .profile-logo {
+      i {
+        position: absolute !important;
+        right: 0px !important;
+      }
     }
   }
 }
 
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) and (max-width: 767.98px) { 
-  .dashboard-page{
-    .card-center{
-        width:56%;
+  .company-profile-page{
+    .profile-logo {
+      i {
+        position: absolute !important;
+        right: 0px !important;
+      }
     }
   }
 }
 
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) and (max-width: 991.98px) {
-  .dashboard-page{
-    .card-center{
-        width:60%;
-    }
-  }
+  
 }

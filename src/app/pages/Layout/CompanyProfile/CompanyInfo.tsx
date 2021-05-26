@@ -27,7 +27,7 @@ const CompanyInfo: React.FC = () => {
         { Object.keys(comProfile).length > 0 &&
         <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle onClick={() => setShowCompanyModal(true)}>
+                <IonCardTitle className="fs-18" onClick={() => setShowCompanyModal(true)}>
                     <span>Company Information</span>
                     <i className="fa fa-pencil float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>
@@ -73,9 +73,9 @@ const CompanyInfo: React.FC = () => {
                             <IonIcon color="greenbg" size="large" icon={callOutline}></IonIcon>
                         </IonAvatar>
                         <IonLabel>
-                            { comProfile.phone && <h2>{`Phone: ${comProfile.phone}`}</h2> }
+                            { comProfile.phone_code && comProfile.phone && <h2>{`Phone: ${comProfile.phone_code} ${comProfile.phone}`}</h2> }
                             { comProfile.phoneext && <p>{`Ext: ${comProfile.phoneext}`}</p>}
-                            { comProfile.mobile && <p>{`Mobile: ${comProfile.mobile}`}</p>}
+                            { comProfile.mobile_code && comProfile.mobile && <p>{`Mobile: ${comProfile.mobile_code} ${comProfile.mobile}`}</p>}
                             { comProfile.fax && <p>{`Fax: ${comProfile.fax}`}</p>}
                         </IonLabel>
                     </IonItem>}

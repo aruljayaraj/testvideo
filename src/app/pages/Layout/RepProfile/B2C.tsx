@@ -56,7 +56,7 @@ const B2C: React.FC = () => {
         { Object.keys(repProfile).length > 0 &&
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle onClick={() => categoryModalFn('Add B2B Category', 'new')}>
+                <IonCardTitle className="fs-18" onClick={() => categoryModalFn('Add B2B Category', 'new')}>
                     <span>B2C Category</span>
                     <i className="fa fa-plus float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>
@@ -90,7 +90,7 @@ const B2C: React.FC = () => {
                                     </IonItem>
                                 </IonItemSliding>
                             }
-                            { (isPlatform('desktop') || isPlatform('tablet')) && 
+                            { (isPlatform('desktop')) && 
                             <IonItem lines="none">
                                 <IonAvatar slot="start" color="greenbg">
                                     <i className="fa fa-chevron-right fa-lg green" aria-hidden="true"></i>
@@ -101,7 +101,7 @@ const B2C: React.FC = () => {
                                     <p><strong>Keywords:</strong> {item.keywords}</p>
                                 </IonLabel>
                                 <IonAvatar className="anchor-white" slot="end" color="greenbg" onClick={() => categoryModalFn('Edit B2B Category', 'edit', item)}>
-                                    <i className="fa fa-pencil green cursor" aria-hidden="true"></i>
+                                    <i className="fa fa-pencil fa-lg green cursor" aria-hidden="true"></i>
                                 </IonAvatar>
                             </IonItem>
                             }

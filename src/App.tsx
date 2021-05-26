@@ -4,7 +4,6 @@ import { IonApp } from '@ionic/react';
 import Routes from './Routes';
 
 const App: React.FC = () => {
-
   return (
     <IonApp>
       <Routes />

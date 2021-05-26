@@ -16,6 +16,7 @@ import {
 import React, { useState, useCallback } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
 import { Editor } from '@tinymce/tinymce-react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,40 +27,33 @@ import CoreService from '../../../../shared/services/CoreService';
 import { lfConfig } from '../../../../../Constants';
 import ResStepInd from './ResStepInd';
 
+type FormInputs = {
+    res_title: string;
+    res_embed: boolean;
+    res_shared: boolean;
+    res_make_public: boolean;
+    res_desc: string;
+}
+
 const CreateResource: React.FC = () => {
     const dispatch = useDispatch();
     const authValues = useSelector( (state:any) => state.auth.data.user);
     const resource = useSelector( (state:any) => state.res.resource); //console.log(resource);
     const [addRes, setAddRes] = useState({ status: false, memID: '', ID: '' });
-    let { res_type, id, step } = useParams();
+    let { res_type, id, step } = useParams<any>();
     const resTypeText = res_type ? res_type.charAt(0).toUpperCase() + res_type.slice(1): '';
 
     let initialValues = {
         res_title: (resource && Object.keys(resource).length > 0) ? resource.title : '',
-        res_embed: (resource && resource.embed === 'Yes')? true: false,
-        res_shared: (resource && resource.shared === 'Yes')? true: false,
-        res_make_public: (resource && resource.make_public === 'Yes')? true: false,
+        res_embed: (resource && Object.keys(resource).length > 0)? ((resource.embed === 'Yes')? true: false): true,
+        res_shared: (resource && Object.keys(resource).length > 0)? ((resource.shared === 'Yes')? true: false): true,
+        res_make_public: (resource && Object.keys(resource).length > 0)? ((resource.make_public === 'Yes')? true: false): true,
         res_desc: (resource && Object.keys(resource).length > 0) ? resource.description : '',
     };
-    const { control, errors, handleSubmit } = useForm({
+    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
-
-    /**
-     *
-     * @param _fieldName
-     */
-    const showError = (_fieldName: string, msg: string) => {
-        let error = (errors as any)[_fieldName];
-        return error ? (
-        (error.ref.name === _fieldName)? (
-            <div className="invalid-feedback">
-            {error.message || `${msg} is required`}
-        </div>
-        ) : null
-        ) : null;
-    };
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -94,7 +88,7 @@ const CreateResource: React.FC = () => {
         <ResStepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-            <IonCardTitle >Create a {resTypeText}</IonCardTitle>
+            <IonCardTitle className="fs-18">Create a {resTypeText}</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -103,42 +97,55 @@ const CreateResource: React.FC = () => {
                     <IonRow>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">{resTypeText} Title (Maximum 10 Words)  <IonText color="danger">*</IonText></IonLabel>
-                            <Controller
-                                as={IonInput}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([selected]) => {
-                                    return selected.detail.value
-                                }}
-                                onKeyUp={(e: any) => {
-                                    var str = e.target.value;
-                                    if( str.split(/\s+/).length > 10 ){
-                                        e.target.value = str.split(/\s+/).slice(0, 10).join(" ");
-                                    }
-                                }}
-                                name="res_title"
-                                rules={{
-                                    required: true,
-                                    pattern: {
-                                        value: /^\W*(\w+(\W+|$)){1,10}$/i,
-                                        message: "Title shoud be lessthan 10 words"
-                                    }
-                                }}
-                            />
+                                <IonLabel position="stacked">{resTypeText} Title (Maximum 10 Words)  <IonText color="danger">*</IonText></IonLabel>
+                                <Controller 
+                                    name="res_title"
+                                    control={control}
+                                    render={({ field: {onChange, onBlur, value} }) => {
+                                        return <IonInput type="text"
+                                            onKeyUp={(e: any) => {
+                                                var str = e.target.value;
+                                                if( str.split(/\s+/).length > 10 ){
+                                                    e.target.value = str.split(/\s+/).slice(0, 10).join(" ");
+                                                }
+                                            }}
+                                            onIonChange={(val: any) => onChange(val)}
+                                            onBlur={onBlur}
+                                            value={value}
+                                        />
+                                    }}
+                                    rules={{
+                                        required: {
+                                            value: true,
+                                            message: "Title is required"
+                                        },
+                                        pattern: {
+                                            value: /^\W*(\w+(\W+|$)){1,10}$/i,
+                                            message: "Title shoud be lessthan 10 words"
+                                        }
+                                    }}
+                                />
                             </IonItem>
-                            {showError("res_title", "Title")}
+                            <ErrorMessage
+                                errors={errors}
+                                name="res_title"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
                         </IonCol>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
-                            <Controller
-                                as={<IonCheckbox color="greenbg" checked slot="start"></IonCheckbox>}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([e]) => {
-                                    return e.detail.checked;
-                                }}
+                            <Controller 
                                 name="res_embed"
+                                control={control}
+                                render={({ field: {onChange, onBlur, value} }) => {
+                                    return <IonCheckbox color="greenbg" slot="start"
+                                        checked={value}
+                                        onIonChange={(e: any) =>{
+                                            onChange(e.detail.checked);
+                                        }}
+                                        onBlur={onBlur}
+                                    />
+                                }}
                             />
                             <IonLabel position="stacked">Allow others to embed your resource</IonLabel>
                             </IonItem>
@@ -147,28 +154,36 @@ const CreateResource: React.FC = () => {
                     <IonRow>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
-                            <Controller
-                                as={<IonCheckbox color="greenbg" checked slot="start"></IonCheckbox>}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([e]) => {
-                                    return e.detail.checked;
-                                }}
+                            <Controller 
                                 name="res_shared"
+                                control={control}
+                                render={({ field: {onChange, onBlur, value} }) => {
+                                    return <IonCheckbox color="greenbg" slot="start"
+                                        checked={value}
+                                        onIonChange={(e: any) =>{
+                                            onChange(e.detail.checked);
+                                        }}
+                                        onBlur={onBlur}
+                                    />
+                                }}
                             />
                             <IonLabel position="stacked">Share your resource in the Public</IonLabel>
                             </IonItem>
                         </IonCol>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
-                            <Controller
-                                as={<IonCheckbox color="greenbg" checked slot="start"></IonCheckbox>}
-                                control={control}
-                                onChangeName="onIonChange"
-                                onChange={([e]) => {
-                                    return e.detail.checked;
-                                }}
+                           <Controller 
                                 name="res_make_public"
+                                control={control}
+                                render={({ field: {onChange, onBlur, value} }) => {
+                                    return <IonCheckbox color="greenbg" slot="start"
+                                        checked={value}
+                                        onIonChange={(e: any) =>{
+                                            onChange(e.detail.checked);
+                                        }}
+                                        onBlur={onBlur}
+                                    />
+                                }}
                             />
                             <IonLabel position="stacked">Make Public</IonLabel>
                             </IonItem>
@@ -178,55 +193,62 @@ const CreateResource: React.FC = () => {
                         <IonCol>
                             <IonItem lines="none" class="ion-no-padding">
                                 <IonLabel className="mb-3" position="stacked">{resTypeText} Description <IonText color="danger">*</IonText></IonLabel>
-                                <Controller
-                                    as={
-                                        <Editor
-                                        apiKey="p5k59vuava18l9axn125wa4fl2qsmhmwsxfs6krrtffntke8"
-                                        initialValue=""
-                                        init={{
-                                            max_chars: lfConfig.tinymceResourceMaxLength, // max. allowed words
-                                            
-                                            init_instance_callback: function (editor: any) {
-                                                editor.on('change', function (e: Event) {
-                                                    let content = editor.contentDocument.body.innerText;
-                                                    // console.log(content.split(/[\w\u2019\'-]+/).length);
-                                                    if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceResourceMaxLength){
-                                                        editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceResourceMaxLength).join(" ");
-                                                    }
-                                                });
-                                            },
-                                            branding: false,
-                                            height: 300,
-                                            width: '100%',
-                                            menubar: false,
-                                            mobile: {
-                                                menubar: true
-                                            },
-                                            plugins: [
-                                                'advlist autolink lists link image charmap print preview anchor',
-                                                'searchreplace visualblocks code fullscreen',
-                                                'insertdatetime media table paste code help wordcount'
-                                            ],
-                                            toolbar:
-                                                'undo redo | formatselect | bold italic backcolor | \
-                                                alignleft aligncenter alignright alignjustify | \
-                                                bullist numlist outdent indent | removeformat | help'
-                                        }}
-                                        // onEditorChange={handleEditorChange}
-                                    />
-                                    }
-                                    className="mt-3"
-                                    control={control}
-                                    onChange={([cdata]) => {
-                                        return cdata.level.content;
-                                    }}
+                                <Controller 
                                     name="res_desc"
+                                    control={control}
+                                    render={({ field: {onChange, onBlur, value} }) => {
+                                        return <Editor
+                                            value={value}
+                                            apiKey={lfConfig.tinymceKey}
+                                            initialValue=""
+                                            init={{
+                                                max_chars: lfConfig.tinymceResourceMaxLength, // max. allowed words
+                                                
+                                                init_instance_callback: function (editor: any) {
+                                                    editor.on('change', function (e: Event) {
+                                                        let content = editor.contentDocument.body.innerText;
+                                                        // console.log(content.split(/[\w\u2019\'-]+/).length);
+                                                        if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceResourceMaxLength){
+                                                            editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceResourceMaxLength).join(" ");
+                                                        }
+                                                    });
+                                                },
+                                                branding: false,
+                                                height: 300,
+                                                width: '100%',
+                                                menubar: false,
+                                                mobile: {
+                                                    menubar: true
+                                                },
+                                                plugins: [
+                                                    'advlist autolink lists link image charmap print preview anchor',
+                                                    'searchreplace visualblocks code fullscreen',
+                                                    'insertdatetime media table paste code help wordcount'
+                                                ],
+                                                toolbar:
+                                                    'undo redo | formatselect | bold italic backcolor | \
+                                                    alignleft aligncenter alignright alignjustify | \
+                                                    bullist numlist outdent indent | removeformat | help'
+                                            }}
+                                            onEditorChange={(val: any) =>{
+                                                onChange(val);
+                                            }}
+                                            onBlur={onBlur}
+                                        />
+                                    }}
                                     rules={{
-                                        required: true
+                                        required: {
+                                            value: true,
+                                            message: "Description is required"
+                                        }
                                     }}
                                 />
                             </IonItem>
-                            {showError("res_desc",  "Description")}
+                            <ErrorMessage
+                                errors={errors}
+                                name="res_desc"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
                         </IonCol>
                         
                     </IonRow>

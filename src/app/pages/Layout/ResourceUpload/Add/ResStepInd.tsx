@@ -9,7 +9,7 @@ const ResStepInd: React.FC = () => {
   const authUser = useSelector( (state:any) => state.auth.data.user);
   const resource = useSelector( (state:any) => state.res.resource);
   const { basename } = lfConfig;
-  let { id, res_type, step } = useParams();
+  let { id, res_type, step } = useParams<any>();
 
   return (<>
       <div className="mb-4">

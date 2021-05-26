@@ -2,11 +2,11 @@ import { IonList, IonAvatar, IonItem, IonLabel, IonText, IonItemSliding, IonItem
 import React from 'react';
 import { useHistory } from "react-router-dom";
 import { isPlatform } from '@ionic/react';
-import { format } from 'date-fns'
 import './ResourceUpload.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../Constants';
 import { musicalNotesOutline } from 'ionicons/icons';
+import CommonService from '../../../shared/services/CommonService';
 
 interface Props {
   res_type: string,
@@ -37,8 +37,8 @@ const Audio: React.FC<Props> = ({res_type, setShowAlert}) => {
                   <IonLabel>
                     <h2>{item.title} </h2>
                     <p>
-                      { format(new Date(item.added_date), 'MMM dd, yyyy') } 
-                      <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 0)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 0)? '(Active)': '(Pending)'}</IonText>
+                      {CommonService.dateFormat(item.added_date)} 
+                      <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 1)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 1)? '(Active)': '(Pending)'}</IonText>
                     </p>
                   </IonLabel>
                 </IonItem>
@@ -48,7 +48,7 @@ const Audio: React.FC<Props> = ({res_type, setShowAlert}) => {
                 </IonItemOptions>
               </IonItemSliding>
             }
-            { (isPlatform('desktop') || isPlatform('tablet')) &&
+            { (isPlatform('desktop')) &&
             <IonItem lines={ (resources.length === index+1)? "none": "inset" }>
               <IonAvatar slot="start" color="greenbg">
                 <IonIcon color="greenbg" size="large" icon={musicalNotesOutline}></IonIcon>
@@ -58,8 +58,8 @@ const Audio: React.FC<Props> = ({res_type, setShowAlert}) => {
                 <h2>{item.title} </h2>
                 </IonRouterLink>
                 <p>
-                  { format(new Date(item.added_date), 'MMM dd, yyyy') } 
-                  <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 0)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 0)? '(Active)': '(Pending)'}</IonText>
+                  {CommonService.dateFormat(item.added_date)} 
+                  <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 1)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 1)? '(Active)': '(Pending)'}</IonText>
                 </p>
               </IonLabel>
               

@@ -21,13 +21,22 @@ import {
 import React, { useState, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
-
+import { ErrorMessage } from '@hookform/error-message';
 import { useDispatch, useSelector } from 'react-redux';
 import * as authActions from '../../store/reducers/auth';
 import Modal from '../../components/Modal/Modal';
 import './Signup.scss';
 import { lfConfig } from '../../../Constants';
-const { baseurl } = lfConfig;
+
+type FormInputs = {
+  firstname: string;
+  lastname: string;
+  business_name: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+  business_type: string;
+}
 
 let initialValues = {
   firstname: "",
@@ -42,9 +51,10 @@ let initialValues = {
 const Signup: React.FC = () => {
   console.log('Signup Page');
   const dispatch = useDispatch();
+  const { baseurl } = lfConfig;
   // const token = useSelector( (state:any) => state.auth.token);
   const authValues = useSelector( (state:any) => state.auth.data);
-  const { control, errors, handleSubmit, watch } = useForm({
+  const { control, handleSubmit, watch, formState: { errors } } = useForm<FormInputs>({
     defaultValues: { ...initialValues },
     mode: "onChange"
   });
@@ -55,21 +65,6 @@ const Signup: React.FC = () => {
   async function closeModal() {
     await setShowModal({status: false, title: ''});
   }
-
- /**
-   *
-   * @param _fieldName
-   */
-  const showError = (_fieldName: string, msg: string) => {
-    let error = (errors as any)[_fieldName];
-    return error ? (
-      (error.ref.name === _fieldName)? (
-        <div className="invalid-feedback">
-        {error.message || `${msg} is required`}
-      </div>
-      ) : null
-    ) : null;
-  };
 
   /*const onSignupCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -104,7 +99,7 @@ const Signup: React.FC = () => {
   }
 
   return (
-    <IonPage>
+    <IonPage className="signup-page">
       <IonContent className="ion-padding">
         <IonCard className="card-center mt-2">
           <IonCardHeader>
@@ -118,63 +113,79 @@ const Signup: React.FC = () => {
                 <IonRow>
                   <IonCol sizeMd="6" sizeXs="12">
                     <IonItem class="ion-no-padding">
-                      <Controller
-                        as={IonInput}
-                        control={control}
-                        onChangeName="onIonChange"
-                        onChange={([selected]) => {
-                          return selected.detail.value;
-                        }}
+                      <Controller 
                         name="firstname"
-                        placeholder="First Name *"
+                        control={control}
+                        render={({ field: {onChange, onBlur} }) => {
+                          return <IonInput 
+                            type="text"
+                            placeholder="First Name *"
+                            onIonChange={onChange} 
+                            onBlur={onBlur} />
+                        }}
                         rules={{
-                          required: true,
-                          pattern: {
-                            value: /^[A-Z0-9 ]{2,25}$/i,
-                            message: "Invalid First Name"
-                          }
+                          required: {
+                            value: true,
+                            message: "First Name is required"
+                          },
+                            pattern: {
+                                value: /^[A-Z0-9 ]{2,25}$/i,
+                                message: "Invalid First Name"
+                            }
                         }}
                       />
                     </IonItem>
-                    {showError("firstname", "First Name")}
+                    <ErrorMessage
+                        errors={errors}
+                        name="firstname"
+                        render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    />
                   </IonCol>
                   <IonCol>
                     <IonItem class="ion-no-padding">
-                        <Controller
-                          as={IonInput}
-                          control={control}
-                          onChangeName="onIonChange"
-                          onChange={([selected]) => {
-                            return selected.detail.value;
-                          }}
-                          name="lastname"
-                          placeholder="Last Name *"
-                          rules={{
-                            required: true,
+                      <Controller 
+                        name="lastname"
+                        control={control}
+                        render={({ field: {onChange, onBlur} }) => {
+                          return <IonInput 
+                            type="text"
+                            placeholder="Last Name *"
+                            onIonChange={onChange} 
+                            onBlur={onBlur} />
+                        }}
+                        rules={{
+                            required: {
+                              value: true,
+                              message: "Lastname is required"
+                            },
                             pattern: {
-                              value: /^[A-Z0-9 ]{1,25}$/i,
-                              message: "Invalid Last Name"
+                                value: /^[A-Z0-9 ]{2,25}$/i,
+                                message: "Invalid Last Name"
                             }
-                          }}
-                        />
-                      </IonItem>
-                      {showError("lastname", "Last Name")}
+                        }}
+                      />
+                    </IonItem>
+                    <ErrorMessage
+                      errors={errors}
+                      name="lastname"
+                      render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    />
                   </IonCol>
                 </IonRow>
                 <IonRow>
                   <IonCol >
                     <IonItem class="ion-no-padding">
-                      <Controller
-                        as={IonInput}
-                        control={control}
-                        onChangeName="onIonChange"
-                        onChange={([selected]) => {
-                          return selected.detail.value;
-                        }}
+                      <Controller 
                         name="business_name"
-                        placeholder="Business Name (if applicable)"
+                        control={control}
+                        render={({ field: {onChange, onBlur} }) => {
+                          return <IonInput 
+                            type="text"
+                            placeholder="Business Name (if applicable)"
+                            onIonChange={onChange} 
+                            onBlur={onBlur} />
+                        }}
                         rules={{
-                          required: false,
                           minLength: {
                             value: 3,
                             message: "Invalid Business Name"
@@ -186,23 +197,31 @@ const Signup: React.FC = () => {
                         }}
                       />
                     </IonItem>
-                    {showError("business_name", "Business Name")}
+                    <ErrorMessage
+                      errors={errors}
+                      name="business_name"
+                      render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    />
                   </IonCol>
                 </IonRow>
                 <IonRow>
                   <IonCol>
                     <IonItem class="ion-no-padding">
-                      <Controller
-                        as={IonInput}
-                        control={control}
-                        onChangeName="onIonChange"
-                        onChange={([selected]) => {
-                          return selected.detail.value;
-                        }}
+                      <Controller 
                         name="email"
-                        placeholder="Email *"
+                        control={control}
+                        render={({ field: {onChange, onBlur} }) => {
+                          return <IonInput 
+                            type="email"
+                            placeholder="Email *"
+                            onIonChange={onChange} 
+                            onBlur={onBlur} />
+                        }}
                         rules={{
-                          required: true,
+                          required: {
+                            value: true,
+                            message: "Email is required"
+                          },
                           pattern: {
                             value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                             message: "Invalid Email Address"
@@ -210,14 +229,17 @@ const Signup: React.FC = () => {
                         }}
                       />
                     </IonItem>
-                    {/* {errors.username && "Username is required"} */}
-                    {showError("email", "Email")}
+                    <ErrorMessage
+                      errors={errors}
+                      name="email"
+                      render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    />
                   </IonCol>
                 </IonRow>  
                 <IonRow>
                   <IonCol sizeMd="6" sizeXs="12">
                     <IonItem class="ion-no-padding">
-                      <Controller
+                      {/* <Controller
                         as={IonInput}
                         control={control}
                         onChangeName="onIonChange"
@@ -242,48 +264,88 @@ const Signup: React.FC = () => {
                             message: "Invalid Password"
                           }
                         }}
+                      /> */}
+                      <Controller 
+                          name="password"
+                          control={control}
+                          render={({ field: {onChange, onBlur} }) => {
+                            return <IonInput 
+                              type="password"
+                              placeholder="Password *"
+                              onIonChange={onChange} 
+                              onBlur={onBlur} />
+                          }}
+                          rules={{
+                            required: {
+                              value: true,
+                              message: "Password is required"
+                            },
+                            minLength: {
+                              value: 5,
+                              message: "Password must have at least 5 characters"
+                            },
+                            maxLength: {
+                              value: 15,
+                              message: "Password must consist of at maximum 15 characters"
+                            },
+                            pattern: {
+                              value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
+                              message: "Invalid Password"
+                            }
+                          }}
                       />
                     </IonItem>
-                    {showError("password", "Password")}
+                    <ErrorMessage
+                      errors={errors}
+                      name="password"
+                      render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    />
                   </IonCol>
                   <IonCol sizeMd="6" sizeXs="12">
                     <IonItem class="ion-no-padding">
-                      <Controller
-                        as={IonInput}
-                        control={control}
-                        onChangeName="onIonChange"
-                        onChange={([selected]) => {
-                          return selected.detail.value;
-                        }}
-                        name="confirm_password"
-                        type="password"
-                        placeholder="Confirm Password *"
-                        rules={{
-                          required: true,
-                          minLength: {
-                            value: 5,
-                            message: "Password must have at least 5 characters"
-                          },
-                          maxLength: {
-                            value: 15,
-                            message: "Password must consist of at maximum 15 characters"
-                          },
-                          pattern: {
-                            value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
-                            message: "Invalid Confirm Password"
-                          },
-                          validate: value => ( value === password.current || "The passwords do not match" )
-                        }}
+                      <Controller 
+                          name="confirm_password"
+                          control={control}
+                          render={({ field: {onChange, onBlur} }) => {
+                            return <IonInput 
+                              type="password"
+                              placeholder="Confirm Password *"
+                              onIonChange={onChange} 
+                              onBlur={onBlur} />
+                          }}
+                          rules={{
+                            required: {
+                              value: true,
+                              message: "Confirm Password is required"
+                            },
+                            minLength: {
+                              value: 5,
+                              message: "Password must have at least 5 characters"
+                            },
+                            maxLength: {
+                              value: 15,
+                              message: "Password must consist of at maximum 15 characters"
+                            },
+                            pattern: {
+                              value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
+                              message: "Invalid Confirm Password"
+                            },
+                            validate: value => ( value === password.current || "The passwords do not match" )
+                          }}
                       />
                     </IonItem>
-                    {showError("confirm_password", "Confirm Password")}
+                    <ErrorMessage
+                      errors={errors}
+                      name="confirm_password"
+                      render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    />
                     
                   </IonCol>
                 </IonRow>
                     
               </IonGrid>
               <IonList lines="none">
-                <Controller
+                {/* <Controller
                   as={
                     <IonRadioGroup>
                       <IonItem>
@@ -304,6 +366,31 @@ const Signup: React.FC = () => {
                     console.log(selected.detail.value);
                     return selected.detail.value;
                   }}
+                /> */}
+                <Controller 
+                    name="business_type"
+                    control={control}
+                    render={({ field: {onChange, onBlur, value} }) => {
+                      return <IonRadioGroup
+                        onIonChange={onChange} 
+                        onBlur={onBlur}
+                        value={value}>
+                          <IonItem>
+                            <IonLabel color="medium">I sell products or services</IonLabel>
+                            <IonRadio slot="start" value="Seller" />
+                          </IonItem>
+                          <IonItem>
+                            <IonLabel color="medium">I only want to buy product or services</IonLabel>
+                            <IonRadio slot="start" value="Buyer" />
+                          </IonItem>
+                        </IonRadioGroup>
+                    }}
+                    rules={{ 
+                      required: {
+                        value: true,
+                        message: "Business Type is required"
+                      }
+                     }}
                 />
               </IonList>
               <IonRow>

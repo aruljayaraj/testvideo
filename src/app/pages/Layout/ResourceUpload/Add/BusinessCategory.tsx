@@ -42,7 +42,7 @@ const BusinessCategory: React.FC = () => {
     const resource = useSelector( (state:any) => state.res.resource);
     const [showCategoryModal, setShowCategoryModal] = useState(initialValues);
     const [selectedItem, setSelectedItem] = useState({});
-    let { id, res_type } = useParams(); 
+    let { id, res_type } = useParams<any>(); 
     const { basename } = lfConfig;
 
     const categoryModalFn = (title: string, actionType: string, item?: any) => {
@@ -64,7 +64,7 @@ const BusinessCategory: React.FC = () => {
         <ResStepInd />
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle >
+                <IonCardTitle className="fs-18">
                     <span>B2B Category</span>
                     <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')} className="float-right router-link-anchor">
                         <i className="fa fa-plus green cursor" aria-hidden="true"></i>
@@ -95,7 +95,7 @@ const BusinessCategory: React.FC = () => {
                                     </IonItem>
                                 </IonItemSliding>
                             }
-                            { (isPlatform('desktop') || isPlatform('tablet')) && 
+                            { (isPlatform('desktop')) && 
                             <IonItem lines="none">
                                 <IonAvatar slot="start" color="greenbg">
                                     <i className="fa fa-chevron-right fa-lg green" aria-hidden="true"></i>
@@ -106,7 +106,7 @@ const BusinessCategory: React.FC = () => {
                                     <p><strong>Keywords:</strong> {item.keywords}</p>
                                 </IonLabel>
                                 <IonAvatar className="anchor-white" slot="end" color="greenbg" onClick={() => categoryModalFn('Edit B2B Category', 'edit', item)}>
-                                    <i className="fa fa-pencil green cursor" aria-hidden="true"></i>
+                                    <i className="fa fa-pencil fa-lg green cursor" aria-hidden="true"></i>
                                 </IonAvatar>
                             </IonItem>
                             }

@@ -26,7 +26,7 @@ import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
 import ImageModal from '../../../../components/Image/ImageModal';
 import ResStepInd from './ResStepInd';
-// import PRPreviewModal from './PRPreviewModal';
+import ResPreviewModal from './ResPreviewModal';
 
 var CancelToken = axios.CancelToken;
 const source = CancelToken.source();
@@ -53,7 +53,7 @@ const ResMedia: React.FC = () => {
     const [resPreviewModal, setResPreviewModal] = useState(initPreviewValues);
     const [addRes, setAddRes] = useState({ status: false, memID: '', ID: '' });
     // const { apiBaseURL, basename } = lfConfig;
-    let { id, res_type } = useParams();
+    let { id, res_type } = useParams<any>();
     let acceptedTypes = '';
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [resFile, setResFile] = useState<any>();
@@ -118,8 +118,8 @@ const ResMedia: React.FC = () => {
         if( files && files.length > 0 ){
             const file = files.item(0); 
             setResFile(file);
-            const resType = res_type? res_type : '';
-            if (file && !isValidFileType(file.type, resType)) {
+            const resType = res_type? res_type : ''; 
+            if (file && !isValidFileType(file.type, resType)) { console.log(file.type);
                 let msg = '';
                 if( ['document','article'].includes(res_type? res_type: '') ){
                     msg = `Only ${lfConfig.acceptedDocTypes} these type are allowed`;
@@ -130,57 +130,75 @@ const ResMedia: React.FC = () => {
                 }
                 dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: msg }));
                 return;
-            }
-            event.preventDefault();
-            if(file){
-                setUploading(true);
-                const fd = new FormData();
-                fd.append('memID', authUser.ID);
-                fd.append('formID', id? id: '');
-                fd.append('action', 'res_upload' );
-                fd.append('resType', res_type? res_type: '' );
-                fd.append('dataFile', file);
-                // dispatch(uiActions.setShowLoading({ loading: true, msg: `0% Uploading...` }));
-                axios({
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                    data: fd,
-                    url: `v2/res_update`,
-                    onUploadProgress: (ev: ProgressEvent) => {
-                        const progress = ev.loaded / ev.total * 100; console.log("Progress = " +progress);
-                        const percent = Math.round(progress);
-                        // dispatch(uiActions.setShowLoading({ loading: true, msg: `${percent}% Uploading...` }));
-                        updateUploadProgress(Math.round(percent));
-                    },
-                    cancelToken: source.token
-                })
-                .then((resp: any) => {
-                    const res = resp.data;
-                    setUploadStatus(true);
-                    setUploading(false);
-                    updateUploadProgress(0);
-                    setResFile('');
-                    if(res.status === 'SUCCESS'){
-                        dispatch(resActions.setResource({ data: res.data }));
-                    }
-                    // dispatch(uiActions.setShowLoading({ loading: false, msg: '' }));
-                    dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
-                })
-                .catch((err: any) => {
-                    if(axios.isCancel(err)){
-                        setUploadStatus(false);
-                        setUploading(false);
-                        updateUploadProgress(0);
-                        setResFile('');
+            }else { 
+                if (file && !isAllowedFilesize(file.size, resType)) { console.log(file.type);
+                    let msg = '';
+                    if( file.size > 0 ){
+                        if( ['document','article'].includes(res_type? res_type: '') ){
+                            msg = `Only less than ${lfConfig.acceptedDocSizeMB} size is allowed`;
+                        }else if(res_type === 'audio'){
+                            msg = `Only less than ${lfConfig.acceptedAudSizeMB} size is allowed`;
+                        }else if(res_type === 'video'){
+                            msg = `Only less than ${lfConfig.acceptedVidSizeMB} size is allowed`;
+                        }
                     }else{
-                        console.error(err);
+                        msg = `Please attach valid file`;
                     }
-                });
-            }else{
-                dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: 'File should not be empty!' }));
-            }
+                    dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: msg }));
+                    return;
+                }else{
+                    event.preventDefault();
+                    if(file){
+                        setUploading(true);
+                        const fd = new FormData();
+                        fd.append('memID', authUser.ID);
+                        fd.append('formID', id? id: '');
+                        fd.append('action', 'res_upload' );
+                        fd.append('resType', res_type? res_type: '' );
+                        fd.append('dataFile', file); // console.log(file);
+                        // dispatch(uiActions.setShowLoading({ loading: true, msg: `0% Uploading...` }));
+                        axios({
+                            method: 'post',
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                            data: fd,
+                            url: `v2/res_update`,
+                            onUploadProgress: (ev: ProgressEvent) => {
+                                const progress = ev.loaded / ev.total * 100; console.log("Progress = " +progress);
+                                const percent = Math.round(progress);
+                                // dispatch(uiActions.setShowLoading({ loading: true, msg: `${percent}% Uploading...` }));
+                                updateUploadProgress(Math.round(percent));
+                            },
+                            cancelToken: source.token
+                        })
+                        .then((resp: any) => {
+                            const res = resp.data;
+                            setUploadStatus(true);
+                            setUploading(false);
+                            updateUploadProgress(0);
+                            setResFile('');
+                            if(res.status === 'SUCCESS'){
+                                dispatch(resActions.setResource({ data: res.data }));
+                            }
+                            // dispatch(uiActions.setShowLoading({ loading: false, msg: '' }));
+                            dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
+                        })
+                        .catch((err: any) => {
+                            if(axios.isCancel(err)){
+                                setUploadStatus(false);
+                                setUploading(false);
+                                updateUploadProgress(0);
+                                setResFile('');
+                            }else{
+                                console.error(err);
+                            }
+                        });
+                    }else{
+                        dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: 'File should not be empty!' }));
+                    }
+                }
+            }    
         }
     }
     
@@ -196,13 +214,26 @@ const ResMedia: React.FC = () => {
         return result;
     };
 
+    const isAllowedFilesize = (filesize: number, resType: string): boolean => {
+        let result = false;
+        if( ['document', 'article'].includes(resType) ){
+            return +(lfConfig.acceptedDocSize) > filesize;
+        }else if( ['audio'].includes(resType) ){
+            return +(lfConfig.acceptedAudSize) > filesize;
+        }else if( ['video'].includes(resType) ){
+            return +(lfConfig.acceptedVidSize) > filesize;
+        }
+        return result;
+    };
+
     
     if( res_type && ['document', 'article'].includes(res_type) ){
         acceptedTypes = lfConfig.acceptedDocumentTypes.toString();
     }else if( res_type && ['audio'].includes(res_type) ){
         acceptedTypes = lfConfig.acceptedAudioTypes.toString();
     }else if( res_type && ['video'].includes(res_type) ){
-        acceptedTypes = lfConfig.acceptedVideoTypes.toString();
+        // acceptedTypes = lfConfig.acceptedVideoTypes.toString();
+        acceptedTypes = "video/mp4,video/x-m4v,video/*";
     }
 
     if( addRes.status  ){
@@ -218,7 +249,7 @@ const ResMedia: React.FC = () => {
             <IonCardContent>
                 <IonRow>
                     <IonCol>
-                        <IonCardTitle className="text-center mb-3">
+                        <IonCardTitle className="text-center mb-3 fs-18">
                             <span>Upload {resTypeText}</span>
                         </IonCardTitle>
                         <IonCardSubtitle className="text-center">
@@ -254,7 +285,7 @@ const ResMedia: React.FC = () => {
                             { resource && Object.keys(resource).length > 0 && resource.filename && 
                             <IonItem className="p-0 text-center mx-auto" lines="none">
                                 <IonLabel>
-                                    <i className="fa fa-paperclip pr-3" aria-hidden="true"></i> {resource.filename}
+                                    <i className="fa fa-paperclip pr-3" aria-hidden="true"></i> {resource.uploaded_name}
                                     <IonButton className="pl-3" size="small" color="danger" onClick={removeResource}> Remove</IonButton>
                                 </IonLabel>
                             </IonItem>}
@@ -264,11 +295,11 @@ const ResMedia: React.FC = () => {
                 </IonRow>
                 { resource && Object.keys(resource).length > 0 && resource.filename && 
                 <>
-                    {/* <IonButton color="warning" 
+                    <IonButton color="warning" 
                         onClick={() => previewModalFn()}
                         className="ion-margin-top mt-4 mb-3 float-left">
                         Preview
-                    </IonButton> */}
+                    </IonButton>
                     <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 float-right" onClick={onSubmit}>
                         Submit
                     </IonButton>
@@ -278,18 +309,12 @@ const ResMedia: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </>}
-        <IonModal isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
-            { resource && Object.keys(resource).length > 0 && showImageModal.isOpen === true &&  <ImageModal
-            showImageModal={showImageModal}
-            setShowImageModal={setShowImageModal} 
+        <IonModal isOpen={resPreviewModal.isOpen} cssClass='my-custom-class'>
+            { resource && Object.keys(resource).length > 0 && resPreviewModal.isOpen === true &&  <ResPreviewModal
+            resPreviewModal={resPreviewModal}
+            setResPreviewModal={setResPreviewModal}
            /> }
         </IonModal>
-        {/* <IonModal isOpen={prPreviewModal.isOpen} cssClass='my-custom-class'>
-            { pr && Object.keys(pr).length > 0 && prPreviewModal.isOpen === true &&  <PRPreviewModal
-            prPreviewModal={prPreviewModal}
-            setPrPreviewModal={setPrPreviewModal} 
-           /> }
-        </IonModal> */}
     </>);
 };
   

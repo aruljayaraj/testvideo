@@ -12,13 +12,9 @@ import VideoPlayer from './VideoJsPlayer';
 // const { CapacitorVideoPlayer, Device } = Plugins;
 
 const VideoViewer: React.FC = () => {
-    // const dispatch = useDispatch();
-    // const authUser = useSelector( (state:any) => state.auth.data.user);
-    // const loadingState = useSelector( (state:any) => state.ui.loading);
     const resource = useSelector( (state:any) => state.res.resource);
-    const { apiBaseURL, basename } = lfConfig;
+    const { apiBaseURL } = lfConfig;
     
-
     const ResFile = ( resource && Object.keys(resource).length > 0 && resource.filename) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${resource.filename}` : ``;
     const videoJsOptions = {
         autoplay: true,

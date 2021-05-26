@@ -23,6 +23,10 @@ import * as uiActions from '../../store/reducers/ui';
 import CoreService from '../../shared/services/CoreService';
 import './EmailVerify.scss';
 
+type FormInputs = {
+  pin: string;
+}
+
 let initialValues = {
   pin: ""
 };
@@ -32,25 +36,10 @@ const EmailVerify: React.FC = () => {
   const dispatch = useDispatch();
   const authValues = useSelector( (state:any) => state.auth.data); 
   
-  const { control, errors, handleSubmit, formState } = useForm({
+  const { control, handleSubmit, formState, formState: { errors } } = useForm<FormInputs>({
     defaultValues: { ...initialValues },
     mode: "onChange"
   });
-
- /**
-   *
-   * @param _fieldName
-   */
-  const showError = (_fieldName: string, msg: string) => {
-    let error = (errors as any)[_fieldName];
-    return error ? (
-      (error.ref.name === _fieldName)? (
-        <div className="invalid-feedback">
-        {error.message || `${msg} is required`}
-      </div>
-      ) : null
-    ) : null;
-  };
 
   const onEmailVerifyCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -80,7 +69,7 @@ const EmailVerify: React.FC = () => {
   }
 
   return (
-    <IonPage>
+    <IonPage className="email-verify-page">
       <IonContent className="ion-padding">
         <IonCard className="card-center mt-2">
           <IonCardHeader>
@@ -98,29 +87,33 @@ const EmailVerify: React.FC = () => {
                   <IonCol sizeMd="12" sizeXs="12">
                     <IonItem>
                       <IonLabel color="medium" position="stacked">6 Digit Verification Pin</IonLabel>
-                      <Controller
-                        as={IonInput}
-                        control={control}
-                        onChangeName="onIonChange"
-                        onChange={([selected]) => {
-                          return selected.detail.value;
-                        }}
-                        name="pin"
-                        rules={{
-                          required: true,
-                          pattern: {
-                            value: /^[0-9]{6,6}$/i,
-                            message: "Invalid Pin"
-                          }
-                        }}
+                      <Controller 
+                          name="pin"
+                          control={control}
+                          render={({ field: {onChange, onBlur} }) => {
+                            return <IonInput 
+                              type="text"
+                              onIonChange={onChange} 
+                              onBlur={onBlur} />
+                          }}
+                          rules={{
+                            required: {
+                              value: true,
+                              message: "Verification Pin is required"
+                            },
+                            pattern: {
+                              value: /^[0-9]{6,6}$/i,
+                              message: "Invalid Verification Pin"
+                            }
+                          }}
                       />
                     </IonItem>
-                    {showError("pin", "Verification Pin")}
+                    {errors.pin && <div className="invalid-feedback">{errors.pin.message}</div>}
                   </IonCol>
                 </IonRow>  
                 
               </IonGrid>
-              <IonButton color="greenbg" className="ion-margin-top mt-5" expand="block" type="submit" disabled={formState.isValid === false}>
+              <IonButton color="greenbg" className="ion-margin-top mt-5" expand="block" type="submit">
                 Submit
               </IonButton>
             </form>  

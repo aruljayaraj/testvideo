@@ -6,14 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 import * as uiActions from '../../../store/reducers/ui';
 import CompanyInfo from './CompanyInfo';
-//import ContactInfo from './ContactInfo';*/
+import OtherInfo from './OtherInfo';
 import AboutCompany from './AboutCompany';
 /*import B2B from './B2B';
 import B2C from './B2C';*/
 import CompanyAndLogo from './CompanyAndLogo';
 
 const CompanyProfile: React.FC = () => {
-  console.log('Company Profile Page');
   const dispatch = useDispatch();
   const memid = useSelector( (state:any) => state.auth.data.user.ID);
   const comProfile = useSelector( (state:any) => state.rep.comProfile);
@@ -28,6 +27,8 @@ const CompanyProfile: React.FC = () => {
       if(res.data.b2c){
         dispatch(repActions.setB2C({ data: res.data.b2c }));
       }*/
+    }else{
+      dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }
     dispatch(uiActions.setShowLoading({ loading: false }));
   }, [dispatch]);
@@ -43,13 +44,13 @@ const CompanyProfile: React.FC = () => {
   }, [dispatch, onGetMemberCb, memid]);
 
   return (
-    <IonPage className="repprofile-page">
+    <IonPage className="company-profile-page">
       { comProfile && 
         <IonContent>
             <CompanyAndLogo />
             <CompanyInfo />
-            {/* <ContactInfo />
-            { ([1,3].includes(parseInt(memOpts.buscat_type))) === true  && <B2B /> }
+            <OtherInfo />
+            {/*{ ([1,3].includes(parseInt(memOpts.buscat_type))) === true  && <B2B /> }
             { ([2,3].includes(parseInt(memOpts.buscat_type))) === true  && <B2C /> } */}
             <AboutCompany />
         </IonContent> 

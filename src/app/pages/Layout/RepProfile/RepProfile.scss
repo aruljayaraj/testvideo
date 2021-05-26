@@ -1,6 +1,7 @@
 .repprofile-page{
   .card-center{
     width: 90%;
+    margin: 0 auto;
   }
   .border-right{
     border-right: 2px dashed #ccc;
@@ -34,36 +35,38 @@
     .profile-logo{
       margin: 0 auto;
       i{
-        position: absolute;
-        bottom: 15px;
-        right: 25px;
+        position: relative;
+        bottom: 10px;
+        right: 8px;
       }
     }
   }
 }
-/*
+
 @media (max-width: 575.98px) { 
-  .dashboard-page{
-    .card-center{
-        width:90%;
+  .repprofile-page{
+    .profile-logo {
+      i {
+        position: absolute !important;
+        right: 0px !important;
+      }
     }
   }
 }
 
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) and (max-width: 767.98px) { 
-  .dashboard-page{
-    .card-center{
-        width:56%;
+  .repprofile-page{
+    .profile-logo {
+      i {
+        position: absolute !important;
+        right: 0px !important;
+      }
     }
   }
 }
 
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) and (max-width: 991.98px) {
-  .dashboard-page{
-    .card-center{
-        width:60%;
-    }
-  }
-}*/
+
+}

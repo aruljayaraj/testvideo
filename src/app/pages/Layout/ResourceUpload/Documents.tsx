@@ -1,12 +1,12 @@
-import { IonList, IonAvatar, IonItem, IonLabel, IonText, IonItemSliding, IonItemOptions, IonRouterLink, IonItemOption, IonIcon } from '@ionic/react';
+import { IonList, IonAvatar, IonItem, IonLabel, IonText, IonItemSliding, IonItemOptions, IonRouterLink, IonItemOption, IonIcon, IonThumbnail } from '@ionic/react';
 import React from 'react';
 import { useHistory } from "react-router-dom";
 import { isPlatform } from '@ionic/react';
-import { format } from 'date-fns'
 import './ResourceUpload.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../Constants';
 import { documentOutline } from 'ionicons/icons';
+import CommonService from '../../../shared/services/CommonService';
 
 interface Props {
   res_type: string,
@@ -26,19 +26,23 @@ const Documents: React.FC<Props> = ({res_type, setShowAlert}) => {
     { resources && 
       <IonList className="buscat-section-content">
         { resources && resources.length > 0 &&  resources.map((item: any, index: number)=> {
-          const prImage = ( item && Object.keys(item).length > 0 && item.pr_image) ? `${apiBaseURL}uploads/press_release/${item.pr_image}` : `${basename}/assets/img/placeholder.png`;
+          let resImage = '';
+          if( +(item.converted) === 1){
+            resImage = ( item && Object.keys(item).length > 0 && item.filename) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.filename.split(".")[0]}.png` : ``;
+          }
           return (<div key={item.id}>
             { (isPlatform('android') || isPlatform('ios')) &&   
               <IonItemSliding > 
                 <IonItem lines={ (resources.length === index+1)? "none": "inset" } routerLink={`${basename}/layout/resources/${res_type}/${item.id}`}>
-                  <IonAvatar slot="start" color="greenbg">
-                    <IonIcon color="greenbg" size="large" icon={documentOutline}></IonIcon>
-                  </IonAvatar>
+                  <IonThumbnail slot="start">
+                    { resImage && <img className="pr-2" src={resImage} alt={item.title} /> }
+                    { !resImage && <IonIcon className="pt-2" color="greenbg" size="large" icon={documentOutline}></IonIcon>}
+                  </IonThumbnail>
                   <IonLabel>
                     <h2>{item.title} </h2>
                     <p>
-                      { format(new Date(item.added_date), 'MMM dd, yyyy') } 
-                      <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 0)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 0)? '(Active)': '(Pending)'}</IonText>
+                      {CommonService.dateFormat(item.added_date)} 
+                      <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 1)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 1)? '(Active)': '(Pending)'}</IonText>
                     </p>
                   </IonLabel>
                 </IonItem>  
@@ -48,18 +52,21 @@ const Documents: React.FC<Props> = ({res_type, setShowAlert}) => {
                 </IonItemOptions>
               </IonItemSliding>
             }
-            { (isPlatform('desktop') || isPlatform('tablet')) &&
+            { (isPlatform('desktop')) &&
             <IonItem lines={ (resources.length === index+1)? "none": "inset" }>
-              <IonAvatar slot="start" color="greenbg">
-                <IonIcon color="greenbg" size="large" icon={documentOutline}></IonIcon>
-              </IonAvatar>
+              <IonThumbnail slot="start">
+                <IonRouterLink href={`${basename}/layout/resources/${res_type}/${item.id}`}>
+                  { resImage && <img className="pr-2" src={resImage} alt={item.title} /> }
+                  { !resImage && <IonIcon className="pt-2" color="greenbg" size="large" icon={documentOutline}></IonIcon>}
+                </IonRouterLink> 
+              </IonThumbnail>
               <IonLabel>
                 <IonRouterLink color="dark" href={`${basename}/layout/resources/${res_type}/${item.id}`}>
                 <h2>{item.title} </h2>
                 </IonRouterLink>
                 <p>
-                  { format(new Date(item.added_date), 'MMM dd, yyyy') } 
-                  <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 0)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 0)? '(Active)': '(Pending)'}</IonText>
+                  {CommonService.dateFormat(item.added_date)} 
+                  <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 1)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 1)? '(Active)': '(Pending)'}</IonText>
                 </p>
               </IonLabel>
               

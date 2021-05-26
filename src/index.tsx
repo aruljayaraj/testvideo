@@ -28,13 +28,16 @@ import './theme/styles.scss';
 import createStore from './app/store/configureStore';
 import { Provider } from 'react-redux';
 import axios from 'axios';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 const store = createStore();
 
 axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL; // Beta
 //axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
+// axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 // console.log(process.env);
+
 axios.interceptors.request.use(
     request => {
       if (!request.headers.Authorization) {
@@ -57,6 +60,10 @@ axios.interceptors.response.use(response => {
     //console.log(error);
     return Promise.reject(error);
 });
+
+// Call the element loader after the platform has been bootstrapped
+defineCustomElements(window);  // add this line
+
 ReactDOM.render(
 <Provider store={store}>
     <App />

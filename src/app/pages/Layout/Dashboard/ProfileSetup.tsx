@@ -22,6 +22,10 @@ import * as uiActions from '../../../store/reducers/ui';
 import * as authActions from '../../../store/reducers/auth';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 
+type FormInputs = {
+    memLevel: number|string;
+}
+
 const ProfileSetup: React.FC = () => {
     const user = useSelector( (state:any) => state.auth.data.user);
     // const repProfile = useSelector( (state:any) => state.rep.repProfile);
@@ -29,13 +33,12 @@ const ProfileSetup: React.FC = () => {
         memLevel: user.business_type === 'Seller'? '1': '6'
     };
     const dispatch = useDispatch();
-    const { control, handleSubmit, formState } = useForm({
+    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
 
     const onCallbackFn = useCallback((res: any) => {
-        console.log(res);
         if(res.status === 'SUCCESS'){
             dispatch(repActions.setMemberProfile({ data: res.data }));
             dispatch(authActions.setUser({ user: res.data.member }));
@@ -61,7 +64,7 @@ const ProfileSetup: React.FC = () => {
     return (<>
         <IonCard className="card-center mt-4">
             <IonCardHeader color="light">
-                <IonCardTitle color="medium" className="ion-text-center">
+                <IonCardTitle color="medium" className="ion-text-center fs-18">
                     Complete Your Profile Set Up
                 </IonCardTitle>
             </IonCardHeader>
@@ -73,9 +76,14 @@ const ProfileSetup: React.FC = () => {
                 <p><IonText><strong>What best describes your business type.</strong></IonText></p>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <IonList lines="none">
-                        <Controller
-                        as={
-                            <IonRadioGroup>
+                        <Controller 
+                            name="memLevel"
+                            control={control}
+                            render={({ field: {onChange, onBlur, value} }) => {
+                            return <IonRadioGroup
+                                onIonChange={onChange} 
+                                onBlur={onBlur}
+                                value={value}>
                                 { (user && Object.keys(user).length > 0 && user.business_type === 'Seller') &&
                                 <>
                                     <IonItem>
@@ -111,18 +119,18 @@ const ProfileSetup: React.FC = () => {
                                     </IonItem>
                                 </>}
                             </IonRadioGroup>
-                        }
-                        control={control}
-                        name="memLevel"
-                        rules={{ required: true }}
-                        onChangeName="onIonChange"
-                        onChange={([selected]) => {
-                            return selected.detail.value;
-                        }}
+                            }}
+                            rules={{ 
+                                required: {
+                                    value: true,
+                                    message: "Business Type is required"
+                                }
+                             }}
                         />
+                        {errors.memLevel && <div className="invalid-feedback">{errors.memLevel.message}</div>}
                     </IonList>
                 
-                    <IonButton color="greenbg" className="ion-margin-top mt-4" expand="block" type="submit" disabled={formState.isValid === false}>
+                    <IonButton color="greenbg" className="ion-margin-top mt-4" expand="block" type="submit">
                         Submit
                     </IonButton>
                 </form>  

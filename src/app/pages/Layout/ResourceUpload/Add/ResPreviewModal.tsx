@@ -1,14 +1,16 @@
-import { IonContent, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonButton, IonGrid, IonRow, IonCol, IonHeader, IonToolbar, IonButtons, IonIcon, IonTitle } from '@ionic/react';
-import React, {useCallback, useEffect} from 'react';
+import { IonContent, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonButton, IonGrid, IonRow, IonCol, IonHeader, IonToolbar, IonButtons, IonIcon, IonTitle, IonRouterLink } from '@ionic/react';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import { isPlatform } from '@ionic/react';
-import { format } from 'date-fns'
 import { close } from 'ionicons/icons';
 import '../ResourceUpload.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import * as uiActions from '../../../../store/reducers/ui';
-import * as prActions from '../../../../store/reducers/dashboard/pr';
+import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../../Constants';
-import CoreService from '../../../../shared/services/CoreService';
+import CommonService from '../../../../shared/services/CommonService';
+import VideoViewer from '../Viewer/VideoViewer';
+import DocumentViewer from '../Viewer/DocumentViewer';
+import AudioViewer from '../Viewer/AudioViewer';
+
 
 interface Props {
     resPreviewModal: any,
@@ -16,38 +18,19 @@ interface Props {
 }
 
 const ResPreviewModal: React.FC<Props> = ({ resPreviewModal, setResPreviewModal }) => {
-    const dispatch = useDispatch();
-    const pr = useSelector( (state:any) => state.pr.pressRelease);
+    const resource = useSelector( (state:any) => state.res.resource);
+    const authUser = useSelector( (state:any) => state.auth.data.user);
     const { apiBaseURL, basename } = lfConfig;
-    let { memID, prID } = resPreviewModal;
+    let { res_type } = useParams<any>();
 
-    // Press Release deafult to load callback
-    const onPrBuscatCb = useCallback((res: any) => {
-        if(res.status === 'SUCCESS'){
-            dispatch(prActions.setPressRelease({ data: res.data }));
-        }
-        dispatch(uiActions.setShowLoading({ loading: false }));
-    }, [dispatch]);
+    const ResFile = ( resource && Object.keys(resource).length > 0 && resource.filename) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${resource.filename}` : ``;
+    const notifyText = `Your ${res_type} is currently being converted for internet streaming. You can try your preview in a few minutes.`;
 
-    useEffect(() => {
-        if( prID ){
-        dispatch(uiActions.setShowLoading({ loading: true }));
-            CoreService.onPostFn('pr_update', {
-                action: 'get_resource', 
-                memID: memID,
-                formID: prID
-            }, onPrBuscatCb);
-        }
-    }, [dispatch, memID, prID, onPrBuscatCb]);
-
-    const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/press_release/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
-
-    return (<>
-        { pr && Object.keys(pr).length > 0 && 
-        <>
+    return (<div className="resource-preview-modal">
+      { resource && Object.keys(resource).length > 0 && <>
         <IonHeader translucent>
             <IonToolbar color="greenbg">
-                <IonButtons slot={ isPlatform('desktop') || isPlatform('tablet')? 'end': 'start' }>
+                <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                     <IonButton onClick={() => setResPreviewModal({
                         ...resPreviewModal, 
                         isOpen: false
@@ -55,29 +38,56 @@ const ResPreviewModal: React.FC<Props> = ({ resPreviewModal, setResPreviewModal 
                         <IonIcon icon={close} slot="icon-only"></IonIcon>
                     </IonButton>
                 </IonButtons>
-                <IonTitle>Press Release Preview</IonTitle>
+                <IonTitle>Resource Preview</IonTitle>
             </IonToolbar>
             
         </IonHeader>
         <IonContent fullscreen className="ion-padding">
-          <IonCard className="preview-card card-center mt-2 mb-4">
+          <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle > {pr.pr_name}</IonCardTitle>
-                <IonText className="mt-2 fs-12" color="medium">{ format(new Date(pr.pr_date), 'MMMM dd, yyyy') }</IonText>
-                <IonText className="fs-12" color={ +(pr.pr_active) === 1? 'success': 'danger'}> { +(pr.pr_active) === 1? '(Active)': '(Pending)'}</IonText>
+                <IonCardTitle className="fs-18"> 
+                  {resource.title}
+                  { +(resource.status) === 0 && resource.mem_id === authUser.ID &&
+                  <IonRouterLink color="greenbg" href={`${basename}/layout/add-resource/${resource.id}/${resource.mem_id}/1`} className="float-right router-link-anchor">
+                    <i className="fa fa-pencil green cursor" aria-hidden="true"></i>
+                  </IonRouterLink>}
+                </IonCardTitle>
+                <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(resource.added_date)}</IonText>
+                { authUser.ID === resource.mem_id && 
+                  <IonText className="fs-12" color={ (+(resource.status) === 1 && +(resource.converted) === 1)? 'success': 'danger'}> { (+(resource.status) === 1 && +(resource.converted) === 1)? '(Active)': '(Pending)'}</IonText>
+                }
             </IonCardHeader>
+            { resource && <>
             <IonCardContent className="pt-3">
-              <IonGrid>
+              <IonGrid className="p-0">
                 <IonRow>
-                  { pr.pr_image && 
-                  <IonCol sizeMd="4" sizeXl="4" sizeXs="12" className="">
-                    <img src={prImage} alt="Press Release Media" />
-                  </IonCol> }
-                  <IonCol sizeMd={ pr.pr_image? "8": "12" } sizeXs="12" className="">
-                    <div className="pl-3">  { /* pt-sm-3 mt-sm-4 */}
-                    { pr.pr_overview && <h2 className="mb-4"><strong>{pr.pr_overview}</strong></h2> }
-                    { pr.pr_quote && <div className="quote mb-3">" {pr.pr_quote} "</div> }
-                    { pr.buscats && pr.buscats.length > 0 &&  pr.buscats.map((item: any, index: number)=> { 
+                  { resource && +(resource.converted) === 0 && <IonCol className="p-4">
+                    <p className="py-5">
+                      <IonText color="danger">{notifyText}</IonText>
+                    </p>
+                  </IonCol>}
+                  { resource && +(resource.converted) === 1 && resource.filename && res_type && res_type === 'video' && 
+                      <IonCol sizeMd="8" sizeXl="8" sizeXs="12" className="p-0"> 
+                        <VideoViewer /> 
+                      </IonCol>
+                  }
+                  { resource && +(resource.converted) === 1 && resource.filename && res_type && ['audio'].includes(res_type) &&
+                      <IonCol sizeMd="6" sizeXl="6" sizeXs="12" className="pt-4"> 
+                          <AudioViewer/> 
+                      </IonCol>
+                  }
+                  { resource && +(resource.converted) === 1 && resource.filename && res_type && ['document', 'article'].includes(res_type) &&
+                      <IonCol sizeMd="12" sizeXl="8" sizeXs="12" className="p-0"> 
+                        <div style={{ width: "100%", minHeight: '200px'}}>
+                          <DocumentViewer /> 
+                        </div>
+                      </IonCol>
+                  }
+                   
+                  <IonCol sizeMd={ (resource.filename && +(resource.converted) === 1)? "4": "12" } sizeXl={ (resource.filename && +(resource.converted) === 1)? "4": "12" } sizeXs="12" className="">
+                    <div className="pl-md-3 mt-3">  { /* pt-sm-3 mt-sm-4 */}
+                    
+                    { resource.buscats && resource.buscats.length > 0 &&  resource.buscats.map((item: any, index: number)=> { 
                       return (<IonItem lines="none" key={index}>
                         <IonAvatar slot="start" color="greenbg">
                             <i className="fa fa-chevron-right fa-lg green" aria-hidden="true"></i>
@@ -91,23 +101,37 @@ const ResPreviewModal: React.FC<Props> = ({ resPreviewModal, setResPreviewModal 
                     </div>
                   </IonCol>
                 </IonRow>
-                { pr.pr_desc && <IonRow className="pt-3">
+                { resource.description && <IonRow className="pt-3">
                   <IonCol>
-                    <div className="external_text" dangerouslySetInnerHTML={{ __html: pr.pr_desc }} ></div>
+                    <div className="external_text" dangerouslySetInnerHTML={{ __html: resource.description }} ></div>
                   </IonCol>
                 </IonRow>}
               </IonGrid>    
             </IonCardContent>
-            <IonCardHeader color="titlebg"><strong>Contacts:</strong>  
-            { pr.reps && pr.reps.length > 0 &&  pr.reps.map((item: any, index: number)=> { 
-                return (
-                  <IonText className="font-weight-bold" key={index}> {`${item.firstname} ${item.lastname} ${ (pr.reps.length > index+1)? ", ": "" } `}</IonText>
-                ) }) }
+            <IonCardHeader color="titlebg">
+              <h3 className="mt-0 font-weight-bold fs-16">Contacts:</h3> 
+              <div className="reps-container">
+                { resource.reps && resource.reps.length > 0 &&  resource.reps.map((item: any, index: number)=> { 
+                  const repImage = (item.profile_image) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${item.profile_image}` : `${basename}/assets/img/avatar.svg`;
+                  return (
+                    <div key={index}>
+                      <IonRouterLink href={`${basename}/profile/${item.mem_id}/${item.rep_id}`}>
+                        <IonAvatar color="greenbg">
+                          <img src={repImage} alt={`${item.firstname} ${item.lastname}`}/>
+                        </IonAvatar>
+                        <p className="mb-0"><IonText color="dark" className="mt-2" key={index}> {`${item.firstname} ${item.lastname}`}</IonText></p>
+                      </IonRouterLink>
+                    </div>
+                  ) 
+                }) }
+              </div>  
             </IonCardHeader>
+            </>}
+             
           </IonCard>  
-        </IonContent> 
+        </IonContent>
       </>}
-    </>);
+    </div>);
 };
   
 export default ResPreviewModal;

@@ -1,14 +1,13 @@
 import React from 'react';
 import '../ResourceUpload.scss';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../../Constants';
 import ReactAudioPlayer from 'react-audio-player';
 
 const AudioViewer: React.FC = () => {
-    const dispatch = useDispatch();
     const resource = useSelector( (state:any) => state.res.resource);
-    const { apiBaseURL, basename } = lfConfig;
+    const { apiBaseURL } = lfConfig;
 
     const ResFile = ( resource && Object.keys(resource).length > 0 && resource.filename) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${resource.filename}` : ``;
     // ${basename}/assets/img/placeholder.png

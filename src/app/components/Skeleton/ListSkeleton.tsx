@@ -1,20 +1,16 @@
-import { IonList, IonItem, IonThumbnail, IonSkeletonText, IonLabel } from '@ionic/react';
+import { IonList, IonItem, IonThumbnail, IonSkeletonText, IonLabel, IonListHeader } from '@ionic/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import './Skeleton.scss';
 
 const ListSkeleton = () => {
-    const loading = useSelector( (state:any) => state.ui.loading);
+    const skeleton = useSelector( (state:any) => state.ui.skeleton);
     
     return (<>
-        { loading.showLoading && 
-            <>
-            <div className="ion-padding list-skeleton">
-                <IonSkeletonText animated style={{ width: '60%' }} />
-                <IonSkeletonText animated />
-            </div>
-
-            <IonList>
+        { skeleton && skeleton.showSkeleton && <IonList>
+            <IonListHeader>
+                <IonSkeletonText className="list-skeleton-title" animated></IonSkeletonText>
+            </IonListHeader>
             { [1,2,3,4,5,6].map((item: any, index: number)=> { 
                 return (
                     <IonItem key={index}>
@@ -35,8 +31,7 @@ const ListSkeleton = () => {
                     </IonItem>
                 );
             }) }
-            </IonList>
-        </>}    
+        </IonList>}    
     </>);
     
 };

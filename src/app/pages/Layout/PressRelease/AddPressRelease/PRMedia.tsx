@@ -45,7 +45,7 @@ const PRMedia: React.FC = () => {
     const [prPreviewModal, setPrPreviewModal] = useState(initPreviewValues);
     const [addPR, setAddPR] = useState({ status: false, memID: '', ID: '' });
     const { apiBaseURL, basename } = lfConfig;
-    let { id } = useParams();
+    let { id } = useParams<any>();
 
     const imageModalFn = (title: string, actionType: string) => {
         setShowImageModal({ 
@@ -101,7 +101,7 @@ const PRMedia: React.FC = () => {
             <IonCardContent>
                 <IonRow>
                     <IonCol className="">
-                        <IonCardTitle className="text-center">
+                        <IonCardTitle className="text-center fs-18">
                             <span>Upload Supporting Media</span>
                         </IonCardTitle>
                         <IonList>

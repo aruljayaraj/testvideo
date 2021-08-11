@@ -1,0 +1,42 @@
+ion-content ion-toolbar {
+  --background: translucent;
+}
+.search-page{
+  .card-center{
+      width:90%;
+      display:block;
+      margin: 0 auto;
+  }
+  .profile-image-wrap{
+    img{
+      width:150px;
+      height:auto;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+    .profile-image{
+      margin: 0 auto;
+      position: relative;
+    }
+  }
+}
+
+@media (max-width: 575.98px) { 
+  // .search-page{
+    
+  // }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) { 
+  // .search-page{
+    
+  // }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 991.98px) {
+  // .search-page{
+    
+  // }
+}

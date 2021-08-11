@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 let state = {
-    isdCodes: []
+    isdCodes: [],
+    item: {},
+    items: []
 }
 
 const slice = createSlice({
@@ -12,8 +14,7 @@ const slice = createSlice({
                 const data = action.payload.data;
                 fdataState[action.payload.key] = data;
             }
-        },
-        
+        }
     }
 });
 

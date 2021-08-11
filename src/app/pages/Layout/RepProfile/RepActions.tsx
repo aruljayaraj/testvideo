@@ -26,7 +26,7 @@ const RepActions: React.FC = () => {
     const dispatch = useDispatch(); // console.log('Actions');
     const repProfile = useSelector( (state:any) => state.rep.repProfile);   // console.log(repProfile);
     const [delRep, setDelRep] = useState({ status: false, memID: '', repID: ''  });
-    const { apiBaseURL, basename } = lfConfig; console.log( apiBaseURL, basename );
+    const { apiBaseURL, basename } = lfConfig;
 
     const onCallbackFn = useCallback((res: any) => { // console.log(res);
         if(res.status === 'SUCCESS'){

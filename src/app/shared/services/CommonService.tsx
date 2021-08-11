@@ -35,16 +35,24 @@ var CommonService = (function() {
         }
         return new Uint8Array(img_buffer);
     }
-    // date format
+    // date format MMM dd, yyyy
     var dateFormat = function (cdate: any) {
         if(cdate){ // For safari need to do like this
             return format(new Date(cdate.replace(/-/g, "/")), 'MMM dd, yyyy')
         }
         return;
     }
+    // Date readable format dd/MM/yyyy
     var dateReadFormat = function (cdate: any) {
         if(cdate){ // For safari need to do like this
             return format(new Date(cdate.replace(/-/g, "/")), 'dd/MM/yyyy')
+        }
+        return;
+    }
+    // Mysql date format to normal javascript format
+    var mysqlToJsDateFormat = function (cdate: any) {
+        if(cdate){ // For safari need to do like this
+            return new Date(Date.parse(cdate!.replace(/-/g, '/')))
         }
         return;
     }
@@ -55,7 +63,8 @@ var CommonService = (function() {
         getBase64FromUrl: getBase64FromUrl,
         b64ToUint8Array: b64ToUint8Array,
         dateFormat: dateFormat,
-        dateReadFormat: dateReadFormat
+        dateReadFormat: dateReadFormat,
+        mysqlToJsDateFormat: mysqlToJsDateFormat
     }
 
 })();

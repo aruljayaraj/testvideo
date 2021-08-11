@@ -62,7 +62,7 @@ const AboutProfile: React.FC = () => {
             </IonCardContent>
         </IonCard>
         }
-        <IonModal isOpen={showAboutProfileModal} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showAboutProfileModal} cssClass='my-custom-class'>
           { Object.keys(repProfile).length > 0 && showAboutProfileModal === true && <AboutProfileModal 
             showAboutProfileModal={showAboutProfileModal}
             setShowAboutProfileModal={setShowAboutProfileModal} 

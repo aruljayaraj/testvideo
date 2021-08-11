@@ -29,7 +29,7 @@ import CoreService from '../../../shared/services/CoreService';
 import './RepProfile.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../../store/reducers/dashboard/rep';
-import * as frmdataActions from '../../../store/reducers/dashboard/formdata';
+import * as frmdataActions from '../../../store/reducers/common';
 import * as uiActions from '../../../store/reducers/ui';
 import { DropDown } from '../../../interfaces/Common';
 
@@ -120,7 +120,7 @@ const ContactInfoModal: React.FC<Props> = ({showContactModal, setShowContactModa
         dispatch(uiActions.setShowLoading({ loading: false }));
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }, [dispatch, setShowContactModal]);
-    const onSubmit = (data: any) => { console.log(data);
+    const onSubmit = (data: any) => { 
         dispatch(uiActions.setShowLoading({ loading: true }));
         const user = {
             action: 'contact_info_update',

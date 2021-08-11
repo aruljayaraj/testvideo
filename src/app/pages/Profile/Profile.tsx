@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonCardTitle, IonCol, IonContent, IonPage, IonRow, IonText } from '@ionic/react'; 
+import { IonCard, IonCardContent, IonCol, IonContent, IonPage, IonRow } from '@ionic/react'; 
 import React, {useCallback, useEffect} from 'react';
 import { useParams } from "react-router-dom";
 import CoreService from '../../shared/services/CoreService';
@@ -6,16 +6,15 @@ import './Profile.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../store/reducers/dashboard/rep';
 import * as resActions from '../../store/reducers/dashboard/resource';
+import * as dealActions from '../../store/reducers/dashboard/deal';
+import * as prActions from '../../store/reducers/dashboard/pr';
 import * as uiActions from '../../store/reducers/ui';
-// import CompanyInfo from './CompanyInfo';
-// import OtherInfo from './OtherInfo';
-// import AboutCompany from './AboutCompany';
-/*
-import B2C from './B2C';*/
+
 import Overview from './Overview';
 import RepOverview from './RepOverview';
 import Buscats from './Buscats';
 import Resources from './Resources';
+import Deals from './Deals';
 import GeneralInfo from './GeneralInfo';
 
 const CompanyProfile: React.FC = () => {
@@ -39,6 +38,15 @@ const CompanyProfile: React.FC = () => {
       }
       if(res.data.resources){
         dispatch(resActions.setResources({ data: res.data.resources }));
+      }
+      if(res.data.deals){
+        dispatch(dealActions.setDeals({ data: res.data.deals }));
+      }
+      if(res.data.deals){
+        dispatch(dealActions.setDeals({ data: res.data.deals }));
+      }
+      if(res.data.prs){
+        dispatch(prActions.setPressReleases({ data: res.data.prs }));
       }
     }else{
       dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
@@ -68,6 +76,7 @@ const CompanyProfile: React.FC = () => {
               <RepOverview />
               <Buscats />
               <Resources />
+              <Deals />
             </IonCol>
 
             <IonCol sizeMd="4">

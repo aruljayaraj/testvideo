@@ -2,7 +2,7 @@ import { IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonTe
 import React, {useCallback, useEffect} from 'react';
 import { isPlatform } from '@ionic/react';
 import { close } from 'ionicons/icons';
-import '../DailyDeal.scss';
+import '../Deals.scss';
 import { useDispatch, useSelector } from 'react-redux';
 // import * as uiActions from '../../../../store/reducers/ui';
 // import * as dealActions from '../../../../store/reducers/dashboard/deal';
@@ -21,7 +21,7 @@ interface Props {
 const PreviewModal: React.FC<Props> = ({ previewModal, setPreviewModal }) => {
     const dispatch = useDispatch();
     const authUser = useSelector( (state:any) => state.auth.data.user);
-    const dd = useSelector( (state:any) => state.deals.dailyDeal);
+    const dd = useSelector( (state:any) => state.deals.localDeal);
     const { apiBaseURL, basename } = lfConfig;
     let { memID, ddID } = previewModal;
 
@@ -68,7 +68,7 @@ const PreviewModal: React.FC<Props> = ({ previewModal, setPreviewModal }) => {
                 <IonCardTitle className="fs-18"> {dd.name}</IonCardTitle>
                 <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(dd.added_date)} </IonText>
                 { authUser.ID === dd.mem_id && 
-                  <Status is_active={+(dd.is_active)} type="daily_deal" />
+                  <Status is_active={+(dd.is_active)} type="local_deal" />
                 }
             </IonCardHeader>
             <IonCardContent className="pt-3">

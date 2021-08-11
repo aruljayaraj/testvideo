@@ -4,8 +4,9 @@ const tokenLocalData = sessionStorage.getItem('token') || '';
 const userLocalData = JSON.parse(sessionStorage.getItem('auth') || '{}');
 const menuLocalData = JSON.parse(sessionStorage.getItem('menu') || '{}');
 const optionsLocalData = JSON.parse(sessionStorage.getItem('options') || '{}');
+// console.log(JSON.parse(localStorage.getItem('location')));
 const locationLocalData = JSON.parse(localStorage.getItem('location') || '{}');
-    
+    // console.log(Object.keys(locationLocalData).length !== 0? locationLocalData: {});
 let state = {
     token: Object.keys(tokenLocalData).length !== 0? tokenLocalData: '',
     data: Object.keys(userLocalData).length !== 0? userLocalData: {
@@ -68,6 +69,19 @@ const slice = createSlice({
                 sessionStorage.setItem('options', JSON.stringify(authState.memOptions));
             }
         },
+        setDealsCountUpdate: (authState, action) => {
+            if( action.payload.total ){
+                const memOptions = {
+                    ...authState.memOptions,
+                    localdeals: {
+                        ...authState.memOptions.localdeals,
+                        total: action.payload.total
+                    }
+                };
+                authState.memOptions = memOptions;
+                sessionStorage.setItem('options', JSON.stringify(authState.memOptions));
+            }
+        },
         setLocation: (authState, action) => {
             if( action.payload.location ){
                 authState.location = action.payload.location;
@@ -86,6 +100,7 @@ export const {
     onEmailVerify,
     setMenu,
     setMemOptions,
+    setDealsCountUpdate,
     setLocation
 } = slice.actions;
 export default slice.reducer;

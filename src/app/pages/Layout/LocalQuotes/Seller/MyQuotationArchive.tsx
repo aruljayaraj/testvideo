@@ -11,6 +11,7 @@ import CoreService from '../../../../shared/services/CoreService';
 import QuotationContent from './QuotationContent'; 
 import ListSkeleton from '../../../../components/Skeleton/ListSkeleton';
 import NoData from '../../../../components/Common/NoData';
+import { nanoid } from 'nanoid';
 // import DeleteModal from '../../../../components/Modal/DeleteModal';
 
 const MyQuotationArchive: React.FC = () => {
@@ -121,7 +122,7 @@ const MyQuotationArchive: React.FC = () => {
           { qts.map((qt: any, index: number) => {
             return (<QuotationContent 
               qt={qt} 
-              key={index} 
+              key={nanoid()} 
               // setShowActionSheet={setShowActionSheet} 
               setShowPopover={setShowPopover}
               // setShowDeleteModal={setShowDeleteModal}

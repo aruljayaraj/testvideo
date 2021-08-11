@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonRouterLink, IonGrid, IonRow, IonCol } from '@ionic/react'; 
+import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonRouterLink, IonGrid, IonRow, IonCol } from '@ionic/react'; 
 import React, {useCallback, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import './PressRelease.scss';

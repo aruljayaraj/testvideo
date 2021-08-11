@@ -131,13 +131,13 @@ const PRMedia: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </>}
-        <IonModal isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='view-modal-wrap'>
             { pr && Object.keys(pr).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}
             setShowImageModal={setShowImageModal} 
            /> }
         </IonModal>
-        <IonModal isOpen={prPreviewModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={prPreviewModal.isOpen} cssClass='view-modal-wrap'>
             { pr && Object.keys(pr).length > 0 && prPreviewModal.isOpen === true &&  <PRPreviewModal
             prPreviewModal={prPreviewModal}
             setPrPreviewModal={setPrPreviewModal} 

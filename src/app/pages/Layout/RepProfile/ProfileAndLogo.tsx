@@ -74,6 +74,7 @@ const ProfileAndLogo: React.FC = () => {
             const fd = new FormData();
             fd.append("dataFile", new Blob([ u8Image ], {type: "image/jpg"}), fileName);
             fd.append('memId', authUser.ID);
+            fd.append('repId', authUser.repID);
             fd.append('formId', authUser.repID);
             fd.append('action', 'rep_profile' );
             CoreService.onUploadFn('file_upload', fd, uploadCameraPhotoCbFn);
@@ -148,7 +149,7 @@ const ProfileAndLogo: React.FC = () => {
             }]}
         >
         </IonActionSheet>
-        <IonModal isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
             { repProfile && Object.keys(repProfile).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}
             setShowImageModal={setShowImageModal} 

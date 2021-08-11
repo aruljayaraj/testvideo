@@ -122,6 +122,9 @@ a{
            color: #47812c;
         }
     }
+    i.fa-shopping-cart{
+        margin: 8px 0 0 5px !important;
+    }
 }
 
 .router-link-anchor-vertical{
@@ -145,6 +148,9 @@ a{
 }
 .gray{
     color: var(--app-gray);
+}
+.gray-medium{
+    color: #737373;
 }
 .blue{
     color: $wizard-color-active;
@@ -351,4 +357,9 @@ p.textbold{
 }
 .roundcorner{
     border-radius: 5px;
+}
+.formInput{
+    border: 1px solid hsl(0,0%, 70%) !important;
+    border-radius: 3px !important;
+    padding: 10px;
 }

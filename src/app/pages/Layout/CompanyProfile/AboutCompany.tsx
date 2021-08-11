@@ -60,7 +60,7 @@ const AboutCompany: React.FC = () => {
             </IonCardContent>
         </IonCard>
         }
-        <IonModal isOpen={showAboutCompanyModal} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showAboutCompanyModal} cssClass='my-custom-class'>
           { Object.keys(comProfile).length > 0 && showAboutCompanyModal === true && <AboutCompanyModal 
             showAboutCompanyModal={showAboutCompanyModal}
             setShowAboutCompanyModal={setShowAboutCompanyModal} 

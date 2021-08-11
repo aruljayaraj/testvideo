@@ -116,7 +116,7 @@ const B2C: React.FC = () => {
             </IonCardContent>
         </IonCard>
         }
-        <IonModal isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
           { repProfile && showCategoryModal.isOpen === true && <CategoryModal
             showCategoryModal={showCategoryModal}
             setShowCategoryModal={setShowCategoryModal}

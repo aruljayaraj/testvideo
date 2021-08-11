@@ -25,15 +25,14 @@ import React, { useState, useCallback, useRef, useEffect} from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-// import useStateWithCallback from 'use-state-with-callback';
 import { size, toArray } from 'lodash';
-import { MediaCapture, CaptureError, CaptureAudioOptions } from '@ionic-native/media-capture';
+// import { MediaCapture, CaptureError, CaptureAudioOptions } from '@ionic-native/media-capture';
 import { isPlatform, getPlatforms } from '@ionic/react';
-import {
+/*import {
     MediaFile,
     VideoCapturePlusOptions,
     VideoCapturePlus,
-  } from "@ionic-native/video-capture-plus";
+  } from "@ionic-native/video-capture-plus";*/
   
 
 import '../LocalQuotes.scss';
@@ -75,8 +74,8 @@ const QQMedia: React.FC = () => {
     const [showAudActSheet, setShowAudActSheet] = useState(false);
     const [showVidActSheet, setShowVidActSheet] = useState(false);
 
-    const [showImageModal, setShowImageModal] = useState(initialValues);
-    const [resPreviewModal, setResPreviewModal] = useState(initPreviewValues);
+    // const [showImageModal, setShowImageModal] = useState(initialValues);
+    // const [resPreviewModal, setResPreviewModal] = useState(initPreviewValues);
     const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
     const { basename } = lfConfig;
     let { id, rfqType } = useParams<any>();
@@ -270,6 +269,7 @@ const QQMedia: React.FC = () => {
             const fd = new FormData();
             fd.append("dataFile", new Blob([ u8Image ], {type: "image/jpg"}), fileName);
             fd.append('memId', authUser.ID);
+            fd.append('repId', authUser.repID);
             fd.append('formId', id? id: '');
             fd.append('qqType', 'buyer' );
             fd.append('action', 'localquote' );
@@ -282,14 +282,14 @@ const QQMedia: React.FC = () => {
         // const { mediaCapture } = MediaCapture();
         // let options: CaptureAudioOptions = { limit: 3 }
         // const openScanner = async () => {
-            let options: CaptureAudioOptions = { limit: 1, duration: 30 };
+            /*let options: CaptureAudioOptions = { limit: 1, duration: 30 };
             const data:any = await MediaCapture.captureAudio()
                 .then((audio: any) => {
                     console.log(audio);
                 })
                 .then((err) => {
                     console.log(JSON.stringify(err));
-                });
+                });*/
                 
             // console.log(data);
             // console.log((data[0] as MediaFile).fullPath);
@@ -308,9 +308,9 @@ const QQMedia: React.FC = () => {
     // Record Video and Upload
     const uploadRecoredVideoFn = async () => { console.log("Meow");
         console.log(getPlatforms());console.log(isPlatform("desktop"));
-        if(isPlatform("desktop")){ 
-            let options: VideoCapturePlusOptions = { limit: 1, duration: 30 };
-            let capture:any = await VideoCapturePlus.captureVideo(options);
+        if(isPlatform("desktop")){ console.log('Meow');
+            // let options: VideoCapturePlusOptions = { limit: 1, duration: 30 };
+            // let capture:any = await VideoCapturePlus.captureVideo(options);
             // console.log((capture[0] as MediaFile).fullPath);
         }
     };

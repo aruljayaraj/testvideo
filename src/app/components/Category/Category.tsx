@@ -168,7 +168,7 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
                 dispatch(prActions.setBuscat({ data: res.data }));
             }else if( ['document','article', 'audio', 'video'].includes(formType) ){
                 dispatch(resActions.setBuscat({ data: res.data }));
-            }else if( formType === 'dailyDeal' ){
+            }else if( formType === 'localDeal' ){
                 dispatch(dealActions.setBuscat({ data: res.data }));
             }else if( formType === 'localquote' ){
                 dispatch(qqActions.setBuscat({ data: res.data }));

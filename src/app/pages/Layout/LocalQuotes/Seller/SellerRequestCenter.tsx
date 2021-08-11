@@ -11,6 +11,7 @@ import CoreService from '../../../../shared/services/CoreService';
 import SRContent from './SRContent';
 import ListSkeleton from '../../../../components/Skeleton/ListSkeleton';
 import NoData from '../../../../components/Common/NoData';
+import { nanoid } from 'nanoid';
 
 const SellerRequestCenter: React.FC = () => {
   const dispatch = useDispatch();
@@ -118,7 +119,7 @@ const SellerRequestCenter: React.FC = () => {
           { qqs.map((qq: any, index: number) => {
             return (<SRContent 
               qq={qq} 
-              key={index} 
+              key={nanoid()} 
               setShowActionSheet={setShowActionSheet}
               setShowPopover={setShowPopover}
               />)

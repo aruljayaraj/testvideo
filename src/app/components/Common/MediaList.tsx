@@ -20,7 +20,8 @@ interface PropsInterface{
     formType: string
 }
 
-const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
+// Only for Resources Document, Audio, Video
+const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => { 
   
     const loadingState = useSelector( (state:any) => state.ui.loading);
     const [showViewerModal, setShowViewerModal] = useState(initialValues);
@@ -49,6 +50,7 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
                     title = 'Video';
                 }
                 return (<IonItem className="cursor" lines="none" key={index} onClick={() => categoryModalFn(`${title} Viewer`, item.mem_id, item.form_id, item.upload_type, item.filename, item.converted)} >
+                { item.uploaded_name && <>
                 <IonAvatar slot="start" color="greenbg">
                     { item && ['document', 'article'].includes(item.upload_type) && <IonIcon className="pt-2" color="greenbg" size="large" icon={documentTextOutline}></IonIcon>}
                     { item && item.upload_type === 'audio' && <IonIcon className="pt-2" color="greenbg" size="large" icon={musicalNoteOutline}></IonIcon>}
@@ -56,7 +58,8 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
                 </IonAvatar>
                 <IonLabel>
                     <h2>{item.uploaded_name}</h2>
-                </IonLabel>
+                </IonLabel> 
+                </>}
             </IonItem> )} )}
         </IonList>}
         { !props.attachments && Object.keys(props.attachments).length === 0 && !loadingState.showLoading && 
@@ -64,7 +67,7 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
                 <IonText color="warning">No attachments found.</IonText>
             </p>
         }
-        <IonModal isOpen={showViewerModal.isOpen} cssClass='category-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={showViewerModal.isOpen} cssClass={ `${['document','article'].includes(showViewerModal.mediaType)? 'view-modal-wrap': ''}` }>
           { props.attachments && Object.keys(props.attachments).length > 0 && showViewerModal.isOpen === true && <ViewerModal
             showViewerModal={showViewerModal}
             setShowViewerModal={setShowViewerModal}

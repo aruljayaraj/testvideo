@@ -34,58 +34,58 @@ const ViewerModal: React.FC<PropsInterface> = (props: PropsInterface) => {
     let { title, mediaType, formType, formId, memId, fileName, converted } = props.showViewerModal;
     
     return (<>
-            <IonHeader translucent>
-                <IonToolbar color="greenbg">
-                    <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
-                        <IonButton onClick={() => props.setShowViewerModal({
-                            ...props.showViewerModal, 
-                            isOpen: false
-                        })}>
-                            <IonIcon icon={close} slot="icon-only"></IonIcon>
-                        </IonButton>
-                    </IonButtons>
-                    <IonTitle> {title}</IonTitle>
-                </IonToolbar>
-                
-            </IonHeader>
-            <IonContent fullscreen className="ion-padding">
-                { fileName && memId && ['document','article'].includes(mediaType) && 
-                    <Document 
-                        memId={memId}
-                        formId={formId}
-                        fileName={fileName}
-                        formType={formType}
-                        mediaType={mediaType}
-                        converted={converted}
-                        showViewerModal={props.showViewerModal}
-                        setShowViewerModal={props.setShowViewerModal}
-                    /> 
-                }
-                { fileName && memId && mediaType === 'audio' && 
-                    <Audio
-                        memId={memId}
-                        formId={formId}
-                        fileName={fileName}
-                        formType={formType}
-                        mediaType={mediaType}
-                        converted={converted}
-                        showViewerModal={props.showViewerModal}
-                        setShowViewerModal={props.setShowViewerModal}
-                    /> 
-                }
-                { fileName && memId && mediaType === 'video' && 
-                    <Video
-                        memId={memId}
-                        formId={formId}
-                        fileName={fileName}
-                        formType={formType}
-                        mediaType={mediaType}
-                        converted={converted}
-                        showViewerModal={props.showViewerModal}
-                        setShowViewerModal={props.setShowViewerModal}
-                    /> 
-                }
-            </IonContent> 
+        <IonHeader translucent>
+            <IonToolbar color="greenbg">
+                <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
+                    <IonButton onClick={() => props.setShowViewerModal({
+                        ...props.showViewerModal, 
+                        isOpen: false
+                    })}>
+                        <IonIcon icon={close} slot="icon-only"></IonIcon>
+                    </IonButton>
+                </IonButtons>
+                <IonTitle> {title}</IonTitle>
+            </IonToolbar>
+            
+        </IonHeader>
+        <IonContent fullscreen className="ion-padding d-flex justify-content-center mb-3">
+            { fileName && memId && ['document','article'].includes(mediaType) && 
+                <Document 
+                    memId={memId}
+                    formId={formId}
+                    fileName={fileName}
+                    formType={formType}
+                    mediaType={mediaType}
+                    converted={converted}
+                    showViewerModal={props.showViewerModal}
+                    setShowViewerModal={props.setShowViewerModal}
+                /> 
+            }
+            { fileName && memId && mediaType === 'audio' && 
+                <Audio
+                    memId={memId}
+                    formId={formId}
+                    fileName={fileName}
+                    formType={formType}
+                    mediaType={mediaType}
+                    converted={converted}
+                    showViewerModal={props.showViewerModal}
+                    setShowViewerModal={props.setShowViewerModal}
+                /> 
+            }
+            { fileName && memId && mediaType === 'video' && 
+                <Video
+                    memId={memId}
+                    formId={formId}
+                    fileName={fileName}
+                    formType={formType}
+                    mediaType={mediaType}
+                    converted={converted}
+                    showViewerModal={props.showViewerModal}
+                    setShowViewerModal={props.setShowViewerModal}
+                />
+            }
+        </IonContent> 
     </>);
 };
   

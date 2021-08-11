@@ -28,11 +28,13 @@ import { useSelector } from 'react-redux';
 import './Header.scss';
 import LeftMenu from './LeftMenu';
 import RightMenu from './RightMenu';
+import SearchModal from '../Modal/SearchModal/SearchModal';
+// import { SearchProps } from '../../interfaces/Common';
 
-const Header: React.FC = () => {
+const Header: React.FC = (props:any) => { // console.log(props.location.state);
   
   const authValues = useSelector( (state:any) => state.auth.data);
-  const [showModal, setShowModal] = useState(false);
+  const [searchModal, setSearchModal] = useState(false);
   const [basename] = useState(process.env.REACT_APP_BASENAME);
   const [showPopover, setShowPopover] = useState(false);
 
@@ -96,7 +98,7 @@ const Header: React.FC = () => {
           </IonButtons> */}
           
           <IonButtons slot="primary">
-            <IonButton onClick={() => setShowModal(true)}>
+            <IonButton onClick={() => setSearchModal(true)}>
               <IonIcon slot="icon-only" icon={search}></IonIcon>
             </IonButton>
             <IonButton className="notify-icon-wrap" onClick={() => setShowPopover(true)}>
@@ -131,11 +133,18 @@ const Header: React.FC = () => {
         
       </div>
 
-      <IonModal isOpen={showModal} cssClass='search-modal'>
+      <IonModal backdropDismiss={false} isOpen={searchModal} cssClass='search-modal'>
+          { searchModal === true &&  <SearchModal
+            searchModal={searchModal}
+            setSearchModal={setSearchModal} 
+          /> }
+      </IonModal>
+
+      {/* <IonModal backdropDismiss={false} isOpen={searchModal} cssClass='search-modal'>
         <IonContent fullscreen>
           <IonToolbar>
             <IonButtons slot="end">
-                <IonButton onClick={() => setShowModal(false)}>
+                <IonButton onClick={() => setSearchModal(false)}>
                     <IonIcon icon={close} slot="icon-only"></IonIcon>
                 </IonButton>
             </IonButtons>
@@ -185,7 +194,7 @@ const Header: React.FC = () => {
 
           </form>      
         </IonContent>
-      </IonModal>
+      </IonModal> */}
 
       <IonPopover
         isOpen={showPopover}

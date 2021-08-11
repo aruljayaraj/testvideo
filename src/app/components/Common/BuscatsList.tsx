@@ -1,6 +1,7 @@
 import { IonAvatar, IonItem, IonLabel, IonText, IonList } from '@ionic/react'; 
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { nanoid } from 'nanoid';
 interface PropsInterface{
     buscats: any
 }
@@ -13,7 +14,7 @@ const BuscatsList: React.FC<PropsInterface> = (props: PropsInterface) => {
         {props.buscats && Object.keys(props.buscats).length > 0 && 
             <IonList>
             { props.buscats.map((item: any, index: number) => { 
-                return (<IonItem lines="none" key={index}>
+                return (<IonItem lines="none" key={nanoid()}>
                     <IonAvatar slot="start" color="greenbg">
                         <i className="fa fa-chevron-right fa-lg green" aria-hidden="true"></i>
                     </IonAvatar>

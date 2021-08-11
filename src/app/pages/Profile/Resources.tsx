@@ -19,7 +19,7 @@ const Resources: React.FC = () => {
     const { basename } = lfConfig;
 
     return (<>
-        { Object.keys(repProfile).length > 0 &&
+        { Object.keys(repProfile).length > 0 && resources && resources.length > 0 && 
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="fs-18">
@@ -28,8 +28,7 @@ const Resources: React.FC = () => {
             </IonCardHeader>
               
             <IonCardContent>
-                { resources && resources.length > 0 && <IonList className="buscat-section-content">
-                    
+                <IonList className="buscat-section-content">
                     { resources.map((item: any)=> {
                         return (<div className="pl-3" key={item.id}>
                             <IonRouterLink color="greenbg" href={`${basename}/layout/resources/${item.res_type}/${item.id}`} className="">
@@ -42,7 +41,7 @@ const Resources: React.FC = () => {
                             </IonRouterLink>
                         </div>)
                     })}
-                </IonList>}
+                </IonList>
                 
             </IonCardContent>
         </IonCard>

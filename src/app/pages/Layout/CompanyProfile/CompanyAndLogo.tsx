@@ -30,9 +30,8 @@ const CompanyAndLogo: React.FC = () => {
     // console.log('Profile Logo Page');
     // const dispatch = useDispatch();
     const comProfile = useSelector( (state:any) => state.rep.comProfile);
-    const [basename] = useState(process.env.REACT_APP_BASENAME);
     const [showImageModal, setShowImageModal] = useState(initialValues);
-    const { apiBaseURL } = lfConfig;
+    const { apiBaseURL, basename } = lfConfig;
 
     const imageModalFn = (title: string, actionType: string) => {
         setShowImageModal({ 
@@ -58,7 +57,7 @@ const CompanyAndLogo: React.FC = () => {
                         <IonList>
                             <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Edit Logo', 'company_logo')}>
                                 <div className="profile-logo">
-                                    <img src={logoImage} alt="Rep Profile Logo"/>
+                                    <img src={logoImage} alt="Company Logo"/>
                                     <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true"></i>
                                 </div>
                             </IonItem>
@@ -82,7 +81,7 @@ const CompanyAndLogo: React.FC = () => {
                 
             </IonCardContent>
         </IonCard>}
-        <IonModal isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
             { Object.keys(comProfile).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}
             setShowImageModal={setShowImageModal} 

@@ -4,6 +4,8 @@ export const lfConfig =  {
     tinymceKey: 'pny4jwf7rrrkuio08hit5ojxslw59l941fvv1wvzsfileta1', // Rod Account
     tinymceMaxLength: 500,
     tinymceResourceMaxLength: 250,
+    stripePublicKey: 'pk_test_T749JqokJ8nJKey9h8sDC4QZ',
+    stripeSecretKey: 'sk_test_x5JKYvDFuRIY5n75wTzwa8Ne',
     apiBaseURL: process.env.REACT_APP_API_URL,
     basename: process.env.REACT_APP_BASENAME,
     baseurl: process.env.REACT_APP_BASE_URL,
@@ -65,4 +67,6 @@ export const lfConfig =  {
     acceptedQQAudSizeMB: '100MB',
     acceptedQQVidSize: '104857600',
     acceptedQQVidSizeMB: '100MB',
+    LOCAL_DEAL: 'local_deal',
+    PRESS_RELEASE: 'press_release',
 }; 

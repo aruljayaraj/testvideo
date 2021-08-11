@@ -198,7 +198,7 @@ const MyQuotations: React.FC = () => {
           
       </IonContent>) : ( <ListSkeleton /> )}
 
-      <IonModal isOpen={showDeleteModal.isOpen} cssClass='my-custom-class'>
+      <IonModal backdropDismiss={false} isOpen={showDeleteModal.isOpen} cssClass='my-custom-class'>
           { qts && Object.keys(qts).length > 0 && showDeleteModal.isOpen === true &&  <DeleteModal
             title="Withdraw Quotation"
             showDeleteModal={showDeleteModal}

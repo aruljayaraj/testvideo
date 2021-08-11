@@ -23,7 +23,6 @@ import React, { useState, useCallback, useRef, useEffect} from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-// import useStateWithCallback from 'use-state-with-callback';
 import { size, toArray } from 'lodash';
 import '../LocalQuotes.scss';
 
@@ -260,6 +259,7 @@ const QQMedia: React.FC = () => {
             const fd = new FormData();
             fd.append("dataFile", new Blob([ u8Image ], {type: "image/jpg"}), fileName);
             fd.append('memId', authUser.ID);
+            fd.append('repId', authUser.repID);
             fd.append('formId', id? id: '');
             fd.append('qqType', 'seller' );
             fd.append('action', 'localquote' );

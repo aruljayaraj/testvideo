@@ -12,6 +12,7 @@ import BRContent from './BRContent';
 import ListSkeleton from '../../../../components/Skeleton/ListSkeleton';
 import NoData from '../../../../components/Common/NoData';
 import DeleteModal from '../../../../components/Modal/DeleteModal';
+import { nanoid } from 'nanoid';
 
 const BuyerRequestCenter: React.FC = () => {
   const dispatch = useDispatch();
@@ -121,7 +122,7 @@ const BuyerRequestCenter: React.FC = () => {
           { qqs.map((qq: any, index: number) => {
             return (<BRContent 
               qq={qq} 
-              key={index} 
+              key={nanoid()} 
               setShowActionSheet={setShowActionSheet} 
               setShowPopover={setShowPopover}
               setShowDeleteModal={setShowDeleteModal}
@@ -182,7 +183,7 @@ const BuyerRequestCenter: React.FC = () => {
           
       </IonContent>) : ( <ListSkeleton /> )}
 
-      <IonModal isOpen={showDeleteModal.isOpen} cssClass='my-custom-class'>
+      <IonModal backdropDismiss={false} isOpen={showDeleteModal.isOpen} cssClass='my-custom-class'>
           { qqs && Object.keys(qqs).length > 0 && showDeleteModal.isOpen === true &&  <DeleteModal
           title="Delete LocalQuote"
           showDeleteModal={showDeleteModal}

@@ -62,7 +62,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
     const [showRepProfile, setShowRepProfile] = useState(false); 
     const [showPressRelease, setShowPressRelease] = useState(false);
     const [showResource, setShowResource] = useState(false);
-    const [showDailyDeal, setShowDailyDeal] = useState(false);
+    const [showLocalDeal, setShowLocalDeal] = useState(false);
     const [showBusinessQQ, setShowBusinessQQ] = useState(false);
     // const [showBusinessSellerQQ, setShowBusinessSellerQQ] = useState(false);
     const [showConsumerQQ, setShowConsumerQQ] = useState(false);
@@ -79,7 +79,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
     }
 
     return (<>
-      { authValues && authValues.authenticated && authValues.isVerified &&  
+      { authValues &&  authValues.user &&
         <>
           <IonHeader>
             <IonToolbar>
@@ -91,7 +91,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   <IonText>
                     <h2><strong>{authValues.user.firstname+" "+authValues.user.lastname}</strong></h2>
                   </IonText>
-                  <IonText color="blackbg"><h3>{authValues.user.business_type}</h3></IonText>
+                  <IonText><h3>{authValues.user.business_type}{`${authValues.user.accType==='sub'? ' (Sub)': '(Primary)'}`}</h3></IonText>
                   
                   <IonButton color="greenbg" onClick={(e) => logout(e)}>
                     <IonIcon slot="icon-only" icon={logOut}></IonIcon>
@@ -101,7 +101,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
               </IonItem>
             </IonToolbar>
           </IonHeader>
-          <IonContent>
+          { authValues.authenticated && authValues.isVerified && <IonContent>
             <IonList className="ion-no-padding">
               <IonItem className="cursor" button color={location.pathname === '/layout/dashboard'? 'menuhlbg': 'blackbg'} routerLink={`${basename}/layout/dashboard`} onClick={ (e) => removeOverlay(e) }>
                   <IonIcon className="mr-3" slot="start" icon={speedometer}></IonIcon>
@@ -190,23 +190,28 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                     </IonItem>
                   </IonItemGroup>}
                 </IonMenuToggle>}
-
                 { authValues.user.accType === 'full' && memOpts && ([2,3].includes(parseInt(memOpts.profile))) === true  && 
                 <IonMenuToggle auto-hide="false" >
-                  <IonItem className="cursor" button color={['/layout/deals/daily-deal','/layout/deals/add-deal', '/layout/deals/daily-deals'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowDailyDeal(!showDailyDeal) }>
+                  <IonItem className="cursor" button color={['/layout/deals/local-deal','/layout/deals/add-deal', '/layout/deals/local-deals'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowLocalDeal(!showLocalDeal) }>
                       <IonIcon className="mr-3" slot="start" icon={newspaperOutline}></IonIcon>
-                      <IonIcon className="hidden-xs hidden-sm" slot="end" icon={showDailyDeal ? chevronUpOutline : chevronDownOutline}></IonIcon>
-                      <IonLabel>Daily Deals</IonLabel>
+                      <IonIcon className="hidden-xs hidden-sm" slot="end" icon={showLocalDeal ? chevronUpOutline : chevronDownOutline}></IonIcon>
+                      <IonLabel>Local Deals</IonLabel>
                   </IonItem>
-                  { (menuItems && showDailyDeal) && 
+                  { menuItems && showLocalDeal  && 
                   <IonItemGroup className="custom-list-sidemenu"> 
+                    { +(memOpts.localdeals!.total!) < +(memOpts.localdeals!.no_free_deals!) && 
                     <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/deals/add-deal/`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={addOutline}></IonIcon>
                         <IonLabel>Add Deal</IonLabel>
-                    </IonItem>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/deals/daily-deals`} onClick={ (e) => removeOverlay(e) }>
+                    </IonItem> }
+                    { +(memOpts.localdeals!.total!) >= +(memOpts.localdeals!.no_free_deals!) && 
+                      <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/deals/buy-deal/`} onClick={ (e) => removeOverlay(e) }>
+                        <IonIcon className="mr-2 fs-20" slot="start" icon={addOutline}></IonIcon>
+                        <IonLabel>Purchase a Deal</IonLabel>
+                    </IonItem> }
+                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/deals/local-deals`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={listOutline}></IonIcon>
-                        <IonLabel>DailyDeals Listing</IonLabel>
+                        <IonLabel>Local Deals Listing</IonLabel>
                     </IonItem>
                   </IonItemGroup>}
                 </IonMenuToggle>}
@@ -317,7 +322,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                 
 
             </IonList>
-          </IonContent>
+          </IonContent> }
         </>
       }
     </>);

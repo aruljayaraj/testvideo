@@ -39,7 +39,7 @@ type FormInputs = {
 
 const CreatePressRelease: React.FC = () => {
     const dispatch = useDispatch();
-    const authValues = useSelector( (state:any) => state.auth.data.user);
+    const authUser = useSelector( (state:any) => state.auth.data.user);
     const pr = useSelector( (state:any) => state.pr.pressRelease);
     const [addPR, setAddPR] = useState({ status: false, memID: '', ID: '' });
     let { id, step } = useParams<any>(); 
@@ -69,7 +69,8 @@ const CreatePressRelease: React.FC = () => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         const fd = {
             action: (id && step)? 'pr_update': 'pr_add',
-            memID: authValues.ID,
+            memID: authUser.ID,
+            repID: authUser.repID,
             ...data
         }; 
         if( id && step ){

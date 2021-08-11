@@ -10,6 +10,7 @@ import { lfConfig } from '../../../../Constants';
 import CoreService from '../../../shared/services/CoreService';
 import CommonService from '../../../shared/services/CommonService';
 import MediaList from '../../../components/Common/MediaList';
+import Status from '../../../components/Common/Status';
 
 const Resource: React.FC = () => {
   let attachments = [];
@@ -66,14 +67,14 @@ const Resource: React.FC = () => {
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="fs-18"> 
                   {resource.title}
-                  { +(resource.status) === 0 && resource.mem_id === authUser.ID &&
-                  <IonRouterLink color="greenbg" href={`${basename}/layout/add-resource/${resource.id}/${resource.mem_id}/1`} className="float-right router-link-anchor">
+                  { (+(resource.status) === 0 || +(resource.converted) === 0) && resource.mem_id === authUser.ID &&
+                  <IonRouterLink color="greenbg" href={`${basename}/layout/add-resource/${res_type}/${resource.id}/${resource.mem_id}/1`} className="float-right router-link-anchor">
                     <i className="fa fa-pencil green cursor" aria-hidden="true"></i>
                   </IonRouterLink>}
                 </IonCardTitle>
-                <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(resource.added_date)}</IonText>
+                <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(resource.added_date)} </IonText>
                 { authUser.ID === resource.mem_id && 
-                  <IonText className="fs-12" color={ (+(resource.status) === 1 && +(resource.converted) === 1)? 'success': 'danger'}> { (+(resource.status) === 1 && +(resource.converted) === 1)? '(Active)': '(Pending)'}</IonText>
+                  <Status is_active={+(resource.status)} converted={+(resource.converted)} type="resources" />
                 }
             </IonCardHeader>
             { resource && <>
@@ -81,8 +82,15 @@ const Resource: React.FC = () => {
               <IonGrid className="p-0">
                 <IonRow>
                   <IonCol sizeMd="6" sizeXl="6" sizeXs="12" className="py-0 pl-0">
-                    <p className="card-custom-title">{`${resTypeText} and other supporting information`}</p>
-                    <MediaList attachments={attachments} formType='resource' />
+                    { attachments && attachments.length > 0 && <>
+                      <p className="card-custom-title">{`${resTypeText} and other supporting information`}</p>
+                      { attachments[0].uploaded_name && <MediaList attachments={attachments} formType='resource' /> }
+                      { !attachments[0].uploaded_name && <p className="mb-3">
+                        <IonText className="fs-13 mr-3" color="warning">
+                          No {`${resTypeText}`} added.   
+                        </IonText>
+                      </p> }
+                    </> }
                     <div className="pl-md-3">  { /* pt-sm-3 mt-sm-4 */}
                       <p className="card-custom-title">Business Category</p>
                       { resource.buscats && resource.buscats.length > 0 &&  resource.buscats.map((item: any, index: number)=> { 

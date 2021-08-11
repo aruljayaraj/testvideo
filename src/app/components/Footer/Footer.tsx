@@ -106,7 +106,7 @@ const Footer: React.FC = () => {
       </IonFooter>
       <Loader />
       <Toast />
-      <IonModal isOpen={showLocationModal} cssClass='my-custom-class'>
+      <IonModal backdropDismiss={false} isOpen={showLocationModal} cssClass='my-custom-class'>
           <LocationModal
             showLocationModal={showLocationModal}
             setShowLocationModal={setShowLocationModal} />

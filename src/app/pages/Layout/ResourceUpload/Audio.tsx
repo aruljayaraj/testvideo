@@ -2,11 +2,13 @@ import { IonList, IonAvatar, IonItem, IonLabel, IonText, IonItemSliding, IonItem
 import React from 'react';
 import { useHistory } from "react-router-dom";
 import { isPlatform } from '@ionic/react';
+import { nanoid } from 'nanoid';
 import './ResourceUpload.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../Constants';
 import { musicalNotesOutline } from 'ionicons/icons';
 import CommonService from '../../../shared/services/CommonService';
+import Status from '../../../components/Common/Status';
 
 interface Props {
   res_type: string,
@@ -27,7 +29,7 @@ const Audio: React.FC<Props> = ({res_type, setShowAlert}) => {
       <IonList className="buscat-section-content">
         { resources && resources.length > 0 &&  resources.map((item: any, index: number)=> {
           const prImage = ( item && Object.keys(item).length > 0 && item.pr_image) ? `${apiBaseURL}uploads/press_release/${item.pr_image}` : `${basename}/assets/img/placeholder.png`;
-          return (<div key={item.id}>
+          return (<div key={nanoid()}>
             { (isPlatform('android') || isPlatform('ios')) &&   
               <IonItemSliding > 
                 <IonItem lines={ (resources.length === index+1)? "none": "inset" } routerLink={`${basename}/layout/resources/${res_type}/${item.id}`}>
@@ -37,8 +39,8 @@ const Audio: React.FC<Props> = ({res_type, setShowAlert}) => {
                   <IonLabel>
                     <h2>{item.title} </h2>
                     <p>
-                      {CommonService.dateFormat(item.added_date)} 
-                      <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 1)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 1)? '(Active)': '(Pending)'}</IonText>
+                      <Status is_active={+(item.status)} converted={+(item.converted)} type="resources" />
+                      {' '+CommonService.dateFormat(item.added_date)} 
                     </p>
                   </IonLabel>
                 </IonItem>
@@ -58,8 +60,8 @@ const Audio: React.FC<Props> = ({res_type, setShowAlert}) => {
                 <h2>{item.title} </h2>
                 </IonRouterLink>
                 <p>
-                  {CommonService.dateFormat(item.added_date)} 
-                  <IonText className="fs-12" color={ (+(item.status) === 1 && +(item.converted) === 1)? 'success': 'danger'}> { (+(item.status) === 1 && +(item.converted) === 1)? '(Active)': '(Pending)'}</IonText>
+                  <Status is_active={+(item.status)} converted={+(item.converted)} type="resources" />
+                  {' '+CommonService.dateFormat(item.added_date)}
                 </p>
               </IonLabel>
               

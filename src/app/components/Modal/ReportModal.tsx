@@ -75,7 +75,7 @@ const ReportModal: React.FC<Props> = ({ showReportModal, setShowReportModal}) =>
             setShowReportModal({ ...showReportModal, isOpen: false });
             if( formType === 'profile' ){
                 
-            }else if( formType === 'dailyDeal' ){
+            }else if( formType === 'localDeal' ){
                 
             }
         }

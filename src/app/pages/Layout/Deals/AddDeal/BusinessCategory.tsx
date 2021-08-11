@@ -20,7 +20,7 @@ import React, { useState,  } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { isPlatform } from '@ionic/react';
-import '../DailyDeal.scss';
+import '../Deals.scss';
 import CategoryModal from '../../../../components/Category/Category';
 import { lfConfig } from '../../../../../Constants';
 import StepInd from './StepInd';
@@ -39,7 +39,7 @@ let initialValues = {
 const BusinessCategory: React.FC = () => {
     
     const authUser = useSelector( (state:any) => state.auth.data.user);
-    const dd = useSelector( (state:any) => state.deals.dailyDeal);
+    const dd = useSelector( (state:any) => state.deals.localDeal);
     const [showCategoryModal, setShowCategoryModal] = useState(initialValues);
     const [selectedItem, setSelectedItem] = useState({});
     let { id } = useParams<any>(); 
@@ -51,7 +51,7 @@ const BusinessCategory: React.FC = () => {
             isOpen: true,
             type: '0',
             title: title,
-            formType: 'dailyDeal',
+            formType: 'localDeal',
             actionType: actionType,
             repId: (authUser && Object.keys(authUser).length > 0)? authUser.repID: '',
             formId: (dd && Object.keys(dd).length > 0)? dd.id: '', 
@@ -131,7 +131,7 @@ const BusinessCategory: React.FC = () => {
                 }
             </IonCardContent>
         </IonCard>
-        <IonModal isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
           { dd && Object.keys(dd).length > 0 && showCategoryModal.isOpen === true && <CategoryModal
             showCategoryModal={showCategoryModal}
             setShowCategoryModal={setShowCategoryModal}

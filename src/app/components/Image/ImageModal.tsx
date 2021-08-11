@@ -49,10 +49,11 @@ let initialValues = {
 
 const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     const dispatch = useDispatch();
+    const authUser = useSelector( (state:any) => state.auth.data.user);
     const repProfile = useSelector( (state:any) => state.rep.repProfile);
     const comProfile = useSelector( (state:any) => state.rep.comProfile);
     const pr = useSelector( (state:any) => state.pr.pressRelease);
-    const dd = useSelector( (state:any) => state.deals.dailyDeal);
+    const dd = useSelector( (state:any) => state.deals.localDeal);
     const [basename] = useState(process.env.REACT_APP_BASENAME);
     const { handleSubmit} = useForm();
     let { title, actionType, memId, frmId } = showImageModal;
@@ -104,7 +105,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                 dispatch(repActions.setRepProfile({ data: res.data }));
             }else if( actionType === 'press_release' ){
                 dispatch(prActions.setPressRelease({ data: res.data }));
-            }else if( actionType === 'daily_deal' ){
+            }else if( actionType === 'local_deal' ){
                 dispatch(dealActions.setDeal({ data: res.data }));
             }  
             setShowImageModal({ ...showImageModal, isOpen: false });
@@ -125,6 +126,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
             const fd = new FormData();
             fd.append("dataFile", new Blob([ u8Image ], {type: "image/jpg"}), picture.name);
             fd.append('memId', memId);
+            fd.append('repId', authUser.repID);
             fd.append('formId', frmId);
             fd.append('action', actionType );
             CoreService.onUploadFn('file_upload', fd, onCallbackFn);
@@ -140,7 +142,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                 dispatch(repActions.setRepProfile({ data: res.data }));
             }else if( actionType === 'press_release' ){
                 dispatch(prActions.setPressRelease({ data: res.data }));
-            }else if( actionType === 'daily_deal' ){
+            }else if( actionType === 'local_deal' ){
                 dispatch(dealActions.setDeal({ data: res.data }));
             } 
             setPicture({
@@ -205,7 +207,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
         }else if( actionType === 'press_release' && pr && (Object.keys(pr).length > 0 && pr.pr_image)){
             cropTempURL = `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_image}`;
             cropImgName = pr.pr_image;
-        }else if( actionType === 'daily_deal' && dd && (Object.keys(dd).length > 0 && dd.image)){
+        }else if( actionType === 'local_deal' && dd && (Object.keys(dd).length > 0 && dd.image)){
             cropTempURL = `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.image}`;
             cropImgName = dd.image;
         }
@@ -249,7 +251,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
             <IonGrid>
 
                 <IonRow>
-                    <IonCol>
+                    <IonCol className="d-flex justify-content-center">
                         { !picture.image && 
                             <img src={`${basename}/assets/img/placeholder.png`} alt="placeholder" width="100%"/>
                         }

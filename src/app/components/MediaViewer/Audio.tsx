@@ -26,7 +26,7 @@ const Audio: React.FC<PropsInterface> = (props: PropsInterface) => {
         }
     }
 
-    return (<>
+    return (<div className="d-flex justify-content-center mb-3">
         { formId && memId && +(converted) === 0 &&
             <div className="p-4">
                 <p className="py-5">
@@ -57,7 +57,7 @@ const Audio: React.FC<PropsInterface> = (props: PropsInterface) => {
             https://media.w3.org/2010/05/sintel/trailer_hd.mp4
             */}
         </>}          
-    </>);
+    </div>);
 };
 
 export default Audio;

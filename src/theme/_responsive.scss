@@ -9,6 +9,10 @@
     .card-custom-title{
         font-size: 15px !important;
     }
+    .general-card{
+        width: 90%;
+        margin: 0 auto;
+    }
  }
 
 // Small devices (landscape phones, 576px and up)
@@ -22,6 +26,10 @@
     .card-custom-title{
         font-size: 15px !important;
     }
+    .general-card{
+        width: 90%;
+        margin: 0 auto;
+    }
  }
 
 // Medium devices (tablets, 768px and up)
@@ -29,12 +37,32 @@
     .hidden-md {
         display: none !important;
     }
+    .view-modal-wrap {
+        .modal-wrapper{
+            width: 90% !important;
+            height: 85% !important;  
+        }
+    }
+    .general-card{
+        width: 80%;
+        margin: 0 auto;
+    }
  }
 
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) and (max-width: 1199.98px) { 
     .hidden-lg {
         display: none !important;
+    }
+    .view-modal-wrap {
+        .modal-wrapper{
+            width: 90% !important;  
+            height: 85% !important;
+        }
+    }
+    .general-card{
+        width: 70%;
+        margin: 0 auto;
     }
  }
 
@@ -50,5 +78,16 @@
             font-size: 20px !important;
         }
     }
+    .view-modal-wrap {
+        .modal-wrapper{
+            width: 80% !important;  
+            height: 85% !important;
+        }
+    }
+    .general-card{
+        width: 70%;
+        margin: 0 auto;
+    }
  }
+
 

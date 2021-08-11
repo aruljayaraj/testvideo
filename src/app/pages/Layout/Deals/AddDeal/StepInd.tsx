@@ -1,19 +1,22 @@
-import { IonRouterLink } from '@ionic/react';
+import { IonCardTitle, IonRouterLink } from '@ionic/react';
 import React from 'react';
 import { useParams} from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import '../DailyDeal.scss';
+import '../Deals.scss';
 import { lfConfig } from '../../../../../Constants';
 
 const StepInd: React.FC = () => {
   const authUser = useSelector( (state:any) => state.auth.data.user);
-  const dd = useSelector( (state:any) => state.deals.dailyDeal);
+  const dd = useSelector( (state:any) => state.deals.localDeal);
   const { basename } = lfConfig;
   let { id, step } = useParams<any>();
 
   return (<>
     { dd && Object.keys(dd).length > 0 && 
       <div className="mb-4">
+        <IonCardTitle className="text-center mt-2 mb-3 fs-20">
+            <span>Local Deal</span>
+        </IonCardTitle>
         <ol className="step-indicator">
             <li className={ (!step || (step && step === '1'))? 'active': (step && step > '1')? 'complete' : '' }>
               <IonRouterLink {... (id && step && dd.name && dd.description) ? {href: `${basename}/layout/deals/add-deal/${id}/${authUser.ID}/1`} : {}}>

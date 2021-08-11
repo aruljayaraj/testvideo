@@ -2,7 +2,7 @@ import { IonContent, IonPage } from '@ionic/react';
 import React, { useCallback, useEffect  } from 'react';
 import { useParams } from "react-router-dom";
 
-import '../DailyDeal.scss';
+import '../Deals.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as dealActions from '../../../../store/reducers/dashboard/deal';
@@ -16,7 +16,7 @@ import Media from './Media';
 const AddDeal: React.FC = () => {
   const dispatch = useDispatch();
   const authUser = useSelector( (state:any) => state.auth.data.user );
-  const dd = useSelector( (state:any) => state.deals.dailyDeal);
+  const dd = useSelector( (state:any) => state.deals.localDeal);
   let { id, mem_id, step } = useParams<any>();
 
   // Press Release deafult to load callback

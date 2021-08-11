@@ -55,14 +55,7 @@ const LeftMenu: React.FC<Props> = ({removeOverlay}) => {
             </IonItem>
           </>)
         }
-        {/* <IonItem button color={location.pathname === '/dailydeals'? 'menuhlbg': 'blackbg'} routerLink="/dailydeals" onClick={ (e) => removeOverlay(e) }>
-          <IonIcon slot="start" icon={pricetag}></IonIcon>
-          <IonLabel>Daily Deals</IonLabel>
-        </IonItem>
-        <IonItem button color={location.pathname === '/onlydeals'? 'menuhlbg': 'blackbg'} routerLink="/onlydeals" onClick={ (e) => removeOverlay(e) }>
-          <IonIcon slot="start" icon={pricetags}></IonIcon>
-          <IonLabel>Only Deals</IonLabel>
-        </IonItem>
+        {/* 
         <IonItem button color={location.pathname === '/events'? 'menuhlbg': 'blackbg'} routerLink="/events" onClick={ (e) => removeOverlay(e) }>
           <IonIcon slot="start" icon={calendar}></IonIcon>
           <IonLabel>Events</IonLabel>

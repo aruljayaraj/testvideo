@@ -11,7 +11,7 @@ import CoreService from '../../../shared/services/CoreService';
 import CommonService from '../../../shared/services/CommonService';
 import ListSkeleton from '../../../components/Skeleton/ListSkeleton';
 import Status from '../../../components/Common/Status';
-
+import { nanoid } from 'nanoid';
 
 const PressReleases: React.FC = () => {
   const dispatch = useDispatch();
@@ -82,10 +82,10 @@ const PressReleases: React.FC = () => {
             <IonList className="buscat-section-content">
               { prs.length > 0  &&  prs.map((item: any, index: number)=> {
                 const prImage = ( item && Object.keys(item).length > 0 && item.pr_image) ? `${apiBaseURL}uploads/member/${item.pr_mem_id}/${item.pr_image}` : `${basename}/assets/img/placeholder.png`;
-                return (<div key={item.pr_id}>
+                return (<div key={nanoid()}>
                   { (isPlatform('android') || isPlatform('ios')) &&   
                     <IonItemSliding >
-                      <IonItem lines={ (prs.length === index+1)? "none": "inset" } routerLink={`${basename}/press-release/${item.pr_id}`}>
+                      <IonItem lines={ (prs.length === index+1)? "none": "inset" } routerLink={`${basename}/layout/press-release/${item.pr_id}`}>
                         <IonAvatar slot="start" color="greenbg">
                           <img src={prImage} alt="Press Release Media"/>
                         </IonAvatar>
@@ -107,12 +107,12 @@ const PressReleases: React.FC = () => {
                   { (isPlatform('desktop')) &&
                   <IonItem lines={ (prs.length === index+1)? "none": "inset" }>
                     <IonThumbnail slot="start" color="greenbg">
-                      <IonRouterLink href={`${basename}/member/${item.pr_mem_id}/${item.pr_id}`}>
+                      <IonRouterLink href={`${basename}/layout/press-release/${item.pr_id}`}>
                         <img src={prImage} alt="Press Release Media"/>
                       </IonRouterLink>
                     </IonThumbnail>
                     <IonLabel>
-                      <IonRouterLink color="dark" href={`${basename}/press-release/${item.pr_id}`}>
+                      <IonRouterLink color="dark" href={`${basename}/layout/press-release/${item.pr_id}`}>
                       <h2>{item.pr_name} </h2>
                       </IonRouterLink>
                       { item.pr_quote && <h3><IonText color="medium">{item.pr_quote}</IonText></h3> }

@@ -13,7 +13,7 @@ import {
 import React, { useState, useCallback } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import '../DailyDeal.scss';
+import '../Deals.scss';
 
 import * as uiActions from '../../../../store/reducers/ui';
 import * as dealActions from '../../../../store/reducers/dashboard/deal';
@@ -40,7 +40,7 @@ let initPreviewValues ={
 const DDMedia: React.FC = () => {
     const dispatch = useDispatch();
     const authUser = useSelector( (state:any) => state.auth.data.user);
-    const dd = useSelector( (state:any) => state.deals.dailyDeal);
+    const dd = useSelector( (state:any) => state.deals.localDeal);
     const [showImageModal, setShowImageModal] = useState(initialValues);
     const [previewModal, setPreviewModal] = useState(initPreviewValues);
     const [addDeal, setAddDeal] = useState({ status: false, memID: '', id: '' });
@@ -89,7 +89,7 @@ const DDMedia: React.FC = () => {
     }
 
     if( addDeal.status  ){
-        return <Redirect to={`/layout/deals/daily-deals`} />;
+        return <Redirect to={`/layout/deals/local-deals`} />;
     }
 
     return (<>
@@ -105,7 +105,7 @@ const DDMedia: React.FC = () => {
                             <span>Upload Supporting Media</span>
                         </IonCardTitle>
                         <IonList>
-                            <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Upload Supporting Media', 'daily_deal')}>
+                            <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Upload Supporting Media', 'local_deal')}>
                                 <div className="profile-logo">
                                     <img src={ddImage} alt="Deal Media"/>
                                     <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true"></i>
@@ -133,13 +133,13 @@ const DDMedia: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </>}
-        <IonModal isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='view-modal-wrap'>
             { dd && Object.keys(dd).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}
             setShowImageModal={setShowImageModal} 
            /> }
         </IonModal>
-        <IonModal isOpen={previewModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={previewModal.isOpen} cssClass='view-modal-wrap'>
             { dd && Object.keys(dd).length > 0 && previewModal.isOpen === true &&  <PreviewModal
             previewModal={previewModal}
             setPreviewModal={setPreviewModal} 

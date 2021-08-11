@@ -1,0 +1,19 @@
+.press-release-page {
+  .card-center {
+    width: 90%;
+    margin: 0 auto;
+  }
+  .border-right {
+    border-right: 2px dashed #ccc;
+  }
+  .border-bottom {
+    border-bottom: 2px dashed #ccc;
+  }
+  .quote {
+    padding: 10px 20px;
+    background-color: #ccc;
+    color: #000;
+    font-weight: bold;
+    border-radius: 20px;
+  }
+}

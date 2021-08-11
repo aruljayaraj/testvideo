@@ -1,15 +1,12 @@
-import { useCamera } from '@ionic/react-hooks/camera';
 import { base64FromPath } from '@ionic/react-hooks/filesystem';
-import { CameraResultType, CameraSource} from "@capacitor/core";
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import CommonService from '../shared/services/CommonService';
 
 export function useCameraPhoto() {
-
-    const { getPhoto } = useCamera();
   
     const takePhoto = async (callbackFn: any) => {
       try {
-        const cameraPhoto = await getPhoto({
+        const cameraPhoto = await Camera.getPhoto({
           quality: 100,
           allowEditing: true,
           correctOrientation: true,

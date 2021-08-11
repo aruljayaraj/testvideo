@@ -132,7 +132,7 @@ const BusinessCategory: React.FC = () => {
                 }
             </IonCardContent>
         </IonCard>
-        <IonModal isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
           { qq && Object.keys(qq).length > 0 && showCategoryModal.isOpen === true && <CategoryModal
             showCategoryModal={showCategoryModal}
             setShowCategoryModal={setShowCategoryModal}

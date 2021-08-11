@@ -421,7 +421,7 @@ const Signup: React.FC = () => {
         
       </IonContent>
 
-      <IonModal isOpen={showModal.status} cssClass='my-custom-class'>
+      <IonModal backdropDismiss={false} isOpen={showModal.status} cssClass='my-custom-class'>
         <Modal title = {showModal.title} closeAction={closeModal} />
       </IonModal>
  

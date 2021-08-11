@@ -20,7 +20,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as dealActions from '../../../../store/reducers/dashboard/deal';
-import '../DailyDeal.scss';
+import '../Deals.scss';
 import CoreService from '../../../../shared/services/CoreService';
 import StepInd from './StepInd';
 
@@ -32,7 +32,7 @@ const AssignRep: React.FC = () => {
     let listReps: any = null;
     const dispatch = useDispatch();
     const authUser = useSelector( (state:any) => state.auth.data.user);
-    const dd = useSelector( (state:any) => state.deals.dailyDeal);
+    const dd = useSelector( (state:any) => state.deals.localDeal);
     const [addDeal, setAddDeal] = useState({ status: false, memID: '', id: '' });
     const [ reps, setReps ] = useState([]);
     let { id } = useParams<any>(); 
@@ -121,6 +121,7 @@ const AssignRep: React.FC = () => {
                                                 }}
                                                 onBlur={onBlur}
                                                 value={value}
+                                                disabled={[1,2].includes(+(dd.is_premium))? true: false}
                                             >{listReps}</IonSelect>
                                         }}
                                         rules={{
@@ -134,13 +135,13 @@ const AssignRep: React.FC = () => {
                                         }}
                                     />
                                 }
-                                
                             </IonItem>
                             <ErrorMessage
                                 errors={errors}
                                 name="reps"
                                 render={({ message }) => <div className="invalid-feedback">{message}</div>}
                             />
+                            { [1,2].includes(+(dd.is_premium)) && <p className="mt-2">Premium deals we can't edit reps here. You need to choose appropirate reps during deal purcahse.</p> }
                         </IonCol>
                         
                     </IonRow>

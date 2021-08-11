@@ -309,7 +309,7 @@ const ResMedia: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </>}
-        <IonModal isOpen={resPreviewModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={resPreviewModal.isOpen} cssClass='my-custom-class'>
             { resource && Object.keys(resource).length > 0 && resPreviewModal.isOpen === true &&  <ResPreviewModal
             resPreviewModal={resPreviewModal}
             setResPreviewModal={setResPreviewModal}

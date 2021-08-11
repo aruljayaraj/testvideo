@@ -18,13 +18,15 @@ import { useParams, Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import { Editor } from '@tinymce/tinymce-react';
-import { format, addYears } from 'date-fns';
+import { format, addYears, addDays } from 'date-fns';
 
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as dealActions from '../../../../store/reducers/dashboard/deal';
-import '../DailyDeal.scss';
+import * as authActions from '../../../../store/reducers/auth';
+import '../Deals.scss';
 import CoreService from '../../../../shared/services/CoreService';
+import CommonService from '../../../../shared/services/CommonService';
 import { lfConfig } from '../../../../../Constants';
 import StepInd from './StepInd';
 
@@ -36,12 +38,23 @@ type FormInputs = {
     dd_desc: string;
 }
 
-const CreatePressRelease: React.FC = () => {
+const CreateDeals: React.FC = () => {
     const dispatch = useDispatch();
-    const authValues = useSelector( (state:any) => state.auth.data.user);
-    const dd = useSelector( (state:any) => state.deals.dailyDeal);
+    const authUser = useSelector( (state:any) => state.auth.data.user);
+    const memOpts = useSelector( (state:any) => state.auth.memOptions);
+    const dd = useSelector( (state:any) => state.deals.localDeal);
     const [addDeal, setAddDeal] = useState({ status: false, memID: '', id: '' });
     const [startDate, setStartDate] = useState<string>(dd.sdate);
+    const maxDaysAllowed = (dd && Object.keys(dd).length > 0) ? dd.days_allowed : +(memOpts.localdeals!.no_days_allowed!);
+    let calEnddate = addDays(new Date(), maxDaysAllowed);
+    if( startDate && memOpts && memOpts.localdeals && maxDaysAllowed ){
+        // convert mysql date to javascript 
+        const convStartDate = CommonService.mysqlToJsDateFormat(startDate);
+        if( convStartDate ){
+            calEnddate = addDays(convStartDate, maxDaysAllowed);
+        }
+    }
+    // const calEnddate = dd.sdate? new Date(Date.parse(dd.sdate!.replace(/-/g, '/'))): addDays(new Date(), 60); console.log(calEnddate);
     let { id, step } = useParams<any>(); 
 
     let initialValues = {
@@ -58,6 +71,7 @@ const CreatePressRelease: React.FC = () => {
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
+            dispatch(authActions.setDealsCountUpdate({ total: res.total }));
             dispatch(dealActions.setDeal({ data: res.data }));
             setAddDeal({ status: true, memID: res.data.mem_id, id: res.data.id  });
         }
@@ -69,7 +83,8 @@ const CreatePressRelease: React.FC = () => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         const fd = {
             action: (id && step)? 'dl_update': 'dl_add',
-            memID: authValues.ID,
+            memID: authUser.ID,
+            repID: authUser.repID,
             ...data
         };
         if( id && step ){
@@ -87,7 +102,7 @@ const CreatePressRelease: React.FC = () => {
         <StepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Create your Daily Deal</IonCardTitle>
+                <IonCardTitle className="fs-18">Create your Local Deal</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -212,8 +227,9 @@ const CreatePressRelease: React.FC = () => {
                                         return <IonDatetime
                                             placeholder="DD-MMM-YYYY"
                                             displayFormat="DD-MMM-YYYY" 
-                                            min={startDate} 
-                                            max={format(new Date(addYears(new Date(), 2)), 'yyyy')}
+                                            min={startDate? startDate : format(new Date(), 'yyyy-MM-dd')} 
+                                            max={format(calEnddate, 'yyyy-MM-dd')}
+                                            // max={format(new Date(addYears(new Date(), 60)), 'mm')}
                                             onIonChange={(e: any) => onChange(e.target.value)}
                                             onBlur={onBlur}
                                             value={value}
@@ -311,5 +327,5 @@ const CreatePressRelease: React.FC = () => {
         </form>
     );
 };
-export default CreatePressRelease;
+export default CreateDeals;
   

@@ -26,7 +26,7 @@ import './CompanyProfile.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 import * as uiActions from '../../../store/reducers/ui';
-import * as frmdataActions from '../../../store/reducers/dashboard/formdata';
+import * as frmdataActions from '../../../store/reducers/common';
 import { DropDown } from '../../../interfaces/Common';
 
 type FormInputs = {

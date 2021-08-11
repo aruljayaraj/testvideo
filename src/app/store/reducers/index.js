@@ -6,7 +6,8 @@ import prReducer from './dashboard/pr';
 import resReducer from './dashboard/resource';
 import dealReducer from './dashboard/deal';
 import qqReducer from './dashboard/qq';
-import formdataReducer from './dashboard/formdata';
+import formdataReducer from './common';
+import searchReducer from './search';
 
 const allReducers = combineReducers({
     ui: uiReducer,
@@ -16,7 +17,8 @@ const allReducers = combineReducers({
     res: resReducer,
     deals: dealReducer,
     qq: qqReducer,
-    formdata: formdataReducer
+    formdata: formdataReducer,
+    search: searchReducer
 });
 
 export default allReducers;

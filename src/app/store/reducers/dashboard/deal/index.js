@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 let state = {
-    dailyDeal: {},
-    dailyDeals: []
+    localDeal: {},
+    localDeals: []
 }
 
 const slice = createSlice({
@@ -12,18 +12,18 @@ const slice = createSlice({
         setDeal: (dState, action) => {
             if( action.payload.data ){
                 const data = action.payload.data;
-                dState.dailyDeal = data;
+                dState.localDeal = data;
             }
         },
         setBuscat: (dState, action) => {
             if( action.payload.data ){
-                dState.dailyDeal.buscats = action.payload.data;
+                dState.localDeal.buscats = action.payload.data;
             }
         },
         setDeals: (dState, action) => {
             if( action.payload.data ){
                 const data = action.payload.data;
-                dState.dailyDeals = data;
+                dState.localDeals = data;
             }
         },
     }

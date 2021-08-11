@@ -8,7 +8,6 @@ import * as uiActions from '../../../../store/reducers/ui';
 import NewRepProfileInfo from './NewRepProfileInfo';
 
 const NewRep: React.FC = () => {
-  console.log('Rep Profile Page');
   const dispatch = useDispatch();
   const user = useSelector( (state:any) => state.auth.data.user );
   const repProfile = useSelector( (state:any) => state.rep.repProfile);

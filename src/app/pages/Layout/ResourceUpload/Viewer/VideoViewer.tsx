@@ -7,9 +7,6 @@ import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../../Constants';
 
 import VideoPlayer from './VideoJsPlayer';
-// import { Plugins } from '@capacitor/core';
-// import * as PluginsLibrary from 'capacitor-video-player';
-// const { CapacitorVideoPlayer, Device } = Plugins;
 
 const VideoViewer: React.FC = () => {
     const resource = useSelector( (state:any) => state.res.resource);

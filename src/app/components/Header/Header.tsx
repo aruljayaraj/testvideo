@@ -5,23 +5,16 @@ import { IonHeader,
   IonButtons,
   IonButton,
   IonIcon,
-  IonLabel,
   IonMenuButton,
-  IonContent,
   IonModal,
-  IonChip,
   IonPopover,
   IonList,
-  // IonListHeader,
   IonItem,
   IonBadge
 } from '@ionic/react';
 import {
   search,
   personCircleOutline,
-  close,
-  searchOutline,
-  checkmarkOutline,
   notificationsOutline
 } from 'ionicons/icons';
 import { useSelector } from 'react-redux';
@@ -29,7 +22,6 @@ import './Header.scss';
 import LeftMenu from './LeftMenu';
 import RightMenu from './RightMenu';
 import SearchModal from '../Modal/SearchModal/SearchModal';
-// import { SearchProps } from '../../interfaces/Common';
 
 const Header: React.FC = (props:any) => { // console.log(props.location.state);
   

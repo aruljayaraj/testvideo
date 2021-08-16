@@ -21,7 +21,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { isPlatform } from '@ionic/react';
 import '../ResourceUpload.scss';
-import CategoryModal from '../../../../components/Category/Category';
+import ResCategoryModal from '../../../../components/Category/ResCategory';
 import { lfConfig } from '../../../../../Constants';
 import ResStepInd from './ResStepInd';
 
@@ -36,7 +36,7 @@ let initialValues = {
     memId: '' // Member Id
 };
 
-const BusinessCategory: React.FC = () => {
+const ResourceCategory: React.FC = () => {
     
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const resource = useSelector( (state:any) => state.res.resource);
@@ -65,8 +65,8 @@ const BusinessCategory: React.FC = () => {
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="fs-18">
-                    <span>B2B Category</span>
-                    <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')} className="float-right router-link-anchor">
+                    <span>Resources Category</span>
+                    <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Resources Category', 'new')} className="float-right router-link-anchor">
                         <i className="fa fa-plus green cursor" aria-hidden="true"></i>
                     </IonRouterLink>
                     
@@ -117,7 +117,7 @@ const BusinessCategory: React.FC = () => {
                             <IonText className="fs-13 mr-3" color="warning">
                                 No categories added.   
                             </IonText>
-                            <IonButton color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')}>Add</IonButton>
+                            <IonButton color="greenbg" onClick={() => categoryModalFn('Add Resources Category', 'new')}>Add</IonButton>
                         </IonItem>
                     }
                     {/* <p>{JSON.stringify(pr.buscats)}</p> */}
@@ -132,7 +132,7 @@ const BusinessCategory: React.FC = () => {
             </IonCardContent>
         </IonCard>
         <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
-          { resource && Object.keys(resource).length > 0 && showCategoryModal.isOpen === true && <CategoryModal
+          { resource && Object.keys(resource).length > 0 && showCategoryModal.isOpen === true && <ResCategoryModal
             showCategoryModal={showCategoryModal}
             setShowCategoryModal={setShowCategoryModal}
             selectedItem={selectedItem}
@@ -141,5 +141,5 @@ const BusinessCategory: React.FC = () => {
     </>);
 };
   
-export default BusinessCategory;
+export default ResourceCategory;
   

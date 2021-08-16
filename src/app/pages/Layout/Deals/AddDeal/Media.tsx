@@ -7,7 +7,8 @@ import {
     IonList,
     IonRow,
     IonCol,
-    IonButton
+    IonButton,
+    IonRouterLink
   } from '@ionic/react';
   
 import React, { useState, useCallback } from 'react';
@@ -103,6 +104,9 @@ const DDMedia: React.FC = () => {
                     <IonCol className="">
                         <IonCardTitle className="text-center mb-3 fs-18">
                             <span>Upload Supporting Media</span>
+                            <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deals`} className="float-right router-link-anchor" title="Deal Listing">
+                                <i className="fa fa-list green cursor" aria-hidden="true"></i>
+                            </IonRouterLink>
                         </IonCardTitle>
                         <IonList>
                             <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Upload Supporting Media', 'local_deal')}>

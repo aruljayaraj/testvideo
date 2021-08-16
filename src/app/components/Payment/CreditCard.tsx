@@ -172,7 +172,8 @@ export const CreditCardForm = () => {
 
     if( itemData && Object.keys(itemData).length > 0 && paymentStatus){
         if( itemData.type === LOCAL_DEAL ){
-            return <Redirect to={`/layout/deals/add-deal/${itemData.form_id}/${itemData.mem_id}/1`} />;
+            // return <Redirect to={`/layout/deals/add-deal/${itemData.form_id}/${itemData.mem_id}/1`} />;
+            return <Redirect to={`/layout/deals/local-deals`} />;
         }
     }
 
@@ -323,7 +324,7 @@ export const CreditCardForm = () => {
             </IonGrid>    
             
             <IonButton color="greenbg" className="ion-margin-top my-4 float-right" type="submit" >
-                Pay <strong>{itemData && itemData.price ? `$${itemData.price}`: ''}</strong>
+                Pay <strong> {itemData && itemData.price ? ` $${itemData.price}`: ''}</strong>
             </IonButton>
         </form> 
         }

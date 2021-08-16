@@ -11,15 +11,15 @@ import {
     IonRow,
     IonCol,
     IonCardTitle,
-    IonText
+    IonText,
+    IonRouterLink
 } from '@ionic/react';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import { Editor } from '@tinymce/tinymce-react';
 import { format, addYears, addDays } from 'date-fns';
-
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as dealActions from '../../../../store/reducers/dashboard/deal';
@@ -45,18 +45,8 @@ const CreateDeals: React.FC = () => {
     const dd = useSelector( (state:any) => state.deals.localDeal);
     const [addDeal, setAddDeal] = useState({ status: false, memID: '', id: '' });
     const [startDate, setStartDate] = useState<string>(dd.sdate);
-    const maxDaysAllowed = (dd && Object.keys(dd).length > 0) ? dd.days_allowed : +(memOpts.localdeals!.no_days_allowed!);
-    let calEnddate = addDays(new Date(), maxDaysAllowed);
-    if( startDate && memOpts && memOpts.localdeals && maxDaysAllowed ){
-        // convert mysql date to javascript 
-        const convStartDate = CommonService.mysqlToJsDateFormat(startDate);
-        if( convStartDate ){
-            calEnddate = addDays(convStartDate, maxDaysAllowed);
-        }
-    }
-    // const calEnddate = dd.sdate? new Date(Date.parse(dd.sdate!.replace(/-/g, '/'))): addDays(new Date(), 60); console.log(calEnddate);
     let { id, step } = useParams<any>(); 
-
+    const { basename } = lfConfig;
     let initialValues = {
         dd_name: (dd && Object.keys(dd).length > 0) ? dd.name : '',
         dd_price: (dd && Object.keys(dd).length > 0) ? dd.price: '',
@@ -64,10 +54,26 @@ const CreateDeals: React.FC = () => {
         dd_end_date: (dd && Object.keys(dd).length > 0) ? dd.edate : '',
         dd_desc: (dd && Object.keys(dd).length > 0) ? dd.description : '',
     };
-    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
+    const { control, handleSubmit, formState: { errors }, setValue } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
+    const maxDaysAllowed = (dd && Object.keys(dd).length > 0 && dd.days_allowed > 0) ? dd.days_allowed : +(memOpts.localdeals!.no_days_allowed!);
+    let calEnddate = addDays(new Date(), maxDaysAllowed);
+    if( startDate && memOpts.localdeals && maxDaysAllowed ){
+        // convert mysql date to javascript 
+        const convStartDate = CommonService.mysqlToJsDateFormat(startDate);
+        if( convStartDate ){
+            calEnddate = addDays(convStartDate, maxDaysAllowed);
+        }
+    }
+    
+    useEffect(() => { // Only for Premium End date autoupdate.
+        if( startDate && calEnddate && dd.days_allowed > 0){ console.log("Meow");
+            const newCalEndDate: any = format(new Date(calEnddate), 'yyyy-MM-dd'); 
+            setValue("dd_end_date", newCalEndDate, { shouldValidate: true });
+        }
+    },[startDate, dd.days_allowed]);
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -102,7 +108,11 @@ const CreateDeals: React.FC = () => {
         <StepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Create your Local Deal</IonCardTitle>
+                <IonCardTitle className="fs-18">Create your Local Deal
+                    <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deals`} className="float-right router-link-anchor" title="Deal Listing">
+                        <i className="fa fa-list green cursor" aria-hidden="true"></i>
+                    </IonRouterLink>
+                </IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -197,6 +207,11 @@ const CreateDeals: React.FC = () => {
                                                     const sDateChange = format(new Date(selected.target.value), 'yyyy-MM-dd');
                                                     onChange(selected.target.value);
                                                     setStartDate(sDateChange);
+                                                    // const newCalEndDate: any = format(new Date(calEnddate), 'yyyy-MM-dd'); 
+                                                    // console.log(calEnddate, newCalEndDate );
+                                                    // setValue("dd_end_date", newCalEndDate, { shouldValidate: true });
+                                                    // setValue("dd_end_date", newCalEndDate, { shouldValidate: true })
+
                                                 }
                                             }}
                                             onBlur={onBlur}

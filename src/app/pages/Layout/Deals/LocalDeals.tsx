@@ -56,7 +56,11 @@ const LocalDeals: React.FC = () => {
   const onDeleteCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
       dispatch(authActions.setDealsCountUpdate({ total: res.data.length }));
-      dispatch(dealActions.setDeals({ data: res.data }));
+      const cusData = {
+        deals: res.data,
+        unpaid: res.unpaid
+      }
+      dispatch(dealActions.setDeals({ data: cusData }));
     }
     dispatch(uiActions.setShowSkeleton({ skeleton: false }));
     dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
@@ -81,10 +85,9 @@ const LocalDeals: React.FC = () => {
   const slideEdit = (item: any) => {
     history.push(`/layout/deals/add-deal/${item.id}/${item.mem_id}/1`);
   }
-
+  let noNameCount = 0;
   return (
-    <IonPage className="deals-page">
-      { (dds && !skeleton.showSkeleton)  ? ( //  
+    <IonPage className="deals-page">  
         <IonContent>
           <IonCard className="card-center my-4">
             <IonCardHeader color="titlebg">
@@ -102,80 +105,78 @@ const LocalDeals: React.FC = () => {
                 </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
-            <IonList className="buscat-section-content">
-              { unpaid && unpaid.length > 0  && <LocalDealsUnpaid />}
-              { dds.length > 0  &&  dds.map((item: any, index: number)=> {
-                // console.log(item.id+"==" + (!item.sdate || (item.sdate && new Date(Date.parse(item.sdate.replace(/[-]/g,'/'))).valueOf()/1000 > Date.now())));
-                const img = (item.image).split(".");
-                const ddImage = ( item && Object.keys(item).length > 0 && item.image) ? `${apiBaseURL}uploads/member/${item.mem_id}/${img[0]}-thumb.${img[1]}` : `${basename}/assets/img/placeholder.png`;
-                return (<div key={nanoid()}>
-                  { (isPlatform('android') || isPlatform('ios')) &&   
-                    <IonItemSliding >
-                      <IonItem lines={ (dds.length === index+1)? "none": "inset" } routerLink={`${basename}/layout/deals/local-deal/${item.id}`}>
-                        <IonAvatar slot="start" color="greenbg">
-                          <img className="roundcorner" src={ddImage} alt="Local Deal Media"/>
-                        </IonAvatar>
-                        <IonLabel>
-                          <h2>{item.name? item.name: 'No Deal Name'}</h2>
-                          <p><b>$</b> {item.price}</p>
-                          { (item.sdate && item.edate) && <p>
-                            <Status is_active={+(item.is_active)} type="local_deal" />
-                            {` `+CommonService.dateReadFormat(item.sdate)} - {CommonService.dateReadFormat(item.edate)}
-                          </p>} 
-                        </IonLabel>
-                      </IonItem>
-                      <IonItemOptions side="end">
-                        { (!item.sdate || +(item.is_active) === 0 || (item.sdate && +(item.is_active) !== 0 && new Date(Date.parse(item.sdate.replace(/[-]/g,'/'))).valueOf()/1000 > Date.now())) &&
-                          <IonItemOption className="px-2" color="greenbg" onClick={() => slideEdit(item) } title="Edit">Edit</IonItemOption>
-                        }
-                        <IonItemOption color="warning" onClick={() => setShowAlert({status: true, id: item.id, mem_id: item.mem_id })} title="Trash">Delete</IonItemOption>
-                      </IonItemOptions>
-                    </IonItemSliding>
+              { (dds && !skeleton.showSkeleton)  ? ( 
+              <IonList className="buscat-section-content">
+                { unpaid && unpaid.length > 0  && <LocalDealsUnpaid />}
+                { dds.length > 0  &&  dds.map((item: any, index: number)=> {
+                  // console.log(item.id+"==" + (!item.sdate || (item.sdate && new Date(Date.parse(item.sdate.replace(/[-]/g,'/'))).valueOf()/1000 > Date.now())));
+                  const img = (item.image).split(".");
+                  const ddImage = ( item && Object.keys(item).length > 0 && item.image) ? `${apiBaseURL}uploads/member/${item.mem_id}/${img[0]}-thumb.${img[1]}` : `${basename}/assets/img/placeholder.png`;
+                  if(!item.name){
+                    noNameCount++;
                   }
-                  { (isPlatform('desktop')) &&
-                  <IonItem lines={ (dds.length === index+1)? "none": "inset" }>
-                    <IonThumbnail slot="start" color="greenbg">
-                      <IonRouterLink href={`${basename}/layout/deals/local-deal/${item.id}`}>
-                        <img className="roundcorner" src={ddImage} alt="LocalDeal Media"/>
-                      </IonRouterLink>
-                    </IonThumbnail>
-                    <IonLabel>
-                      <IonRouterLink color="dark" href={`${basename}/layout/deals/local-deal/${item.id}`}>
-                        <h2>{item.name? item.name: 'No Deal Name'}</h2>
-                      </IonRouterLink>
-                      <p><b>$</b> {item.price}</p>
-                      { (item.sdate && item.edate) && <p>
-                        <Status is_active={+(item.is_active)} type="local_deal" />
-                        {` `+CommonService.dateReadFormat(item.sdate)} - {CommonService.dateReadFormat(item.edate)}
-                      </p>}
-                    </IonLabel>
-                  
-                    { (!item.sdate || +(item.is_active) === 0 || (item.sdate && new Date(Date.parse(item.sdate.replace(/[-]/g,'/'))).valueOf()/1000 > Date.now())) &&
-                    <IonRouterLink className="router-link-anchor" slot="end" color="greenbg" href={`${basename}/layout/deals/add-deal/${item.id}/${item.mem_id}/1`} title="Edit">
-                      <i className="fa fa-pencil fa-lg green cursor" aria-hidden="true"></i>
-                    </IonRouterLink>
+                  return (<div key={nanoid()}>
+                    { (isPlatform('android') || isPlatform('ios')) &&   
+                      <IonItemSliding >
+                        <IonItem lines={ (dds.length === index+1)? "none": "inset" } routerLink={`${basename}/layout/deals/local-deal/${item.id}`}>
+                          <IonAvatar slot="start" color="greenbg">
+                            <img className="roundcorner" src={ddImage} alt="Local Deal Media"/>
+                          </IonAvatar>
+                          <IonLabel>
+                            <h2>{item.name? item.name: `No Deal Name ${noNameCount}`}</h2>
+                            <p><b>$</b> {item.price}</p>
+                            { (item.sdate && item.edate) && <p>
+                              <Status is_active={+(item.is_active)} type="local_deal" />
+                              {` `+CommonService.dateReadFormat(item.sdate)} - {CommonService.dateReadFormat(item.edate)}
+                            </p>} 
+                          </IonLabel>
+                        </IonItem>
+                        <IonItemOptions side="end">
+                          { (!item.sdate || +(item.is_active) === 0 || (item.sdate && +(item.is_active) !== 0 && new Date(Date.parse(item.sdate.replace(/[-]/g,'/'))).valueOf()/1000 > Date.now())) &&
+                            <IonItemOption className="px-2" color="greenbg" onClick={() => slideEdit(item) } title="Edit">Edit</IonItemOption>
+                          }
+                          <IonItemOption color="warning" onClick={() => setShowAlert({status: true, id: item.id, mem_id: item.mem_id })} title="Trash">Delete</IonItemOption>
+                        </IonItemOptions>
+                      </IonItemSliding>
                     }
-                    <IonAvatar className="anchor-white-ellipsis" slot="end" color="greenbg" onClick={() => setAlert(item)} title="Trash">
-                      <i className="fa fa-trash fa-lg green cursor" aria-hidden="true"></i>
-                    </IonAvatar> { /*setShowAlert({status: true, id: item.id, mem_id: item.mem_id })*/}
-      
-                  </IonItem>
-                  }
-                </div>)
-              })} 
-              <NoData dataArr={dds} htmlText="No Local Deals added." />
-              {/* { dds && dds.length === 0 &&  
-                <IonItem lines="none" >
-                  <IonText className="fs-13 mr-3" color="warning">
-                       
-                  </IonText>
-                </IonItem>
-              } */}
-              </IonList>
+                    { (isPlatform('desktop')) &&
+                    <IonItem lines={ (dds.length === index+1)? "none": "inset" }>
+                      <IonThumbnail slot="start" color="greenbg">
+                        <IonRouterLink href={`${basename}/layout/deals/local-deal/${item.id}`}>
+                          <img className="roundcorner" src={ddImage} alt="LocalDeal Media"/>
+                        </IonRouterLink>
+                      </IonThumbnail>
+                      <IonLabel>
+                        <IonRouterLink color="dark" href={`${basename}/layout/deals/local-deal/${item.id}`}>
+                          <h2>{item.name? item.name: `No Deal Name ${noNameCount}` }</h2>
+                        </IonRouterLink>
+                        <p><b>$</b> {item.price}</p>
+                        { (item.sdate && item.edate) && <p>
+                          <Status is_active={+(item.is_active)} type="local_deal" />
+                          {` `+CommonService.dateReadFormat(item.sdate)} - {CommonService.dateReadFormat(item.edate)}
+                        </p>}
+                      </IonLabel>
+                    
+                      { (!item.sdate || +(item.is_active) === 0 || (item.sdate && new Date(Date.parse(item.sdate.replace(/[-]/g,'/'))).valueOf()/1000 > Date.now())) &&
+                      <IonRouterLink className="router-link-anchor" slot="end" color="greenbg" href={`${basename}/layout/deals/add-deal/${item.id}/${item.mem_id}/1`} title="Edit">
+                        <i className="fa fa-pencil fa-lg green cursor" aria-hidden="true"></i>
+                      </IonRouterLink>
+                      }
+                      <IonAvatar className="anchor-white-ellipsis" slot="end" color="greenbg" onClick={() => setAlert(item)} title="Trash">
+                        <i className="fa fa-trash fa-lg green cursor" aria-hidden="true"></i>
+                      </IonAvatar> { /*setShowAlert({status: true, id: item.id, mem_id: item.mem_id })*/}
+        
+                    </IonItem>
+                    }
+                  </div>)
+                })} 
+                </IonList>
+                ) : ( <ListSkeleton /> )} 
+                <NoData dataArr={dds} htmlText="No Local Deals added." />
             </IonCardContent>
           </IonCard>  
           
-        </IonContent>) : ( <ListSkeleton /> )} 
+        </IonContent>
         <IonAlert
             isOpen={showAlert.status}
             onDidDismiss={() => setShowAlert({status: false, id: '', mem_id: '' })}

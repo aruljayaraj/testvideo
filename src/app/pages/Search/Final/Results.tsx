@@ -1,38 +1,23 @@
 import { IonContent, IonPage } from '@ionic/react'; 
 import React, {useCallback, useEffect} from 'react';
-import { Redirect, useLocation } from "react-router-dom";
 import CoreService from '../../../shared/services/CoreService';
 import '../Search.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as searchActions from '../../../store/reducers/search';
 import * as uiActions from '../../../store/reducers/ui';
 import { SearchProps } from '../../../interfaces/Common';
-// import PreProducts from './PreProducts';
-// import PreDeals from './PreDeals';
-// import PreNews from './PreNews';
-import LocalResults from './LocalResults';
+import RegionResults from './RegionResults';
 
 const FinalResults: React.FC<SearchProps> = (props: any) => {
   const dispatch = useDispatch();
   const location = useSelector( (state:any) => state.auth.location);
   const localResults = useSelector( (state:any) => state.search.finalResults.local);
+  const regionalResults = useSelector( (state:any) => state.search.finalResults.regional);
+  const nationalResults = useSelector( (state:any) => state.search.finalResults.national);
+  const internationalResults = useSelector( (state:any) => state.search.finalResults.international);
 
-  // function useQuery() {
-  //   return new URLSearchParams(useLocation().search);
-  // }
-  // console.log(props.location);
-
-  /*let query = useQuery(); // console.log(query);
-  const b2b = query.get("b2b");
-  const b2c = query.get("b2c");
-  const br = query.get("br");
-  const d = query.get("d");
-  const bn = query.get("bn");
-  const key = query.get("key");
-  const display = query.get("display");
-  const type = query.get("type");*/
   const mainSearchSettings = { category: '', type: '' };
-  const { category, type } = (props.location && props.location.state)? props.location.state : mainSearchSettings; console.log(props.location.state);
+  const { category, type } = (props.location && props.location.state)? props.location.state : mainSearchSettings;
 
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -54,7 +39,7 @@ const FinalResults: React.FC<SearchProps> = (props: any) => {
       };
       CoreService.onPostFn('search', data, onCallbackFn);
     }
-  }, [dispatch, onCallbackFn, category, type]);
+  }, [dispatch, onCallbackFn, category, type, location]);
 
   // if(!props.location || !props.location.state){
   //   return <Redirect to="/" />;
@@ -62,11 +47,12 @@ const FinalResults: React.FC<SearchProps> = (props: any) => {
 
   return (
     <IonPage className="search-page">
-        <IonContent>
-          { localResults && localResults.length > 0 && <LocalResults /> }
-          { /*{ d === true && <PreDeals /> }
-          { bn === true && <PreNews /> } */}
-        </IonContent>
+      <IonContent>
+        { localResults && localResults.length > 0 && <RegionResults btype={type} region="local" /> }
+        { regionalResults && regionalResults.length > 0 && <RegionResults btype={type} region="regional" /> }
+        { nationalResults && nationalResults.length > 0 && <RegionResults btype={type} region="national" /> }
+        { internationalResults && internationalResults.length > 0 && <RegionResults btype={type} region="international" /> }
+      </IonContent>
     </IonPage>
   );
 };

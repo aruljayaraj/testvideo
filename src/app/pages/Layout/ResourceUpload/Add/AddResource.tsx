@@ -9,7 +9,7 @@ import * as resActions from '../../../../store/reducers/dashboard/resource';
 import CoreService from '../../../../shared/services/CoreService';
 
 import CreateResource from './CreateResource';
-import BusinessCategory from './BusinessCategory';
+import ResourceCategory from './ResourceCategory';
 import AssignRep from './AssignRep';
 import ResMedia from './ResMedia';
 
@@ -50,7 +50,7 @@ const AddResource: React.FC = () => {
     <IonPage className="addpr-page">
         <IonContent className="ion-padding">
           { ( (!mem_id && !id && !step) || (mem_id && id && step === '1' && (resource && Object.keys(resource).length > 0)) ) && <CreateResource /> }
-          { (resource && Object.keys(resource).length > 0) && mem_id && id && (step === '2') && <BusinessCategory /> }
+          { (resource && Object.keys(resource).length > 0) && mem_id && id && (step === '2') && <ResourceCategory /> }
           { (resource && Object.keys(resource).length > 0) && mem_id && id && (step === '3') && <AssignRep /> }
           { (resource && Object.keys(resource).length > 0) && mem_id && id && (step === '4') && <ResMedia /> }
         </IonContent> 

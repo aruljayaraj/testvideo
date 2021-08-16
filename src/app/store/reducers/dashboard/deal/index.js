@@ -1,7 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 let state = {
     localDeal: {},
-    localDeals: []
+    localDeals: {
+        deals: [],
+        unpaid: []
+    }
 }
 
 const slice = createSlice({

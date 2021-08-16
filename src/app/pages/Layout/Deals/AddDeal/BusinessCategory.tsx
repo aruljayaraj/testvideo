@@ -66,7 +66,10 @@ const BusinessCategory: React.FC = () => {
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="fs-18">
                     <span>B2B Category</span>
-                    <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')} className="float-right router-link-anchor">
+                    <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deals`} className="float-right router-link-anchor" title="Deal Listing">
+                        <i className="fa fa-list green cursor" aria-hidden="true"></i>
+                    </IonRouterLink>
+                    <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')} className="float-right router-link-anchor mr-2">
                         <i className="fa fa-plus green cursor" aria-hidden="true"></i>
                     </IonRouterLink>
                     

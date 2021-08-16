@@ -1,15 +1,21 @@
-import { IonAvatar, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonItem, IonLabel, IonList, IonRouterLink, IonRow } from '@ionic/react'; 
-import React from 'react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonRow, IonText, IonToggle } from '@ionic/react'; 
+import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { isPlatform } from '@ionic/react';
 import '../Search.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../Constants';
 import NoData from '../../../components/Common/NoData';
+import ViewRepresentatives from "./ViewRepresentatives";
+interface Props{
+  btype: number,
+  region: string
+}
 
-const LocalResults: React.FC = () => {
-  const localResults = useSelector( (state:any) => state.search.finalResults.local); console.log(localResults);
+const RegionResults: React.FC<Props> = ({ btype, region }) => { console.log(btype, region);
+  const localResults = useSelector( (state:any) => state.search.finalResults[region]);
   const { apiBaseURL, basename } = lfConfig;
+  const [isLocalOpen, setIsLocalOpen] = useState(true);
   const onListSelect = (item: any) => { console.log(item);
     /*if( currentKeyword.length > 2 ){
       setRedirectData({ ...redirectData, status: true, data: { ...searchFilter, keyword: currentKeyword, display: item.display, type: item.type } });
@@ -20,28 +26,30 @@ const LocalResults: React.FC = () => {
     }*/
   }
   return (<>
-     { localResults && localResults.length > 0 && <IonCard className="card-center my-4">
+    { localResults && localResults.length > 0 && <IonCard className="card-center my-4">
     <IonCardHeader color="titlebg">
-        <IonCardTitle className="fs-18">Local Supplier(s) 
-        
+        <IonCardTitle className="fs-18 ion-text-capitalize">{`${region} ${btype}(s)`} 
+          <i className={`ion-float-right gray cursor fa ${isLocalOpen? 'fa-chevron-down': 'fa-chevron-up'}`} aria-hidden="true" onClick={e => setIsLocalOpen(!isLocalOpen)}></i>
         </IonCardTitle>
     </IonCardHeader>
 
-    <IonCardContent>
-        {/* <IonList> */}
-        { localResults.map((item: any) => { 
-            const logoImage = (Object.keys(item).length > 0 && item.company_logo) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.company_logo}` : `${basename}/assets/img/placeholder.png`;
-            return (
-            <IonCard className="mt-3" key={nanoid()}>
-              <IonCardContent>
-              <IonGrid className="mb-3">
-                <IonRow>
-                  <IonCol style={{ borderRight: "1px solid #ccc" }}>
-                    <div className="profile-logo mr-3">
+    { isLocalOpen && <IonCardContent className="px-0 px-sm-2">
+      { localResults.map((item: any) => { 
+          const logoImage = (Object.keys(item).length > 0 && item.company_logo) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.company_logo}` : `${basename}/assets/img/placeholder.png`;
+          return (
+          <IonCard className="mt-3" key={nanoid()}>
+            <IonCardContent className="px-0 px-sm-2">
+              <IonGrid className="mb-3 p-0">
+                <IonRow className="res-item">
+                  <IonCol sizeSm="4" >
+                    <div className="profile-logo mr-3 pb-2 pl-2">
                       <img src={logoImage} alt="Company Logo"/>
                     </div>
+                    { (isPlatform('android') || isPlatform('ios')) && <>
+                      < ViewRepresentatives reps={item.reps} />
+                    </>}
                   </IonCol>
-                  <IonCol sizeMd="4" sizeXl="4" className="px-3" style={{ borderRight: "1px solid #ccc" }}>
+                  <IonCol sizeMd="4" sizeXl="4" className="px-3">
                     <p><strong>{item.company_name}</strong></p>
                     { item.address1 && <p><i className="fa fa-address-card-o fa-lg green" aria-hidden="true"></i> {item.address1},</p> }
                     { item.address2 && <p>{item.address2},</p> }
@@ -53,25 +61,20 @@ const LocalResults: React.FC = () => {
                       </p>}
                     { item.fax && <p className="gray-medium"><i className="fa fa-fax fa-lg green" aria-hidden="true"></i> {`${item.fax}`}</p> }
                   </IonCol>
-                  <IonCol className="px-3" style={{ borderRight: "1px solid #ccc" }}>
-                      <p>Resources: <span className="text-bold">{item.res_count}</span></p>
-                      <p>Deals: <span className="text-bold">{item.deal_count}</span></p>
-                  </IonCol>
-                  <IonCol className="px-3">
-                    <p>View Representatives</p>
-                    <p><IonRouterLink href={`${basename}/profile/${item.mem_id}/${item.id}`}>{`${item.firstname} ${item.lastname}`}</IonRouterLink></p>
-                  </IonCol>
+                  
+                  { isPlatform('desktop') && <IonCol className="pl-3">
+                    < ViewRepresentatives reps={item.reps} />
+                  </IonCol> }
                 </IonRow>
               </IonGrid>
             </IonCardContent>
           </IonCard>)}
         )}
-        {/* </IonList> */}
         <NoData dataArr={localResults} htmlText="No results found." />
-    </IonCardContent> 
+      </IonCardContent>} 
     </IonCard>}
     </>
   );
 };
 
-export default LocalResults;
+export default RegionResults;

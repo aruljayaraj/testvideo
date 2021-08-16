@@ -82,7 +82,8 @@ export default function Paypal() {
 
     if( itemData && Object.keys(itemData).length > 0 && paymentStatus){
         if( itemData.type === LOCAL_DEAL ){
-            return <Redirect to={`/layout/deals/add-deal/${itemData.form_id}/${itemData.mem_id}/1`} />;
+            // return <Redirect to={`/layout/deals/add-deal/${itemData.form_id}/${itemData.mem_id}/1`} />;
+            return <Redirect to={`/layout/deals/local-deals`} />;
         }
     }
 

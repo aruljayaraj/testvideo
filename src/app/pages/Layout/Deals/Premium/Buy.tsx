@@ -93,6 +93,14 @@ const BuyDeal: React.FC = () => {
         }
     }, [dispatch, onProfileCb, authUser.ID]);
 
+    const onFeeCbFn = useCallback((res: any) => {
+        if(res.status === 'SUCCESS'){
+            setDealLog({ ...dealLog, space_total: res.data.space_total, tax: res.data.tax });
+        }else{
+            dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
+        }
+        dispatch(uiActions.setShowLoading({ loading: false }));
+    }, [setDealLog, dispatch]);
     const onPremiumDealFeeCalc = (loading:boolean) => { 
         const data = getValues();
         if( data.location && data.duration && data.reps && data.reps.length > 0 ){
@@ -107,9 +115,8 @@ const BuyDeal: React.FC = () => {
             };
             CoreService.onPostFn('deal_update', fd, onFeeCbFn);
         }   
-
     }
-    useEffect(() => { console.log("Meow");
+    useEffect(() => {
         // Delay calling api on input typing
         if( dealLog.duration ){
             const delayDebounceFn = setTimeout(() => {
@@ -119,14 +126,21 @@ const BuyDeal: React.FC = () => {
         }
     }, [dealLog.duration]);
 
-    const onFeeCbFn = useCallback((res: any) => {
-        if(res.status === 'SUCCESS'){
-            setDealLog({ ...dealLog, space_total: res.data.space_total, tax: res.data.tax });
-        }else{
-            dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
-        }
-        dispatch(uiActions.setShowLoading({ loading: false }));
-    }, [setDealLog, dispatch]);
+    const resetAction = () => {
+        setValue('location', "1", { shouldValidate: true });
+        setValue('reps', [] , { shouldValidate: true });
+        setValue('duration', 1, { shouldValidate: true });
+        setValue('payment_type', 'credit_card', { shouldValidate: true });
+        setDealLog({ 
+            duration: 1,
+            space_total: '0.00', 
+            tax: '0.00', 
+            init: false, 
+            id: id? id: 0,
+            log: {}
+        });
+        onPremiumDealFeeCalc(false);
+    }
 
     
 
@@ -342,7 +356,7 @@ const BuyDeal: React.FC = () => {
                     </IonRow>    
                 </IonGrid>
                 
-                <IonButton color="danger" className="ion-margin-top mt-4 float-right mb-3" type="reset">
+                <IonButton color="danger" className="ion-margin-top mt-4 float-right mb-3" type="button" onClick={resetAction}>
                     Cancel
                 </IonButton>
                 <IonButton color="greenbg" className="ion-margin-top mt-4 float-right mb-3" type="submit">

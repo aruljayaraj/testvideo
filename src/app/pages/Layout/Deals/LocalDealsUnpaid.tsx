@@ -64,7 +64,7 @@ const LocalDealsUnpaid: React.FC = () => {
                         <img className="roundcorner" src={ddImage} alt="Local Deal Media"/>
                     </IonAvatar>
                     <IonLabel>
-                        <h2>No Deal Name</h2>
+                        <h2>No Deal Name {index+1}</h2>
                         <p><b>$</b> {item.price}</p>
                         <p><IonText color="warning">Payment Pending</IonText></p>
                     </IonLabel>
@@ -88,7 +88,7 @@ const LocalDealsUnpaid: React.FC = () => {
                 </IonThumbnail>
                 <IonLabel>
                     <IonRouterLink color="dark" href={`${basename}/layout/deals/buy-deal/${item.id}`}>
-                      <h2>{item.name? item.name: 'No Deal Name'}</h2>
+                      <h2>{item.name? item.name: `No Deal Name ${index+1}`}</h2>
                     </IonRouterLink>
                     <p><b>$</b> {item.price}</p>
                     <IonText color="warning">Payment Pending</IonText>

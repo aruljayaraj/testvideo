@@ -1,6 +1,7 @@
 export interface DropDown {
     value: number|string;
     label: string;
+    pid?: number|string;
 }
 
 export interface SearchProps{

@@ -20,7 +20,6 @@ import {
   logOut,
   chevronUpOutline,
   chevronDownOutline,
-  // alertCircleOutline,
   businessOutline,
   personAddOutline,
   listOutline,
@@ -66,7 +65,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
     const [showBusinessQQ, setShowBusinessQQ] = useState(false);
     // const [showBusinessSellerQQ, setShowBusinessSellerQQ] = useState(false);
     const [showConsumerQQ, setShowConsumerQQ] = useState(false);
-    const [showConsumerSellerQQ, setShowConsumerSellerQQ] = useState(false);
+    // const [showConsumerSellerQQ, setShowConsumerSellerQQ] = useState(false);
 
     // const tt = menuItems?.menuOpts?.some((value: any) => value.menu_key === 'b2b_buyer_tools');
 
@@ -199,12 +198,12 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </IonItem>
                   { menuItems && showLocalDeal  && 
                   <IonItemGroup className="custom-list-sidemenu"> 
-                    { +(memOpts.localdeals!.total!) < +(memOpts.localdeals!.no_free_deals!) && 
+                    { (+(memOpts.localdeals!.total!) < +(memOpts.localdeals!.no_free_deals!)) && 
                     <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/deals/add-deal/`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={addOutline}></IonIcon>
                         <IonLabel>Add Deal</IonLabel>
                     </IonItem> }
-                    { +(memOpts.localdeals!.total!) >= +(memOpts.localdeals!.no_free_deals!) && 
+                    { (+(memOpts.localdeals!.total!) >= +(memOpts.localdeals!.no_free_deals!)) && 
                       <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/deals/buy-deal/`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={addOutline}></IonIcon>
                         <IonLabel>Purchase a Deal</IonLabel>

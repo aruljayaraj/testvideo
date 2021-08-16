@@ -11,7 +11,8 @@ import {
     IonCardTitle,
     IonText,
     IonSelect,
-    IonSelectOption
+    IonSelectOption,
+    IonRouterLink
 } from '@ionic/react';
 import React, { useState, useCallback, useEffect } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
@@ -21,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as dealActions from '../../../../store/reducers/dashboard/deal';
 import '../Deals.scss';
+import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
 import StepInd from './StepInd';
 
@@ -36,6 +38,7 @@ const AssignRep: React.FC = () => {
     const [addDeal, setAddDeal] = useState({ status: false, memID: '', id: '' });
     const [ reps, setReps ] = useState([]);
     let { id } = useParams<any>(); 
+    const { basename } = lfConfig;
     // console.log(dd?.reps!); 
     let initialValues = {
         reps: (dd && Object.keys(dd).length > 0) && dd.dd_reps  ? (dd.dd_reps).split(",") : [] // 
@@ -99,7 +102,11 @@ const AssignRep: React.FC = () => {
         <StepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Assign Representative Profile</IonCardTitle>
+                <IonCardTitle className="fs-18">Assign Representative Profile
+                    <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deals`} className="float-right router-link-anchor" title="Deal Listing">
+                        <i className="fa fa-list green cursor" aria-hidden="true"></i>
+                    </IonRouterLink>
+                </IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>

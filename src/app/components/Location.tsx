@@ -1,13 +1,10 @@
 import {
-    IonItem, 
     IonLabel,
     IonButton,
     IonGrid,
     IonRow,
     IonCol,
     IonText,
-    IonSelect,
-    IonSelectOption,
     IonToolbar,
     IonTitle,
     IonButtons,

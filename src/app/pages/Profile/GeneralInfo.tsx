@@ -10,11 +10,12 @@ import {
     IonRouterLink,
     IonModal
 } from '@ionic/react';
+import { alertCircleOutline, callOutline, locateOutline, logoFacebook, logoLinkedin, logoTwitter, mailOutline, phonePortraitOutline } from 'ionicons/icons';
 import React, {useState} from 'react';
 import './Profile.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../Constants';
-import { alertCircleOutline, callOutline, locateOutline, logoFacebook, logoLinkedin, logoTwitter, mailOutline, phonePortraitOutline } from 'ionicons/icons';
+
 import ReportModal from './../../components/Modal/ReportModal';
 
 const RepOverview: React.FC = () => {
@@ -26,7 +27,7 @@ const RepOverview: React.FC = () => {
     const other_promotional_assets = comProfile.other_promotional_assets? JSON.parse(comProfile.other_promotional_assets): [];
     const special_features = comProfile.special_features? JSON.parse(comProfile.special_features): [];
     const member_organizations = comProfile.member_organizations? JSON.parse(comProfile.member_organizations): [];
-    const [showReportModal, setShowReportModal] = useState(false);
+    const [showReportModal, setShowReportModal] = useState({isOpen: false, memID: '', repID: '' });
 
     const logoImage = (Object.keys(comProfile).length > 0 && comProfile.company_logo) ? `${apiBaseURL}uploads/member/${comProfile.mem_id}/${comProfile.company_logo}` : `${basename}/assets/img/placeholder.png`;
 
@@ -68,42 +69,42 @@ const RepOverview: React.FC = () => {
                             { comProfile.postal && <p>{`${comProfile.country}, ${comProfile.postal}`}</p>}
                         </IonLabel>
                     </IonItem>}
-                    { comProfile.phone && <IonItem lines="none">
+                    { comProfile.phone_code && comProfile.phone && <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={callOutline}></IonIcon>
                         <IonLabel>
-                            { comProfile.phone_code && comProfile.phone && <p>{`${comProfile.phone_code} ${comProfile.phone}`}</p> }
+                            <p>{`${comProfile.phone_code} ${comProfile.phone}`}</p>
                             { comProfile.phoneext && <p>{`Ext: ${comProfile.phoneext}`}</p>}
                         </IonLabel>
                     </IonItem>}
-                    { comProfile.mobile && <IonItem lines="none">
+                    { comProfile.mobile_code && comProfile.mobile && <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={phonePortraitOutline}></IonIcon>
                         <IonLabel>
-                            { comProfile.mobile_code && comProfile.mobile && <p>{`${comProfile.mobile_code} ${comProfile.mobile}`}</p>}
+                            <p>{`${comProfile.mobile_code} ${comProfile.mobile}`}</p>
                             { comProfile.fax && <p>{`Fax: ${comProfile.fax}`}</p>}
                         </IonLabel>
                     </IonItem>}
                     { comProfile.email && <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={mailOutline}></IonIcon>
                         <IonLabel>
-                            { comProfile.email && <p><IonRouterLink href={`mailto:${comProfile.email}`}>Email</IonRouterLink></p>}
+                            <p><IonRouterLink href={`mailto:${comProfile.email}`}>Email</IonRouterLink></p>
                         </IonLabel>
                     </IonItem>}
                     { comProfile.linkedin && <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={logoLinkedin}></IonIcon>
                         <IonLabel>
-                            { comProfile.linkedin && <IonRouterLink href={comProfile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</IonRouterLink>}
+                            <IonRouterLink href={comProfile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</IonRouterLink>
                         </IonLabel>
                     </IonItem>}
                     { comProfile.facebook && <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={logoFacebook}></IonIcon>
                         <IonLabel>
-                            { comProfile.facebook && <IonRouterLink href={comProfile.facebook} target="_blank" rel="noopener noreferrer">Facebook</IonRouterLink>}
+                            <IonRouterLink href={comProfile.facebook} target="_blank" rel="noopener noreferrer">Facebook</IonRouterLink>
                         </IonLabel>
                     </IonItem>}
                     { comProfile.twitter && <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={logoTwitter}></IonIcon>
                         <IonLabel>
-                            { comProfile.twitter && <p><IonRouterLink href={comProfile.twitter} target="_blank" rel="noopener noreferrer">Twitter</IonRouterLink></p>}
+                            <p><IonRouterLink href={comProfile.twitter} target="_blank" rel="noopener noreferrer">Twitter</IonRouterLink></p>
                         </IonLabel>
                     </IonItem>}
                     <IonItem lines="none">
@@ -115,7 +116,7 @@ const RepOverview: React.FC = () => {
                     <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={alertCircleOutline}></IonIcon>
                         <IonLabel>
-                            <p><IonRouterLink onClick={() => setShowReportModal(true)}>Report Profile</IonRouterLink></p>
+                            <p><IonRouterLink className="cursor" onClick={() => setShowReportModal({ ...showReportModal, isOpen: true, memID: repProfile.mem_id, repID:repProfile.id })}>Report Profile</IonRouterLink></p>
                         </IonLabel>
                     </IonItem>
                     
@@ -149,23 +150,23 @@ const RepOverview: React.FC = () => {
                     <IonText><b>{`${repProfile.firstname} ${repProfile.lastname}`}</b></IonText>
                 </div>
                 <IonList>
-                    { repProfile.phone && <IonItem lines="none">
+                    { repProfile.phone_code && repProfile.phone && <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={callOutline}></IonIcon>
                         <IonLabel>
-                            { repProfile.phone_code && repProfile.phone && <p>{`${repProfile.phone_code} ${repProfile.phone}`}</p> }
+                            <p>{`${repProfile.phone_code} ${repProfile.phone}`}</p>
                             { repProfile.phoneext && <p>{`Ext: ${repProfile.phoneext}`}</p>}
                         </IonLabel>
                     </IonItem>}
-                    { repProfile.mobile && <IonItem lines="none">
+                    { repProfile.mobile_code && repProfile.mobile && <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={phonePortraitOutline}></IonIcon>
                         <IonLabel>
-                            { repProfile.mobile_code && repProfile.mobile && <p>{`${repProfile.mobile_code} ${comProfile.mobile}`}</p>}
+                            <p>{`${repProfile.mobile_code} ${comProfile.mobile}`}</p>
                         </IonLabel>
                     </IonItem>}
                     { repProfile.email && <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={mailOutline}></IonIcon>
                         <IonLabel>
-                            { repProfile.email && <p><IonRouterLink href={`mailto:${repProfile.email}`}>Email</IonRouterLink></p>}
+                            <p><IonRouterLink href={`mailto:${repProfile.email}`}>Email</IonRouterLink></p>
                         </IonLabel>
                     </IonItem>}
                     <IonItem lines="none">
@@ -179,7 +180,7 @@ const RepOverview: React.FC = () => {
             </IonCardContent>
         </IonCard>}
 
-        <IonModal backdropDismiss={false} isOpen={showReportModal} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showReportModal.isOpen} cssClass='my-custom-class'>
           { Object.keys(repProfile).length > 0 && <ReportModal
             showReportModal={showReportModal}
             setShowReportModal={setShowReportModal} />}

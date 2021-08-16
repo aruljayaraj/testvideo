@@ -5,6 +5,7 @@ import {
   IonContent
  } from '@ionic/react';
 // import { IonReactRouter } from '@ionic/react-router';
+import { lfConfig } from './Constants';
 
 import Home from './app/pages/Home/Home';
 import NoPage from './app/pages/NoPage/NoPage'; 
@@ -67,6 +68,7 @@ import FinalResults from './app/pages/Search/Final/Results';
 // }
 
 const Routes: React.FC = () => {
+  const { basename } = lfConfig;
     /*const PrivateRoute = ({ component: Component, ...rest }) => (
         <Route {...rest} render={props => (
           fakeAuth.isAuthenticated ? (

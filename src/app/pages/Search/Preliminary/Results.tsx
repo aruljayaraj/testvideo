@@ -39,7 +39,7 @@ const PreliminaryResults: React.FC<SearchProps> = (props: any) => {
       dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }
     dispatch(uiActions.setShowLoading({ loading: false }));
-  }, [dispatch]);
+  }, [dispatch, b2b, b2c, br, d, bn, keyword]);
 
   useEffect(() => { // console.log("Meow", key , type , display);
     if(keyword || (type && display) ){

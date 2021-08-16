@@ -132,7 +132,7 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
     const onListSelect = (item: any) => {
       const currentKeyword = state.keyword; 
       if( currentKeyword.length > 2 ){
-        setRedirectData({ ...redirectData, status: true, data: { ...searchFilter, keyword: currentKeyword, display: item.display, type: item.type } });
+        setRedirectData({ ...redirectData, status: true, data: { ...searchFilter, keyword: currentKeyword, display: item.display, type: item.type, mem_id: item.mem_id, form_id: item.form_id, form_type: item.form_type } });
         setTimeout(() => {
           props.setSearchModal(false);
         }, 1000)
@@ -142,45 +142,33 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
   
     let optionList; 
     if (state.showOptions && state.keyword) {  // console.log(state.showOptions, state.keyword, state.filteredResults);
-      // if (state.filteredResults.length) {
-        optionList = (
-          <div className="suggestions-container">
-            <ul className="options">
-              {state.filteredResults.length > 0 && state.filteredResults.map((item: any, index: number) => { 
-                let iconClassName;
-                //let itemLink = "";
-                //let itemData = {};
-                if(item.type === 'Rep'){ 
-                  iconClassName = "fa-users"; 
-                  // itemLink = `${process.env.REACT_APP_BASE_URL}/preliminary-results?b2b=${searchFilter.b2b}&b2c=${searchFilter.b2c}&br=${searchFilter.br}&d=${searchFilter.d}&bn=${searchFilter.bn}&key=${state.keyword}&display=${item.display}&type=${item.type}`;
-                  //itemLink = `/preliminary-results`;
-                  //itemData = { ...searchFilter, keyword: state.keyword, display: item.display, type: item.type };
-                }else if(item.type === 'Res'){ 
-                  iconClassName = "fa-files-o"; 
-                  //itemLink = `/resource/${item.form_type}/${item.mem_id}/${item.form_id}`;
-                }else if(item.type === 'Deal'){ 
-                  iconClassName = "fa-gift";
-                  //itemLink = `/local-deal/${item.mem_id}/${item.form_id}`; 
-                }else if(item.type === 'News'){ 
-                  iconClassName = "fa-newspaper-o";
-                  //itemLink = `/press-release/${item.mem_id}/${item.form_id}`; 
-                }
-                return (
-                  <li className="" key={nanoid()} onClick={(e: any) => onListSelect(item)} > {/* onClick={(e: any) => onClick(e, item)} */}
-                    {/* <Link color="blackbg" className="text-left" to={{ pathname:itemLink, state: item.type === 'Rep'? itemData: ''}}> */}
-                    <p>
-                        { iconClassName && <i className={`fa ${iconClassName} mr-3`} aria-hidden="true"></i> }
-                        {item.display}
-                        {/* <span style={{ float: 'right' }} dangerouslySetInnerHTML={{ __html: item.btype }}></span> */}
-                    </p>
-                    {/* </Link> */}
-                  </li>
-                );
-              })}
-              {state.filteredResults.length === 0 && <li className="py-2 pr-3 error">No Results found.</li>}
-            </ul>
-          </div>
-        );
+      optionList = (
+        <div className="suggestions-container">
+          <ul className="options">
+            {state.filteredResults.length > 0 && state.filteredResults.map((item: any, index: number) => { 
+              let iconClassName;
+              if(item.type === 'Rep'){ 
+                iconClassName = "fa-users"; 
+              }else if(item.type === 'Res'){ 
+                iconClassName = "fa-files-o";
+              }else if(item.type === 'Deal'){ 
+                iconClassName = "fa-gift";
+              }else if(item.type === 'News'){ 
+                iconClassName = "fa-newspaper-o";
+              }
+              return (
+                <li className="" key={nanoid()} onClick={(e: any) => onListSelect(item)} > {/* onClick={(e: any) => onClick(e, item)} */}
+                  <p>
+                      { iconClassName && <i className={`fa ${iconClassName} mr-3`} aria-hidden="true"></i> }
+                      {item.display}
+                  </p>
+                </li>
+              );
+            })}
+            {state.filteredResults.length === 0 && <li className="py-2 pr-3 error">No Results found.</li>}
+          </ul>
+        </div>
+      );
     }
 
     if( redirectData.status  ){

@@ -24,7 +24,6 @@ import * as uiActions from '../../../../store/reducers/ui';
 import * as resActions from '../../../../store/reducers/dashboard/resource';
 import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
-import ImageModal from '../../../../components/Image/ImageModal';
 import ResStepInd from './ResStepInd';
 import ResPreviewModal from './ResPreviewModal';
 
@@ -52,14 +51,12 @@ const ResMedia: React.FC = () => {
     const [showImageModal, setShowImageModal] = useState(initialValues);
     const [resPreviewModal, setResPreviewModal] = useState(initPreviewValues);
     const [addRes, setAddRes] = useState({ status: false, memID: '', ID: '' });
-    // const { apiBaseURL, basename } = lfConfig;
     let { id, res_type } = useParams<any>();
     let acceptedTypes = '';
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [resFile, setResFile] = useState<any>();
     const [uploadProgress, updateUploadProgress] = useState(0);
-    // const [imageURI, setImageURI] = useState<string|null>(null);
-    const [uploadStatus, setUploadStatus] = useState(false);
+    // const [uploadStatus, setUploadStatus] = useState(false);
     const [uploading, setUploading] = useState(false);
     const resTypeText = res_type ? res_type.charAt(0).toUpperCase() + res_type.slice(1): '';
 
@@ -101,7 +98,7 @@ const ResMedia: React.FC = () => {
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
-    }, [dispatch, setAddRes]);
+    }, [dispatch]);
     const removeResource = () => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         const fd = {
@@ -174,7 +171,7 @@ const ResMedia: React.FC = () => {
                         })
                         .then((resp: any) => {
                             const res = resp.data;
-                            setUploadStatus(true);
+                            // setUploadStatus(true);
                             setUploading(false);
                             updateUploadProgress(0);
                             setResFile('');
@@ -186,7 +183,7 @@ const ResMedia: React.FC = () => {
                         })
                         .catch((err: any) => {
                             if(axios.isCancel(err)){
-                                setUploadStatus(false);
+                                // setUploadStatus(false);
                                 setUploading(false);
                                 updateUploadProgress(0);
                                 setResFile('');

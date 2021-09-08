@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonGrid, IonRow, IonCol, IonTitle } from '@ionic/react'; 
+import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonGrid, IonRow, IonCol } from '@ionic/react'; 
 import React, {useCallback, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import './LocalDeals.scss';
@@ -30,12 +30,11 @@ const LocalDeal: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if( authUser && authUser.ID ){
+    if( id ){
       dispatch(uiActions.setShowLoading({ loading: true }));
         CoreService.onPostFn('deal_update', {
-            action: 'get_deal', 
-            memID: authUser.ID,
-            repID: authUser.repID,
+            action: 'get_deal',
+            actionFrom: 'home',
             formID: id
         }, onCbFn);
     }

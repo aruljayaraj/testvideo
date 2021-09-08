@@ -1,13 +1,10 @@
 import { IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonButton, IonGrid, IonRow, IonCol, IonHeader, IonToolbar, IonButtons, IonIcon, IonTitle } from '@ionic/react';
-import React, {useCallback, useEffect} from 'react';
+import React from 'react';
 import { isPlatform } from '@ionic/react';
 import { close } from 'ionicons/icons';
 import '../Deals.scss';
 import { useDispatch, useSelector } from 'react-redux';
-// import * as uiActions from '../../../../store/reducers/ui';
-// import * as dealActions from '../../../../store/reducers/dashboard/deal';
 import { lfConfig } from '../../../../../Constants';
-// import CoreService from '../../../../shared/services/CoreService';
 import CommonService from '../../../../shared/services/CommonService';
 import Status from '../../../../components/Common/Status';
 import BuscatsList from '../../../../components/Common/BuscatsList';
@@ -23,26 +20,7 @@ const PreviewModal: React.FC<Props> = ({ previewModal, setPreviewModal }) => {
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const dd = useSelector( (state:any) => state.deals.localDeal);
     const { apiBaseURL, basename } = lfConfig;
-    let { memID, ddID } = previewModal;
 
-    // Deal deafult to load callback
-    // const onPrBuscatCb = useCallback((res: any) => {
-    //     if(res.status === 'SUCCESS'){
-    //         dispatch(dealActions.setDeal({ data: res.data }));
-    //     }
-    //     dispatch(uiActions.setShowLoading({ loading: false }));
-    // }, [dispatch]);
-
-    // useEffect(() => {
-    //     if( ddID ){
-    //     // /*dispatch(uiActions.setShowLoading({ loading: true }));
-    //     //     CoreService.onPostFn('deal_update', {
-    //     //         action: 'get_deal', 
-    //     //         memID: memID,
-    //     //         formID: ddID
-    //     //     }, onPrBuscatCb);*/
-    //     }
-    // }, [dispatch, memID, ddID, onPrBuscatCb]);
     const ddImage = ( dd && Object.keys(dd).length > 0 && dd.image) ? `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.image}` : `${basename}/assets/img/placeholder.png`;
 
     return (<>

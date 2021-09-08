@@ -27,7 +27,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as qqActions from '../../../../store/reducers/dashboard/qq';
 import '../LocalQuotes.scss';
-// import TextEditor from '../../../../components/Forms/TextEditor';
 import CoreService from '../../../../shared/services/CoreService';
 import CommonService from '../../../../shared/services/CommonService';
 import { lfConfig } from '../../../../../Constants';
@@ -51,8 +50,7 @@ const CreateQuotation: React.FC = () => {
     const qq = useSelector( (state:any) => state.qq.localQuote);
     const quote = useSelector( (state:any) => state.qq.quotation); 
     const [addQuote, setAddQuote] = useState({ status: false, memID: '', ID: '' });
-    // const [onGoingDate, setOnGoingDate] = useState<any>();
-    let { id, mem_id, quote_id, step, rfqType } = useParams<any>();
+    let { id, quote_id, step, rfqType } = useParams<any>();
 
     let initialValues = {
         s_title: (quote && Object.keys(quote).length > 0 && quote.s_title) ? quote.s_title : '',
@@ -75,7 +73,7 @@ const CreateQuotation: React.FC = () => {
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
-    }, [setAddQuote, dispatch]);
+    }, [setAddQuote, dispatch, setAddQuote]);
     
     const onSubmit = (data: any) => {
         dispatch(uiActions.setShowLoading({ loading: true }));

@@ -1,33 +1,24 @@
 import { IonContent, IonPage, IonText, IonPopover, IonIcon, IonButtons, IonButton, IonToolbar, IonTitle } from '@ionic/react';
 import React, {useCallback, useState, useEffect} from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { close} from 'ionicons/icons';
 import { isPlatform } from '@ionic/react';
 import '../LocalQuotes.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as qqActions from '../../../../store/reducers/dashboard/qq';
-import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
 import BRContent from './BRContent'; 
 import ListSkeleton from '../../../../components/Skeleton/ListSkeleton';
 import NoData from '../../../../components/Common/NoData';
-// import DeleteModal from '../../../../components/Modal/DeleteModal';
 
 const MyLQArchive: React.FC = () => {
   const dispatch = useDispatch();
   const skeleton = useSelector( (state:any) => state.ui.skeleton);
   const authUser = useSelector( (state:any) => state.auth.data.user);
   const qqs = useSelector( (state:any) => state.qq.localQuotes);
-  // const [showActionSheet, setShowActionSheet] = useState<any>({status: false, qq: null});
   const [showPopover, setShowPopover] = useState<any>({status: false, qq: null});
-  // const [showDeleteModal, setShowDeleteModal] = useState({isOpen: false, id: null, mem_id: null, rfqType: '', qqType: ''});
   let { rfqType } = useParams<any>();
-  //let actionsheetButtons: any = [];
-  // const resTypeText = rfqType ? rfqType.charAt(0).toUpperCase() + rfqType.slice(1): '';
-
-  
-
 
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){

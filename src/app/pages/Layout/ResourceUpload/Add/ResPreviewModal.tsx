@@ -11,7 +11,6 @@ import VideoViewer from '../Viewer/VideoViewer';
 import DocumentViewer from '../Viewer/DocumentViewer';
 import AudioViewer from '../Viewer/AudioViewer';
 
-
 interface Props {
     resPreviewModal: any,
     setResPreviewModal: Function,
@@ -23,7 +22,6 @@ const ResPreviewModal: React.FC<Props> = ({ resPreviewModal, setResPreviewModal 
     const { apiBaseURL, basename } = lfConfig;
     let { res_type } = useParams<any>();
 
-    const ResFile = ( resource && Object.keys(resource).length > 0 && resource.filename) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${resource.filename}` : ``;
     const notifyText = `Your ${res_type} is currently being converted for internet streaming. You can try your preview in a few minutes.`;
 
     return (<div className="resource-preview-modal">

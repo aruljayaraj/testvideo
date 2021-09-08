@@ -19,7 +19,6 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
     let qq:any = {};
     let repImage = '';
     let { rfqType } = useParams<any>();
-    //const authUser = useSelector( (state:any) => state.auth.data.user);
     const { apiBaseURL } = lfConfig;
 
     if( qt.localquote && Object.keys(qt.localquote).length > 0  ){

@@ -18,7 +18,6 @@ import './LocalQuotes.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../store/reducers/ui';
 import * as repActions from '../../../store/reducers/dashboard/rep';
-// import * as qqActions from '../../../store/reducers/dashboard/qq';
 import CoreService from '../../../shared/services/CoreService';
 
 type FormInputs = {
@@ -76,15 +75,6 @@ const RFQSettings: React.FC = () => {
   // Initiate form values from API
   useEffect(() => {
     if (repProfile) {
-        // setValue([
-        //     { st_email_notify: (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')?  repProfile.b2b_qq_email_notify : repProfile.consumer_qq_email_notify }, 
-        //     { st_email_alternate: (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_email_alternate: repProfile.consumer_qq_email_alternate },
-        //     { st_sms_notify: (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_sms_notify: repProfile.consumer_qq_sms_notify },
-        //     { st_mobile_alternate: (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_mobile_alternate: repProfile.consumer_qq_mobile_alternate},
-        //     { st_tele_notify: (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_phone_notify: repProfile.consumer_qq_phone_notify},
-        //     { st_phone_alternate: (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_phone_alternate: repProfile.consumer_qq_phone_alternate},
-        //     { st_urgent_request: (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_urgent_request : repProfile.consumer_qq_urgent_request}
-        // ]);
         setValue('st_email_notify', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')?  repProfile.b2b_qq_email_notify : repProfile.consumer_qq_email_notify);
         setValue('st_email_alternate', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_email_alternate: repProfile.consumer_qq_email_alternate);
         setValue('st_sms_notify', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_sms_notify: repProfile.consumer_qq_sms_notify);

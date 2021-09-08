@@ -25,7 +25,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as qqActions from '../../../../store/reducers/dashboard/qq';
 import '../LocalQuotes.scss';
-// import TextEditor from '../../../../components/Forms/TextEditor';
 import CoreService from '../../../../shared/services/CoreService';
 import { lfConfig } from '../../../../../Constants';
 import QQStepInd from './QQStepInd';

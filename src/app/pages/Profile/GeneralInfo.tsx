@@ -15,7 +15,6 @@ import React, {useState} from 'react';
 import './Profile.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../Constants';
-
 import ReportModal from './../../components/Modal/ReportModal';
 
 const RepOverview: React.FC = () => {

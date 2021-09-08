@@ -8,7 +8,7 @@ import {
   IonIcon,
   IonLabel, IonModal
 } from '@ionic/react';
-import { locate, locationOutline } from 'ionicons/icons';
+import { eyeOutline, locate } from 'ionicons/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { isPlatform } from '@ionic/react';
 import { useLocation } from 'react-router-dom'
@@ -20,9 +20,11 @@ import * as uiActions from '../../store/reducers/ui';
 import Loader from '../Loader';
 import Toast from '../Toast';
 import LocationModal from '../Location';
+import { lfConfig } from '../../../Constants';
 
 const Footer: React.FC = () => {
   const dispatch = useDispatch();
+  const { basename } = lfConfig;
   const geolocation = useSelector( (state:any) => state.auth.location);
   const copyright = "Copyright ©"+new Date().getFullYear()+" Isondai Corporation - All Rights Reserved";
   const [showLocationModal, setShowLocationModal] = useState(false);
@@ -84,9 +86,9 @@ const Footer: React.FC = () => {
       <IonFooter >
         <IonToolbar color="blackbg" mode="ios">
           { geolocation && geolocation.city && isPlatform('desktop') && <IonButtons slot="start"> 
-            <IonButton>
-              <IonIcon slot="start" icon={locationOutline}></IonIcon>
-              <IonLabel slot="end">{`${geolocation.city}, ${geolocation.state}, ${geolocation.country}`}</IonLabel>
+            <IonButton routerLink={`${basename}/signup`}>
+              <IonIcon slot="start" icon={eyeOutline}></IonIcon>
+              <IonLabel slot="end">LocalQuote Requests</IonLabel>
             </IonButton>
           </IonButtons>}
 

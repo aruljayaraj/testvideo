@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonRouterLink, IonGrid, IonRow, IonCol } from '@ionic/react'; 
+import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonGrid, IonRow, IonCol } from '@ionic/react'; 
 import React, {useCallback, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import './PressReleases.scss';
@@ -13,11 +13,10 @@ import ContactsList from '../../components/Common/ContactsList';
 
 const HomePR: React.FC = () => {
   const dispatch = useDispatch();
-  const authUser = useSelector( (state:any) => state.auth.data.user);
   const loadingState = useSelector( (state:any) => state.ui.loading);
   const pr = useSelector( (state:any) => state.pr.pressRelease);
   const { apiBaseURL, basename } = lfConfig;
-  let { id, mem_id } = useParams<any>();
+  let { id } = useParams<any>();
 
   // Press Release deafult to load callback
   const onPrBuscatCb = useCallback((res: any) => {
@@ -34,11 +33,11 @@ const HomePR: React.FC = () => {
       dispatch(uiActions.setShowLoading({ loading: true }));
         CoreService.onPostFn('pr_update', {
             action: 'get_press_release',
-            formID: id,
-            memID: mem_id
+            actionFrom: 'home',
+            formID: id
         }, onPrBuscatCb);
     }
-  }, [dispatch, id, authUser, onPrBuscatCb]);
+  }, [dispatch, id, onPrBuscatCb]);
 
   const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
 

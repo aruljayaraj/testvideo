@@ -26,7 +26,6 @@
   "files": [
     "./@types/react-view-pdf.d.ts",
     "./@types/react-audio-player.d.ts",
-    "./@types/react-select.d.ts",
-    "./@types/react-xmasonry.d.ts"
+    "./@types/react-select.d.ts"
   ]
 }

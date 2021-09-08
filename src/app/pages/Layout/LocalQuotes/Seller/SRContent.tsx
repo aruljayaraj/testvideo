@@ -16,7 +16,6 @@ const SRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover}) =>
     const { basename } = lfConfig;
     let { rfqType } = useParams<any>();
     const { apiBaseURL } = lfConfig;
-
     const repImage = (Object.keys(qq).length > 0 && qq.profile_image) ? `${apiBaseURL}uploads/member/${qq.mem_id}/${qq.profile_image}` : `${basename}/assets/img/avatar.svg`;
     
     return (<IonCard className="card-center mt-3 mb-1">

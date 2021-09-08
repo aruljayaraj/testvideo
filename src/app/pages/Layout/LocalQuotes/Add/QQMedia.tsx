@@ -1,6 +1,5 @@
 import {
     IonItem,
-    IonModal,
     IonCard,
     IonCardTitle,
     IonCardContent,
@@ -12,28 +11,16 @@ import {
     IonText,
     IonLabel,
     IonProgressBar,
-    IonRadioGroup,
-    IonListHeader,
-    IonRadio,
     IonGrid,
-    IonIcon,
-    IonPopover,
     IonActionSheet
 } from '@ionic/react';
-import { attach, cameraOutline, ellipsisHorizontalOutline, close } from 'ionicons/icons';  
-import React, { useState, useCallback, useRef, useEffect} from 'react';
-import { useParams, Redirect } from 'react-router-dom';
+import { cameraOutline, ellipsisHorizontalOutline, close } from 'ionicons/icons';  
+import React, { useState, useCallback, useRef} from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { size, toArray } from 'lodash';
-// import { MediaCapture, CaptureError, CaptureAudioOptions } from '@ionic-native/media-capture';
+import { toArray } from 'lodash';
 import { isPlatform, getPlatforms } from '@ionic/react';
-/*import {
-    MediaFile,
-    VideoCapturePlusOptions,
-    VideoCapturePlus,
-  } from "@ionic-native/video-capture-plus";*/
-  
 
 import '../LocalQuotes.scss';
 import { useCameraPhoto } from '../../../../hooks/useCameraPhoto';
@@ -41,14 +28,12 @@ import * as uiActions from '../../../../store/reducers/ui';
 import * as qqActions from '../../../../store/reducers/dashboard/qq';
 import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
-import ImageModal from '../../../../components/Image/ImageModal';
 import QQStepInd from './QQStepInd';
-import QQPreviewModal from './QQPreviewModal';
 
 let cancelToken = axios.CancelToken;
 let source = cancelToken.source();
 
-let initialValues = {
+/*let initialValues = {
     isOpen: false,
     title: '',
     actionType: '', // new or edit
@@ -60,7 +45,7 @@ let initPreviewValues ={
     isOpen: false,
     memID: '',
     prID: ''
-}
+}*/
 
 const QQMedia: React.FC = () => { 
     const dispatch = useDispatch();
@@ -91,7 +76,7 @@ const QQMedia: React.FC = () => {
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
-    }, [dispatch, setAddQQ]);
+    }, [dispatch]);
     const removeQQResource = (attach_id: number) => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         const fd = {

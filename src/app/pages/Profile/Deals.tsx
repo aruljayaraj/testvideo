@@ -6,8 +6,7 @@ import {
     IonCardContent,
     IonList,
     IonRouterLink
-  } from '@ionic/react';
-
+} from '@ionic/react';
 import React from 'react';
 import './Profile.scss';
 import { useSelector } from 'react-redux';

@@ -36,9 +36,8 @@ const HomeResource: React.FC = () => {
       dispatch(uiActions.setShowLoading({ loading: true }));
         CoreService.onPostFn('res_update', {
             action: 'get_resource',
-            resType: res_type, 
-            memID: authUser.ID,
-            repID: authUser.repID,
+            actionFrom: 'home',
+            resType: res_type,
             formID: id
         }, onPrBuscatCb);
     }

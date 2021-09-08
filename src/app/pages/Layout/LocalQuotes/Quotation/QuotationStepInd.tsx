@@ -6,7 +6,6 @@ import '../LocalQuotes.scss';
 import { lfConfig } from '../../../../../Constants';
 
 const QuotationStepInd: React.FC = () => {
-  const authUser = useSelector( (state:any) => state.auth.data.user);
   const quote = useSelector( (state:any) => state.qq.quotation);
   const { basename } = lfConfig;
   let { id, mem_id, quote_id, step, rfqType } = useParams<any>();

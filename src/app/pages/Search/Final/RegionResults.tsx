@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonRow, IonText, IonToggle } from '@ionic/react'; 
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonRow } from '@ionic/react'; 
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { isPlatform } from '@ionic/react';
@@ -16,15 +16,15 @@ const RegionResults: React.FC<Props> = ({ btype, region }) => { console.log(btyp
   const localResults = useSelector( (state:any) => state.search.finalResults[region]);
   const { apiBaseURL, basename } = lfConfig;
   const [isLocalOpen, setIsLocalOpen] = useState(true);
-  const onListSelect = (item: any) => { console.log(item);
-    /*if( currentKeyword.length > 2 ){
+  /*const onListSelect = (item: any) => { console.log(item);
+    if( currentKeyword.length > 2 ){
       setRedirectData({ ...redirectData, status: true, data: { ...searchFilter, keyword: currentKeyword, display: item.display, type: item.type } });
       setTimeout(() => {
         props.setSearchModal(false);
       }, 1000)
       
-    }*/
-  }
+    }
+  }*/
   return (<>
     { localResults && localResults.length > 0 && <IonCard className="card-center my-4">
     <IonCardHeader color="titlebg">

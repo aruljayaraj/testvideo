@@ -20,7 +20,7 @@ import GeneralInfo from './GeneralInfo';
 const CompanyProfile: React.FC = () => {
   const dispatch = useDispatch();
   // const memid = useSelector( (state:any) => state.auth.data.user.ID);
-  const repProfile = useSelector( (state:any) => state.rep.repProfile);
+  // const repProfile = useSelector( (state:any) => state.rep.repProfile);
   const comProfile = useSelector( (state:any) => state.rep.comProfile);
   // const memOpts = useSelector( (state:any) => state.auth.memOptions );
   // const resources = useSelector( (state:any) => state.res.resources);

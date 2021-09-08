@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 let state = {
     preResults: [],
-    finalResults: []
+    finalResults: [],
+    companyResults: [],
+    homeResults: {
+        items: [],
+        total: 0
+    }
 }
 
 const slice = createSlice({
@@ -19,9 +24,27 @@ const slice = createSlice({
                 const data = action.payload.data;
                 sState.finalResults = data;
             }
+        },
+        setCompanyResults: (sState, action) => {
+            if( action.payload.data ){
+                const data = action.payload.data;
+                sState.companyResults = data;
+            }
+        },
+        setHomeResults: (sState, action) => {
+            let data;
+            if( action.payload.data ){
+                if( action.payload.actionFrom === 'loadmore' ){
+                    data = [...sState.homeResults.items, ...action.payload.data]
+                }else{
+                    data = action.payload.data;
+                }
+                sState.homeResults.items = data;
+                sState.homeResults.total =action.payload.total;
+            }
         }
     }
 });
 
-export const {setPreResults, setFinalResults} = slice.actions;
+export const {setPreResults, setFinalResults, setCompanyResults, setHomeResults} = slice.actions;
 export default slice.reducer;

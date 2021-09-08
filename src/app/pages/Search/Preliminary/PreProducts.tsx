@@ -8,11 +8,11 @@ import NoData from '../../../components/Common/NoData';
 import { Redirect } from 'react-router';
 
 interface Props {
-    filters: {
-        b2b: boolean | null,
-        b2c: boolean | null
-    }
+  filters: {
+      b2b: boolean | null,
+      b2c: boolean | null
   }
+}
 
 const PreProducts: React.FC<Props> = ({ filters }) => {
   const preResults = useSelector( (state:any) => state.search.preResults.products);

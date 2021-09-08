@@ -18,19 +18,18 @@ import {
     IonCheckbox
   } from '@ionic/react';
   import { close } from 'ionicons/icons';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import { isPlatform } from '@ionic/react';
 import Select from 'react-select';
-
-import CoreService from '../../../shared/services/CoreService';
 import './RepProfile.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 import * as frmdataActions from '../../../store/reducers/common';
 import * as uiActions from '../../../store/reducers/ui';
+import CoreService from '../../../shared/services/CoreService';
 import { DropDown } from '../../../interfaces/Common';
 
 type FormInputs = {
@@ -88,7 +87,7 @@ const ContactInfoModal: React.FC<Props> = ({showContactModal, setShowContactModa
         newsLetter: (repProfile && repProfile.newsletteryn === 'Y')? true: false,
     }; // console.log(initialValues);
     
-    const { control, handleSubmit, getValues, formState: { errors } } = useForm<FormInputs>({
+    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });

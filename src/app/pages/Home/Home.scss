@@ -1,0 +1,144 @@
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+}
+@keyframes fadeOut {
+  0% {opacity:1;}
+  100% {opacity:0;}
+}
+.homepage {
+  ion-content {
+    ion-toolbar {
+      --background: translucent;
+      --min-height: 42px;
+      .filter-toolbar{
+        .tb-item{
+          height: 36px;
+          min-width: auto !important;
+          margin-top: 4px !important;
+          &::before{
+            border-left: none !important;
+          }
+        }
+      }
+      
+    }
+  }
+  .home-container{
+    background-color: #F2F2F2;
+    .filter-container{
+      display: flex;
+      flex-wrap: wrap;
+      .space-between { 
+        justify-content: space-between; 
+      }  
+      .home-item {
+        margin: 10px;
+        padding: 0 !important;
+        // flex: 20%;
+        flex: 40%;
+        animation: fadeIn 5s;
+        .music-item{
+          // padding-top: 20%;
+          // padding-bottom: 20%;
+          padding-top: 22%;
+          padding-bottom: 22%;
+          background-color: #F3F3F5;
+        }
+      }
+      .ion-hide{
+        animation: fadeOut 5s;
+      }
+    }
+  }
+}
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) { 
+  .homepage {
+    ion-content {
+      ion-toolbar {
+        --min-height: 46px;
+      }
+    }  
+    .home-container{  
+      .filter-container{
+        .home-item {
+          flex: 40%;
+          .music-item{
+            padding-top: 34%;
+            padding-bottom: 34%;
+          }
+        }
+      }
+    }
+  }
+ }
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) { 
+  .homepage {
+    ion-content {
+      ion-toolbar {
+        --min-height: 42px;
+      }
+    } 
+    .home-container{
+      .filter-container{
+        .home-item {
+          flex: 25%;
+          .music-item{
+            padding-top: 25%;
+            padding-bottom: 25%;
+          }
+        }
+      }
+    }
+  }
+ }
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) { 
+  .homepage {
+    .home-container{
+      .filter-container{
+        .home-item {
+          flex: 20%;
+          .music-item{
+            padding-top: 26%;
+            padding-bottom: 26%;
+          }
+        }
+      }
+    }
+  }
+ }
+
+// X-Large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) { 
+  .homepage {
+    .home-container{
+      .filter-container{
+        .home-item {
+          .music-item{
+            padding-top: 35%;
+            padding-bottom: 34%;
+          }
+        }
+      }
+    }
+  }
+ }
+
+// XX-Large devices (larger desktops, 1400px and up)
+@media (min-width: 1400px) { 
+  // .homepage {
+  //   .filter-container{
+  //     .home-item {
+  //       .music-item{
+  //         // padding-top: 20%;
+  //         // padding-bottom: 20%;
+  //       }
+  //     }
+  //   }
+  // }
+ }

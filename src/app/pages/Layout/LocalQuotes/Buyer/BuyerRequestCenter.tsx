@@ -25,7 +25,6 @@ const BuyerRequestCenter: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState({isOpen: false, id: null, mem_id: null, rfqType: '', qqType: ''});
   let { rfqType } = useParams<any>();
   let actionsheetButtons: any = [];
-  // const resTypeText = rfqType ? rfqType.charAt(0).toUpperCase() + rfqType.slice(1): '';
 
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){

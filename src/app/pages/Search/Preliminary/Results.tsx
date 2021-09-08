@@ -1,6 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'; 
 import React, {useCallback, useEffect} from 'react';
-import { Redirect, useLocation } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import CoreService from '../../../shared/services/CoreService';
 import '../Search.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,29 +8,16 @@ import * as searchActions from '../../../store/reducers/search';
 import * as uiActions from '../../../store/reducers/ui';
 import { SearchProps } from '../../../interfaces/Common';
 import PreProducts from './PreProducts';
-import PreDeals from './PreDeals';
-import PreNews from './PreNews';
+import PreListItems from './PreListItems';
+import { lfConfig } from '../../../../Constants';
+import PreCompany from './PreCompany';
 
 const PreliminaryResults: React.FC<SearchProps> = (props: any) => {
   const dispatch = useDispatch();
   const location = useSelector( (state:any) => state.auth.location);
-
-  // function useQuery() {
-  //   return new URLSearchParams(useLocation().search);
-  // }
-  // console.log(props.location);
-
-  /*let query = useQuery(); // console.log(query);
-  const b2b = query.get("b2b");
-  const b2c = query.get("b2c");
-  const br = query.get("br");
-  const d = query.get("d");
-  const bn = query.get("bn");
-  const key = query.get("key");
-  const display = query.get("display");
-  const type = query.get("type");*/
+  const { LOCAL_DEAL, PRESS_RELEASE, RESOURCE } = lfConfig;
   const searchSettings = { b2b: true, b2c: false, br: false, d: false, bn: false, keyword: '', display: '', type: '' };
-  const { b2b, b2c, br, d, bn, keyword, display, type } = (props.location && props.location.state)? props.location.state : searchSettings;
+  const { b2b, b2c, br, d, bn, cn, keyword, display, type } = (props.location && props.location.state)? props.location.state : searchSettings;
 
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -39,14 +26,14 @@ const PreliminaryResults: React.FC<SearchProps> = (props: any) => {
       dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }
     dispatch(uiActions.setShowLoading({ loading: false }));
-  }, [dispatch, b2b, b2c, br, d, bn, keyword]);
+  }, [dispatch, b2b, b2c, br, d, bn, cn, keyword]);
 
   useEffect(() => { // console.log("Meow", key , type , display);
     if(keyword || (type && display) ){
       dispatch(uiActions.setShowLoading({ loading: true }));
       const data = {
         action: 'preliminery_search',
-        filters: {b2b, b2c, br, d, bn},
+        filters: {b2b, b2c, br, d, bn, cn},
         keyword,
         location,
         display,
@@ -54,7 +41,7 @@ const PreliminaryResults: React.FC<SearchProps> = (props: any) => {
       };
       CoreService.onPostFn('search', data, onCallbackFn);
     }
-  }, [dispatch, onCallbackFn, keyword, display, type]);
+  }, [dispatch, onCallbackFn, b2b, b2c, br, d, bn, cn, keyword, location, display, type]);
 
   if(!props.location || !props.location.state){
     return <Redirect to="/" />;
@@ -64,8 +51,10 @@ const PreliminaryResults: React.FC<SearchProps> = (props: any) => {
     <IonPage className="search-page">
         <IonContent>
           { (b2b === true || b2c === true) && <PreProducts filters={{b2b, b2c}} /> }
-          { d === true && <PreDeals /> }
-          { bn === true && <PreNews /> }
+          { d === true && <PreListItems itemType={LOCAL_DEAL} /> }
+          { bn === true && <PreListItems itemType={PRESS_RELEASE} /> }
+          { br === true && <PreListItems itemType={RESOURCE} /> }
+          { cn === true && <PreCompany /> }
         </IonContent>
     </IonPage>
   );

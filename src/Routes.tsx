@@ -1,11 +1,8 @@
 import React, { Suspense, lazy } from 'react';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
-import {
-  //IonRouterOutlet,
-  IonContent
- } from '@ionic/react';
-// import { IonReactRouter } from '@ionic/react-router';
+import { IonContent } from '@ionic/react';
 import { lfConfig } from './Constants';
+import PrivateRoute from './AuthGuard';
 
 import Home from './app/pages/Home/Home';
 import NoPage from './app/pages/NoPage/NoPage'; 
@@ -53,6 +50,7 @@ import RFQSettings from './app/pages/Layout/LocalQuotes/RFQSettings';
 import DealPayment from './app/pages/Layout/Deals/Premium/DealPayment';
 import HomeResource from './app/pages/Resources/Resource';
 import FinalResults from './app/pages/Search/Final/Results';
+import CompanyResults from './app/pages/Search/Final/CompanyResults';
 
 // class DebugRouter extends Router {
 //   constructor(props){
@@ -101,9 +99,11 @@ const Routes: React.FC = () => {
                 <Route path="/profile/:memid/:repid" component={Profile} exact={true} />
                 <Route path="/preliminary-results" component={PreResults} exact={true} />
                 <Route path="/search-results" component={FinalResults} exact={true} />
-                <Route path="/press-release/:mem_id/:id" component={HomePR} exact={true} />
-                <Route path="/local-deal/:mem_id/:id" component={HomeLD} exact={true} />
-                <Route path="/resource/:res_type/:mem_id/:id" component={HomeResource} exact={true} />
+                <Route path="/company-results" component={CompanyResults} exact={true} />
+                
+                <Route path="/press-release/:id" component={HomePR} exact={true} />
+                <Route path="/local-deal/:id" component={HomeLD} exact={true} />
+                <Route path="/resource/:res_type/:id" component={HomeResource} exact={true} />
                 {/* <Route path="/reset-password" component={ResetPassword} exact={true} /> */}
                 {/* <Route 
                     path="/layout"
@@ -113,36 +113,36 @@ const Routes: React.FC = () => {
                     }}
                     /> */}
                 {/* <Route path="/layout" component={Layout} exact={true} /> */}
-                <Route path="/layout/dashboard" component={Dashboard} exact={true} />
-                <Route path="/layout/company-profile" component={CompanyProfile} exact={true} />
-                <Route path="/layout/rep-profile/:memid/:repid" component={RepProfile} exact={true} />
-                <Route path="/layout/add-newrep" component={NewRep} exact={true} />
+                <PrivateRoute path="/layout/dashboard" component={Dashboard} exact={true} />
+                <PrivateRoute path="/layout/company-profile" component={CompanyProfile} exact={true} />
+                <PrivateRoute path="/layout/rep-profile/:memid/:repid" component={RepProfile} exact={true} />
+                <PrivateRoute path="/layout/add-newrep" component={NewRep} exact={true} />
 
-                <Route path="/layout/press-release/:id" component={PressRelease} exact={true} />
-                <Route path="/layout/press-releases/" component={PressReleases} exact={true} />
-                <Route path="/layout/add-press-release/:id?/:mem_id?/:step?" component={AddPressRelease} exact={true} />
+                <PrivateRoute path="/layout/press-release/:id" component={PressRelease} exact={true} />
+                <PrivateRoute path="/layout/press-releases/" component={PressReleases} exact={true} />
+                <PrivateRoute path="/layout/add-press-release/:id?/:mem_id?/:step?" component={AddPressRelease} exact={true} />
 
-                <Route path="/layout/resources/:res_type/" component={Resources} exact={true} />
-                <Route path="/layout/resources/:res_type/:id" component={Resource} exact={true} />
-                <Route path="/layout/add-resource/:res_type/:id?/:mem_id?/:step?" component={AddResource} exact={true} />
+                <PrivateRoute path="/layout/resources/:res_type/" component={Resources} exact={true} />
+                <PrivateRoute path="/layout/resources/:res_type/:id" component={Resource} exact={true} />
+                <PrivateRoute path="/layout/add-resource/:res_type/:id?/:mem_id?/:step?" component={AddResource} exact={true} />
 
-                <Route path="/layout/deals/local-deal/:id" component={LocalDeal} exact={true} />
-                <Route path="/layout/deals/local-deals/" component={LocalDeals} exact={true} />
-                <Route path="/layout/deals/add-deal/:id?/:mem_id?/:step?" component={AddDeal} exact={true} />
-                <Route path="/layout/deals/buy-deal/:id?" component={BuyDeal} exact={true} />
-                <Route path="/layout/deals/deal-payment/:id" component={DealPayment} exact={true} />
+                <PrivateRoute path="/layout/deals/local-deal/:id" component={LocalDeal} exact={true} />
+                <PrivateRoute path="/layout/deals/local-deals/" component={LocalDeals} exact={true} />
+                <PrivateRoute path="/layout/deals/add-deal/:id?/:mem_id?/:step?" component={AddDeal} exact={true} />
+                <PrivateRoute path="/layout/deals/buy-deal/:id?" component={BuyDeal} exact={true} />
+                <PrivateRoute path="/layout/deals/deal-payment/:id" component={DealPayment} exact={true} />
 
-                <Route path="/layout/add-localquote/:rfqType/:id?/:mem_id?/:step?" component={AddLQ} exact={true} />
-                <Route path="/layout/view-localquote/:rfqType/:id/:mem_id/:vfrom?" component={ViewLQ} exact={true} />
-                <Route path="/layout/quotation/:rfqType/:id?/:mem_id?/:quote_id?/:step?" component={Quotation} exact={true} />
-                <Route path="/layout/view-quotation/:rfqType/:id?/:mem_id?/:qq_id?/:qq_mem_id?/:vfrom?" component={ViewQuotation} exact={true} />
+                <PrivateRoute path="/layout/add-localquote/:rfqType/:id?/:mem_id?/:step?" component={AddLQ} exact={true} />
+                <PrivateRoute path="/layout/view-localquote/:rfqType/:id/:mem_id/:vfrom?" component={ViewLQ} exact={true} />
+                <PrivateRoute path="/layout/quotation/:rfqType/:id?/:mem_id?/:quote_id?/:step?" component={Quotation} exact={true} />
+                <PrivateRoute path="/layout/view-quotation/:rfqType/:id?/:mem_id?/:qq_id?/:qq_mem_id?/:vfrom?" component={ViewQuotation} exact={true} />
 
-                <Route path="/layout/buyer-request-center/:rfqType/" component={BuyerRequestCenter} exact={true} /> 
-                <Route path="/layout/my-localquotes-archive/:rfqType/" component={MyLQArchive} exact={true} />
-                <Route path="/layout/notification-settings/:rfqType" component={RFQSettings} exact={true} />
-                <Route path="/layout/seller-request-center/:rfqType/" component={SellerRequestCenter} exact={true} />
-                <Route path="/layout/my-quotations/:rfqType/" component={MyQuotations} exact={true} />
-                <Route path="/layout/my-quotations-archive/:rfqType/" component={MyQuotationArchive} exact={true} />
+                <PrivateRoute path="/layout/buyer-request-center/:rfqType/" component={BuyerRequestCenter} exact={true} /> 
+                <PrivateRoute path="/layout/my-localquotes-archive/:rfqType/" component={MyLQArchive} exact={true} />
+                <PrivateRoute path="/layout/notification-settings/:rfqType" component={RFQSettings} exact={true} />
+                <PrivateRoute path="/layout/seller-request-center/:rfqType/" component={SellerRequestCenter} exact={true} />
+                <PrivateRoute path="/layout/my-quotations/:rfqType/" component={MyQuotations} exact={true} />
+                <PrivateRoute path="/layout/my-quotations-archive/:rfqType/" component={MyQuotationArchive} exact={true} />
                 {/* <Route path="/layout/add-qq/:rfqType/:id?/:mem_id?/:step?" component={AddQQ} exact={true} /> */}
                 
                 

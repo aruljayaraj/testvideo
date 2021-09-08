@@ -7,8 +7,6 @@ import {
     IonRow,
     IonCol,
     IonText,
-    IonSelect,
-    IonSelectOption,
     IonToolbar,
     IonTitle,
     IonButtons,
@@ -52,11 +50,6 @@ type FormInputs = {
     };
     postal: string;
     website: string;
-}
-
-type LocationType = {
-    value: number|string;
-    label: string;
 }
 
 interface Props {
@@ -111,7 +104,7 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
             setCity(res.data);
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
-    }, [dispatch, setCity]);
+    }, [dispatch, setValue, setCity]);
     // For State Change
     const onStateChange = (st: string) => {
         if( st ){
@@ -130,7 +123,7 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
             setCity([]);
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
-    }, [dispatch, setState]);
+    }, [dispatch, setValue, setState, setCity]);
     const onCountryChange = (ctry: string) => {
         if( ctry ){
             dispatch(uiActions.setShowLoading({ loading: true }));

@@ -18,7 +18,7 @@ interface Props {
 const Audio: React.FC<Props> = ({res_type, setShowAlert}) => {
   const history = useHistory();
   const resources = useSelector( (state:any) => state.res.resources);
-  const { apiBaseURL, basename } = lfConfig;
+  const { basename } = lfConfig;
 
   const slideEdit = (item: any) => {
     history.push(`/layout/add-resource/${res_type}/${item.id}/${item.mem_id}/1`);
@@ -28,7 +28,6 @@ const Audio: React.FC<Props> = ({res_type, setShowAlert}) => {
     { resources &&
       <IonList className="buscat-section-content">
         { resources && resources.length > 0 &&  resources.map((item: any, index: number)=> {
-          const prImage = ( item && Object.keys(item).length > 0 && item.pr_image) ? `${apiBaseURL}uploads/press_release/${item.pr_image}` : `${basename}/assets/img/placeholder.png`;
           return (<div key={nanoid()}>
             { (isPlatform('android') || isPlatform('ios')) &&   
               <IonItemSliding > 

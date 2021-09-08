@@ -7,8 +7,7 @@ import {
     IonList,
     IonLabel,
     IonListHeader
-  } from '@ionic/react';
-
+} from '@ionic/react';
 import React from 'react';
 import './Profile.scss';
 import { useSelector } from 'react-redux';
@@ -19,7 +18,7 @@ const Buscats: React.FC = () => {
     const b2cCategory = useSelector( (state:any) => state.rep.b2c);
 
     return (<>
-        { Object.keys(repProfile).length > 0 && ( b2bCategory && b2bCategory.length > 0 || b2cCategory && b2cCategory.length > 0) && 
+        { Object.keys(repProfile).length > 0 && ( (b2bCategory && b2bCategory.length > 0) || (b2cCategory && b2cCategory.length > 0)) && 
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="fs-18">

@@ -13,12 +13,6 @@ import BusinessCategory from './BusinessCategory';
 import AssignRep from './AssignRep';
 import PRMedia from './PRMedia';
 
-interface Params {
-  id: number
-  mem_id: number,
-  step: number
-}
-
 const AddPressRelease: React.FC = () => {
   const dispatch = useDispatch();
   const authUser = useSelector( (state:any) => state.auth.data.user );

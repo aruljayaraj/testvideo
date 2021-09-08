@@ -33,7 +33,7 @@ let initialValues = {
 const Login: React.FC = () => {
   const dispatch = useDispatch();
   const authValues = useSelector( (state:any) => state.auth.data);
-  const { register, control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
+  const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
     defaultValues: { ...initialValues },
     mode: "onChange"
   });
@@ -50,11 +50,9 @@ const Login: React.FC = () => {
     };
     dispatch(authActions.getToken({data: user}));
   }
-  
-  // console.log(errors);
 
   if( authValues.authenticated && authValues.isVerified  ){
-    return <Redirect to="/layout/dashboard" />;
+     return <Redirect to="/layout/dashboard" />;
   }
   if( authValues.authenticated && authValues.user && !authValues.isVerified  ){
     return <Redirect to="/email-verify" />;

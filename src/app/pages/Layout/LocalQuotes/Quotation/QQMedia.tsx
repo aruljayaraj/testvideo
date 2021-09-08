@@ -12,27 +12,22 @@ import {
     IonText,
     IonLabel,
     IonProgressBar,
-    IonRadioGroup,
-    IonListHeader,
-    IonRadio,
     IonGrid,
     IonActionSheet
 } from '@ionic/react';
-import { attach, cameraOutline, ellipsisHorizontalOutline, close } from 'ionicons/icons';  
-import React, { useState, useCallback, useRef, useEffect} from 'react';
-import { useParams, Redirect } from 'react-router-dom';
+import { cameraOutline, ellipsisHorizontalOutline, close } from 'ionicons/icons';  
+import React, { useState, useCallback, useRef} from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { size, toArray } from 'lodash';
+import { toArray } from 'lodash';
 import '../LocalQuotes.scss';
 
 import * as uiActions from '../../../../store/reducers/ui';
 import * as qqActions from '../../../../store/reducers/dashboard/qq';
 import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
-import ImageModal from '../../../../components/Image/ImageModal';
 import QuotationStepInd from './QuotationStepInd';
-import QQPreviewModal from './QQPreviewModal';
 import { useCameraPhoto } from '../../../../hooks/useCameraPhoto';
 
 let cancelToken = axios.CancelToken;

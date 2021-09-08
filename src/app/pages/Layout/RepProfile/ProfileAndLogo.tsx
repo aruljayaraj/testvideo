@@ -15,15 +15,12 @@ import { isPlatform } from '@ionic/react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './RepProfile.scss';
-// import * as uiActions from '../../../store/reducers/ui';
-// import { IntfMember } from '../../../interfaces/Member';
 import { lfConfig } from '../../../../Constants';
 import ImageModal from '../../../components/Image/ImageModal';
 import { useCameraPhoto } from '../../../hooks/useCameraPhoto';
 import * as uiActions from '../../../store/reducers/ui';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 import CoreService from '../../../shared/services/CoreService';
-
 
 let initialValues = {
     isOpen: false,

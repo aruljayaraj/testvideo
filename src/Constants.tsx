@@ -69,4 +69,17 @@ export const lfConfig =  {
     acceptedQQVidSizeMB: '100MB',
     LOCAL_DEAL: 'local_deal',
     PRESS_RELEASE: 'press_release',
+    RESOURCE: 'resource',
+    COMPANY: 'company',
+    ICONS: {
+        ICON_USERS: 'fa-users',
+        ICON_COMPANY: 'fa-building-o',
+        ICON_DEAL: 'fa-money',
+        ICON_NEWS: 'fa-newspaper-o',
+        ICON_RESOURCE: 'fa-files-o',
+        ICON_DOCUMENT: 'fa-file-o',
+        ICON_ARTICLE: 'fa-file-text-o',
+        ICON_AUDIO: 'fa-file-audio-o',
+        ICON_VIDEO: 'fa-file-video-o',
+    }
 }; 

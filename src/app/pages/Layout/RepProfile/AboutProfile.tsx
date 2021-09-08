@@ -11,15 +11,12 @@ import {
     IonAvatar,
     IonIcon
   } from '@ionic/react';
-  import { 
+import { 
     informationOutline
   } from 'ionicons/icons';
 import React, { useState } from 'react';
-// import { isPlatform } from '@ionic/react';
-
 import './RepProfile.scss';
 import { useSelector } from 'react-redux';
-// import { IntfMember } from '../../../interfaces/Member';
 import AboutProfileModal from './AboutProfileModal';
 
 const AboutProfile: React.FC = () => {

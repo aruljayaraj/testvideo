@@ -6,7 +6,6 @@ import './RepProfile.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 import * as uiActions from '../../../store/reducers/ui';
-// import ProfileImage from './ProfileImage';
 import ProfileInfo from './ProfileInfo';
 import ContactInfo from './ContactInfo';
 import AboutProfile from './AboutProfile';
@@ -19,7 +18,6 @@ const RepProfile: React.FC = () => {
   const dispatch = useDispatch();
   const repProfile = useSelector( (state:any) => state.rep.repProfile);
   const memOpts = useSelector( (state:any) => state.auth.memOptions );
-  // const [member, setMember] = useState<null | IntfMember>(null);
   let { repid, memid } = useParams<any>();
 
   const onCallbackFn = useCallback((res: any) => {

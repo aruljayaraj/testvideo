@@ -19,7 +19,6 @@ const MyQuotations: React.FC = () => {
   const skeleton = useSelector( (state:any) => state.ui.skeleton);
   const authUser = useSelector( (state:any) => state.auth.data.user);
   const qts = useSelector( (state:any) => state.qq.quotations);
-  // const [showAlert, setShowAlert] = useState({status: false, id: '', mem_id: '' });
   const [showActionSheet, setShowActionSheet] = useState<any>({status: false, qt: null});
   const [showPopover, setShowPopover] = useState<any>({status: false, qq: null});
   const [showDeleteModal, setShowDeleteModal] = useState({isOpen: false, id: null, mem_id: null, rfqType: '', qqType: ''});

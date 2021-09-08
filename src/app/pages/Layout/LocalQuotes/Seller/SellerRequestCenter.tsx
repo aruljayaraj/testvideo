@@ -20,12 +20,10 @@ const SellerRequestCenter: React.FC = () => {
   const authUser = useSelector( (state:any) => state.auth.data.user);
   const qqs = useSelector( (state:any) => state.qq.localQuotes);
   const [showAlert, setShowAlert] = useState({status: false, id: '', mem_id: '' });
-  // const [confirmDelete, setConfirmDelete] = useState({status: false, id: '', mem_id: '' });
   const [showActionSheet, setShowActionSheet] = useState<any>({status: false, qq: null});
   const [showPopover, setShowPopover] = useState<any>({status: false, qq: null});
   let { rfqType } = useParams<any>();
   let actionsheetButtons: any = [];
-  // const resTypeText = rfqType ? rfqType.charAt(0).toUpperCase() + rfqType.slice(1): '';
 
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){

@@ -13,11 +13,6 @@ import './PrivacyPolicy.scss';
 import { useDispatch } from 'react-redux';
 import * as uiActions from '../../store/reducers/ui';
 
-type PageProps = {
-  title: string,
-  content: string
-}
-
 const PrivacyPolicy: React.FC = () => {
   console.log('Privacy Policy Page');
   const dispatch = useDispatch();

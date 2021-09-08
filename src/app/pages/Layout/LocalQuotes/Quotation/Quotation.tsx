@@ -22,7 +22,6 @@ const Quotation: React.FC = () => {
   const dispatch = useDispatch();
   const authUser = useSelector( (state:any) => state.auth.data.user );
   const qq = useSelector( (state:any) => state.qq.localQuote);
-  const quote = useSelector( (state:any) => state.qq.quotation);
   let { id, mem_id, quote_id, step, rfqType } = useParams<any>();
 
   // QQ deafult to load callback

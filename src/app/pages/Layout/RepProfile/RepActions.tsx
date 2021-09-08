@@ -11,8 +11,7 @@ import {
     ellipsisHorizontalOutline,
     trashOutline,
     pauseOutline,
-    playOutline,
-    eyeOutline
+    playOutline
   } from 'ionicons/icons';
 import './RepProfile.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,12 +22,12 @@ import CoreService from '../../../shared/services/CoreService';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 
 const RepActions: React.FC = () => {
-    const dispatch = useDispatch(); // console.log('Actions');
-    const repProfile = useSelector( (state:any) => state.rep.repProfile);   // console.log(repProfile);
+    const dispatch = useDispatch(); 
+    const repProfile = useSelector( (state:any) => state.rep.repProfile);
     const [delRep, setDelRep] = useState({ status: false, memID: '', repID: ''  });
-    const { apiBaseURL, basename } = lfConfig;
+    const { basename } = lfConfig;
 
-    const onCallbackFn = useCallback((res: any) => { // console.log(res);
+    const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
             dispatch(repActions.setRepProfile({ data: res.data.rep }));
             if( res.redirect === true ){

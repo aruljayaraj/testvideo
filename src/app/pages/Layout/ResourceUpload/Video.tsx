@@ -30,10 +30,10 @@ const Video: React.FC<Props> = ({res_type, setShowAlert}) => {
         { resources && resources.length > 0 &&  resources.map((item: any, index: number)=> {
           let resImage = '';
           if( +(item.converted) === 1 && item.filename){
-            resImage = ( item && Object.keys(item).length > 0 && item.filename) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.filename.split(".")[0]}.png` : ``;
+            resImage = ( item && Object.keys(item).length > 0 && item.filename) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.rep_id}/${item.filename.split(".")[0]}.png` : ``;
           }
           return (<div key={nanoid()}>
-            { (isPlatform('android') || isPlatform('ios')) &&   
+            { (!isPlatform('desktop')) &&   
               <IonItemSliding > 
                 <IonItem lines={ (resources.length === index+1)? "none": "inset" } routerLink={`${basename}/layout/resources/${res_type}/${item.id}`}>
                   {/* <IonAvatar slot="start" color="greenbg">

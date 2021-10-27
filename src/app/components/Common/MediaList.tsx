@@ -10,6 +10,7 @@ let initialValues = {
     formType: '', //  repProfile / comProfile / resource(document, audio, video, etc) / localquote
     formId: 0, // id or qq id
     memId: 0, // Member Id
+    repId: 0, // Rep Id
     mediaType: '', // document, article, audio, video
     fileName: '',
     converted: 0
@@ -26,7 +27,8 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
     const loadingState = useSelector( (state:any) => state.ui.loading);
     const [showViewerModal, setShowViewerModal] = useState(initialValues);
 
-    const categoryModalFn = (title: string, mem_id: number, form_id: number, media_type: string, filename: string, converted: number) => {
+    const categoryModalFn = (title: string, mem_id: number, rep_id: number, form_id: number, media_type: string, filename: string, converted: number) => {
+        console.log("Meow"+rep_id);
         setShowViewerModal({ 
             ...showViewerModal, 
             isOpen: true,
@@ -34,6 +36,7 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
             formType: props.formType,
             formId: form_id,
             memId: mem_id,
+            repId: rep_id,
             mediaType: media_type,
             fileName: filename,
             converted: converted
@@ -49,7 +52,7 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
                 }else if(item && item.upload_type === 'video'){
                     title = 'Video';
                 }
-                return (<IonItem className="cursor" lines="none" key={index} onClick={() => categoryModalFn(`${title} Viewer`, item.mem_id, item.form_id, item.upload_type, item.filename, item.converted)} >
+                return (<IonItem className="cursor" lines="none" key={index} onClick={() => categoryModalFn(`${title} Viewer`, item.mem_id, item.rep_id, item.form_id, item.upload_type, item.filename, item.converted)} >
                 { item.uploaded_name && <>
                 <IonAvatar slot="start" color="greenbg">
                     { item && ['document', 'article'].includes(item.upload_type) && <IonIcon className="pt-2" color="greenbg" size="large" icon={documentTextOutline}></IonIcon>}

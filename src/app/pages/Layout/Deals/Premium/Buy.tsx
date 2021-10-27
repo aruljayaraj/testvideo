@@ -182,7 +182,7 @@ const BuyDeal: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Purcahse your Local Deal</IonCardTitle>
+                <IonCardTitle className="card-custom-title">Purchase your Local Deal</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>

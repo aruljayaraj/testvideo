@@ -5,6 +5,7 @@ import { IonRouterLink, IonText } from '@ionic/react';
 
 interface PropsInterface{
     memId: number,
+    repId: number,
     fileName: string,
     formId: number,
     formType: string,
@@ -16,13 +17,13 @@ interface PropsInterface{
 
 const Audio: React.FC<PropsInterface> = (props: PropsInterface) => {
     const { apiBaseURL } = lfConfig;
-    let { memId, fileName, formId, formType, mediaType, converted, showViewerModal, setShowViewerModal } = props;
+    let { memId, repId, fileName, formId, formType, mediaType, converted, showViewerModal, setShowViewerModal } = props;
     let resFile = '';
     if(formId && memId && fileName) {
         if( formType === 'localquote' ){
             resFile = fileName ? `${apiBaseURL}uploads/localquote/${formId}/${fileName}` : ``;
         }else if( props.formType === 'resource' ){
-            resFile = fileName ? `${apiBaseURL}uploads/member/${memId}/${fileName}` : ``;
+            resFile = fileName ? `${apiBaseURL}uploads/member/${memId}/${repId}/${fileName}` : ``;
         }
     }
 

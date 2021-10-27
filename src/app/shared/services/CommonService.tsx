@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
-var CommonService = (function() {
+const CommonService = (function() {
     // 
-    var getBase64Image = function (img: any) {
+    const getBase64Image = function (img: any) {
         var canvas: any = document.createElement("canvas");
         canvas.width = img.width;
         canvas.height = img.height;
@@ -25,7 +25,7 @@ var CommonService = (function() {
     }
 
     // b64 To Array of image data
-    var b64ToUint8Array = function (b64Image: any) {
+    const b64ToUint8Array = function (b64Image: any) {
         var img = atob(b64Image.split(',')[1]);
         var img_buffer = [];
         var i = 0;
@@ -36,25 +36,42 @@ var CommonService = (function() {
         return new Uint8Array(img_buffer);
     }
     // date format MMM dd, yyyy
-    var dateFormat = function (cdate: any) {
+    const dateFormat = function (cdate: any) {
         if(cdate){ // For safari need to do like this
             return format(new Date(cdate.replace(/-/g, "/")), 'MMM dd, yyyy')
         }
         return;
     }
     // Date readable format dd/MM/yyyy
-    var dateReadFormat = function (cdate: any) {
+    const dateReadFormat = function (cdate: any) {
         if(cdate){ // For safari need to do like this
             return format(new Date(cdate.replace(/-/g, "/")), 'dd/MM/yyyy')
         }
         return;
     }
     // Mysql date format to normal javascript format
-    var mysqlToJsDateFormat = function (cdate: any) {
+    const mysqlToJsDateFormat = function (cdate: any) {
         if(cdate){ // For safari need to do like this
             return new Date(Date.parse(cdate!.replace(/-/g, '/')))
         }
         return;
+    }
+
+    const getThumbImg = function(imgName: string){
+        if(imgName){
+            const img = imgName.split(".");
+            return `${img[0]}-thumb.${img[1]}`;
+        }
+        return;
+    }
+
+    // on Image loading Error
+    const onImgErr = function(type: string = ''){
+        let url = `${process.env.REACT_APP_BASENAME}/assets/img/placeholder.svg`;
+        if( type === 'profile' ){
+            url = `${process.env.REACT_APP_BASENAME}/assets/img/avatar.svg`;
+        }
+        return url;
     }
 
     return {
@@ -64,7 +81,9 @@ var CommonService = (function() {
         b64ToUint8Array: b64ToUint8Array,
         dateFormat: dateFormat,
         dateReadFormat: dateReadFormat,
-        mysqlToJsDateFormat: mysqlToJsDateFormat
+        mysqlToJsDateFormat: mysqlToJsDateFormat,
+        getThumbImg: getThumbImg,
+        onImgErr: onImgErr
     }
 
 })();

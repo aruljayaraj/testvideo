@@ -104,6 +104,7 @@ const ResMedia: React.FC = () => {
         const fd = {
             action: 'res_upload_delete',
             memID: authUser.ID,
+            repID: authUser.repID,
             resType: res_type,
             formID: id
         };
@@ -149,6 +150,7 @@ const ResMedia: React.FC = () => {
                         setUploading(true);
                         const fd = new FormData();
                         fd.append('memID', authUser.ID);
+                        fd.append('repID', authUser.repID);
                         fd.append('formID', id? id: '');
                         fd.append('action', 'res_upload' );
                         fd.append('resType', res_type? res_type: '' );
@@ -246,7 +248,7 @@ const ResMedia: React.FC = () => {
             <IonCardContent>
                 <IonRow>
                     <IonCol>
-                        <IonCardTitle className="text-center mb-3 fs-18">
+                        <IonCardTitle className="text-center mb-3 card-custom-title">
                             <span>Upload {resTypeText}</span>
                         </IonCardTitle>
                         <IonCardSubtitle className="text-center">

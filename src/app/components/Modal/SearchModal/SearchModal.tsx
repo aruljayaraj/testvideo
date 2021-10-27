@@ -60,13 +60,16 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
       loading: false
     });
     const [searchFilter, setSearchFilter] = useState({
+      filterBy: 'b2b'
+    });
+    /*const [searchFilter, setSearchFilter] = useState({
       b2b: true, // b2b? b2b : true // Supplier
       b2c: false, // b2c? b2c: false // Consumer
       br: false, // br? br: false // Business Resource
       d: false, // d? d: false Deals
       bn: false, // bn? bn: false Business News/ Press Release
       cn: false // cn? cn: false Company Name/Business Name
-    });
+    });*/
     const [redirectData, setRedirectData] = useState({ status: false, data: {} });
 
     const onCommonCb = useCallback((res: any) => {
@@ -173,14 +176,17 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
       );
     }
 
-    if( redirectData.status  ){
+    if( redirectData.status  ){ 
       if(redirectData.data && Object.keys(redirectData.data).length > 0){
         let itemLink = "";
         let itemData = {};
         let item:any = redirectData.data;
         if(item.type === 'Rep'){ 
-          itemLink = `/preliminary-results`;
-          itemData = { ...searchFilter, keyword: state.keyword, display: item.display, type: item.type };
+          //itemLink = `/preliminary-results`;
+          //itemData = { ...searchFilter, keyword: state.keyword, display: item.display, type: item.type };
+          const bcat_type = item.filterBy === 'b2c'? 1: 0;
+          itemLink = `/search-results`;
+          itemData = { ...searchFilter, keyword: state.keyword, category: item.display, type: bcat_type };
         }else if(item.type === 'Res'){
           itemLink = `/resource/${item.form_type}/${item.form_id}`;
         }else if(item.type === 'Deal'){
@@ -264,28 +270,28 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
               /> */}
               <div className="advance-search mt-3">
                 <div className="filterbox">
-                  <IonChip color={searchFilter.b2b? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, b2b:!searchFilter.b2b}) }>
-                    { searchFilter.b2b && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                  <IonChip color={searchFilter.filterBy === 'b2b'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'b2b'}) }>
+                    { searchFilter.filterBy === 'b2b' && <IonIcon icon={checkmarkOutline}></IonIcon> }
                     <IonLabel>B2B Products & Services</IonLabel>
                   </IonChip>
-                  <IonChip color={searchFilter.b2c? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, b2c:!searchFilter.b2c}) }>
-                    { searchFilter.b2c && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                  <IonChip color={searchFilter.filterBy === 'b2c'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'b2c'}) }>
+                    { searchFilter.filterBy === 'b2c' && <IonIcon icon={checkmarkOutline}></IonIcon> }
                     <IonLabel>Consumer Products & Services</IonLabel>
                   </IonChip>
-                  <IonChip color={searchFilter.br? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, br:!searchFilter.br}) }>
-                    { searchFilter.br && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                  <IonChip color={searchFilter.filterBy === 'br'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'br'}) }>
+                    { searchFilter.filterBy === 'br' && <IonIcon icon={checkmarkOutline}></IonIcon> }
                     <IonLabel>Business Resources</IonLabel>
                   </IonChip>
-                  <IonChip color={searchFilter.d? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, d:!searchFilter.d}) }>
-                    { searchFilter.d && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                  <IonChip color={searchFilter.filterBy === 'd'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'd'}) }>
+                    { searchFilter.filterBy === 'd' && <IonIcon icon={checkmarkOutline}></IonIcon> }
                     <IonLabel>Local Deals</IonLabel>
                   </IonChip>
-                  <IonChip color={searchFilter.bn? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, bn:!searchFilter.bn}) }>
-                    { searchFilter.bn && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                  <IonChip color={searchFilter.filterBy === 'bn'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'bn'}) }>
+                    { searchFilter.filterBy === 'bn' && <IonIcon icon={checkmarkOutline}></IonIcon> }
                     <IonLabel>Business News</IonLabel>
                   </IonChip>
-                  <IonChip color={searchFilter.d? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, cn:!searchFilter.cn}) }>
-                    { searchFilter.cn && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                  <IonChip color={searchFilter.filterBy === 'cn'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'cn'}) }>
+                    { searchFilter.filterBy === 'cn' && <IonIcon icon={checkmarkOutline}></IonIcon> }
                     <IonLabel>Business Name</IonLabel>
                   </IonChip>
 

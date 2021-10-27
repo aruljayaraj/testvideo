@@ -16,6 +16,7 @@ import './Profile.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../Constants';
 import ReportModal from './../../components/Modal/ReportModal';
+import CommonService from '../../shared/services/CommonService';
 
 const RepOverview: React.FC = () => {
     const comProfile = useSelector( (state:any) => state.rep.comProfile);
@@ -27,7 +28,7 @@ const RepOverview: React.FC = () => {
     const special_features = comProfile.special_features? JSON.parse(comProfile.special_features): [];
     const member_organizations = comProfile.member_organizations? JSON.parse(comProfile.member_organizations): [];
     const [showReportModal, setShowReportModal] = useState({isOpen: false, memID: '', repID: '' });
-
+    const prepID = (Object.keys(comProfile).length > 0 && repProfile.rep_account === 'sub' && repProfile.wp_mem_id > 0) ? repProfile.wp_mem_pri_id : repProfile.id;
     const logoImage = (Object.keys(comProfile).length > 0 && comProfile.company_logo) ? `${apiBaseURL}uploads/member/${comProfile.mem_id}/${comProfile.company_logo}` : `${basename}/assets/img/placeholder.png`;
 
     let comAddress = comProfile.address1? comProfile.address1: '';
@@ -51,7 +52,7 @@ const RepOverview: React.FC = () => {
             
             <IonCardContent>
                 <div className="py-3">
-                    <img src={logoImage} alt="Company Logo" />
+                    <img src={logoImage} alt="Company Logo"/>
                 </div>
                 <p>
                     <IonText><b>General Contact Information</b></IonText>

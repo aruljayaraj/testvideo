@@ -15,7 +15,7 @@ const PreCompany: React.FC = () => {
     return (<>
     { preResults && preResults && preResults.length > 0 && <IonCard className="card-center my-4">
         <IonCardHeader color="titlebg">
-            <IonCardTitle className="fs-18">Business Names</IonCardTitle>
+            <IonCardTitle className="card-custom-title">Business Names</IonCardTitle>
         </IonCardHeader>
 
         <IonCardContent>

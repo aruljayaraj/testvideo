@@ -12,7 +12,7 @@ const VideoViewer: React.FC = () => {
     const resource = useSelector( (state:any) => state.res.resource);
     const { apiBaseURL } = lfConfig;
     
-    const ResFile = ( resource && Object.keys(resource).length > 0 && resource.filename) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${resource.filename}` : ``;
+    const ResFile = ( resource && Object.keys(resource).length > 0 && resource.filename) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${resource.rep_id}/${resource.filename}` : ``;
     const videoJsOptions = {
         autoplay: true,
         controls: true,

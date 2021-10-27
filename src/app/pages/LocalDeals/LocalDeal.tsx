@@ -40,7 +40,7 @@ const LocalDeal: React.FC = () => {
     }
   }, [dispatch, id, authUser, onCbFn]);
 
-  const ddImage = ( dd && Object.keys(dd).length > 0 && dd.image) ? `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.image}` : `${basename}/assets/img/placeholder.png`;
+  const ddImage = ( dd && Object.keys(dd).length > 0 && dd.image) ? `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.rep_id}/${dd.image}` : `${basename}/assets/img/placeholder.png`;
   return (
     <IonPage className="deals-page">
       
@@ -49,7 +49,7 @@ const LocalDeal: React.FC = () => {
         <IonContent>
           <IonCard className="card-center my-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18"> 
+                <IonCardTitle className="card-custom-title"> 
                   {dd.name}
                 </IonCardTitle>
                 <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(dd.sdate)} </IonText> 

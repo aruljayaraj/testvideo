@@ -81,5 +81,10 @@ export const lfConfig =  {
         ICON_ARTICLE: 'fa-file-text-o',
         ICON_AUDIO: 'fa-file-audio-o',
         ICON_VIDEO: 'fa-file-video-o',
+    },
+    ADS: {
+        HOME: 5,
+        PROFILE: 5,
+        DEFAULT: 3
     }
 }; 

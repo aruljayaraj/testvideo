@@ -154,6 +154,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-menu-sub-item-shade: #b4b4b4;
   --ion-color-menu-sub-item-tint: #d1d1d1;
 
+  /** App Footer color */
+  --ion-color-footerbg: #D3D5D6;
+  --ion-color-footerbg-rgb: 211,213,214;
+  --ion-color-footerbg-contrast: #424648;
+  --ion-color-footerbg-contrast-rgb: 0,0,0;
+  --ion-color-footerbg-shade: #babbbc;
+  --ion-color-footerbg-tint: #d7d9da;
+
   /** App Custom Color Starts **/
   --app-sidebar-bg-color: #424648;
   --app-overlay-bg-color: #B1B1B1;
@@ -226,6 +234,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-contrast-rgb: var(--ion-color-menu-sub-item-contrast-rgb);
   --ion-color-shade: var(--ion-color-menu-sub-item-shade);
   --ion-color-tint: var(--ion-color-menu-sub-item-tint);
+}
+.ion-color-footerbg {
+  --ion-color-base: var(--ion-color-footerbg);
+  --ion-color-base-rgb: var(--ion-color-footerbg-rgb);
+  --ion-color-contrast: var(--ion-color-footerbg-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-footerbg-contrast-rgb);
+  --ion-color-shade: var(--ion-color-footerbg-shade);
+  --ion-color-tint: var(--ion-color-footerbg-tint);
 }
 
 @media (prefers-color-scheme: dark) {

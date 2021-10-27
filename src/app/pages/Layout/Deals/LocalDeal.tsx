@@ -64,7 +64,7 @@ const LocalDeal: React.FC = () => {
 
   }
 
-  const ddImage = ( dd && Object.keys(dd).length > 0 && dd.image) ? `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.image}` : `${basename}/assets/img/placeholder.png`;
+  const ddImage = ( dd && Object.keys(dd).length > 0 && dd.image) ? `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.rep_id}/${dd.image}` : `${basename}/assets/img/placeholder.png`;
   const checked = +(dd.is_active) === 1? true: false; 
   return (
     <IonPage className="deals-page">
@@ -72,10 +72,13 @@ const LocalDeal: React.FC = () => {
         <IonContent>
           <IonCard className="card-center my-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18"> 
+                <IonCardTitle className="card-custom-title"> 
                   {dd.name}
+                  <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deals`} className="float-right router-link-anchor ml-2" title="Deals List">
+                    <i className="fa fa-list green cursor" aria-hidden="true"></i>
+                  </IonRouterLink>
                   { +(dd.is_active) === 0 && dd.mem_id === authUser.ID &&
-                  <IonRouterLink color="greenbg" href={`${basename}/layout/deals/add-deal/${dd.id}/${dd.mem_id}/1`} className="float-right router-link-anchor">
+                  <IonRouterLink color="greenbg" href={`${basename}/layout/deals/add-deal/${dd.id}/${dd.mem_id}/1`} className="float-right router-link-anchor" title="Deal Edit">
                     <i className="fa fa-pencil green cursor" aria-hidden="true"></i>
                   </IonRouterLink>}
                   { [1,2].includes(+(dd.is_active)) &&
@@ -95,7 +98,7 @@ const LocalDeal: React.FC = () => {
                 <IonRow>
                   { dd.image && 
                   <IonCol sizeMd="4" sizeXl="4" sizeXs="12" className="">
-                    <img src={ddImage} alt="LocalDeal Media" />
+                    <img src={ddImage} alt="LocalDeal Media"/>
                   </IonCol> }
                   <IonCol sizeMd={ dd.image? "8": "12" } sizeXs="12" className="">
                     <div className="pl-3">  { /* pt-sm-3 mt-sm-4 */}

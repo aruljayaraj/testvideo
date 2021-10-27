@@ -21,7 +21,7 @@ const PreviewModal: React.FC<Props> = ({ previewModal, setPreviewModal }) => {
     const dd = useSelector( (state:any) => state.deals.localDeal);
     const { apiBaseURL, basename } = lfConfig;
 
-    const ddImage = ( dd && Object.keys(dd).length > 0 && dd.image) ? `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.image}` : `${basename}/assets/img/placeholder.png`;
+    const ddImage = ( dd && Object.keys(dd).length > 0 && dd.image) ? `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.rep_id}/${dd.image}` : `${basename}/assets/img/placeholder.png`;
 
     return (<>
         { dd && Object.keys(dd).length > 0 && 
@@ -43,7 +43,7 @@ const PreviewModal: React.FC<Props> = ({ previewModal, setPreviewModal }) => {
         <IonContent fullscreen className="ion-padding">
           <IonCard className="preview-card card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18"> {dd.name}</IonCardTitle>
+                <IonCardTitle className="card-custom-title"> {dd.name}</IonCardTitle>
                 <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(dd.added_date)} </IonText>
                 { authUser.ID === dd.mem_id && 
                   <Status is_active={+(dd.is_active)} type="local_deal" />

@@ -9,8 +9,7 @@ import { Redirect } from 'react-router';
 
 interface Props {
   filters: {
-      b2b: boolean | null,
-      b2c: boolean | null
+      filterBy: string
   }
 }
 
@@ -30,10 +29,9 @@ const PreProducts: React.FC<Props> = ({ filters }) => {
   return (<>
     { preResults && preResults.length > 0 && <IonCard className="card-center my-4">
     <IonCardHeader color="titlebg">
-        <IonCardTitle className="fs-18">Available 
-        { filters.b2b && !filters.b2c && ` Suppliers` }
-        { !filters.b2b && filters.b2c && ` Consumers` }
-        { filters.b2b && filters.b2c && ` Suppliers & Consumers` }
+        <IonCardTitle className="card-custom-title">Available 
+        { filters.filterBy === 'b2b' && ` Suppliers` }
+        { filters.filterBy === 'b2c' && ` Consumers` }
         </IonCardTitle>
     </IonCardHeader>
 

@@ -51,10 +51,11 @@ const CreatePressRelease: React.FC = () => {
         pr_quote: (pr && Object.keys(pr).length > 0) ? pr.pr_quote : '',
         pr_desc: (pr && Object.keys(pr).length > 0) ? pr.pr_desc : '',
     };
-    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
+
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -88,7 +89,7 @@ const CreatePressRelease: React.FC = () => {
         <PRStepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Create a Press Release</IonCardTitle>
+                <IonCardTitle className="card-custom-title">Create a Press Release</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -243,7 +244,6 @@ const CreatePressRelease: React.FC = () => {
                                         return <Editor
                                             value={value}
                                             apiKey={lfConfig.tinymceKey}
-                                            initialValue=""
                                             init={{
                                                 max_chars: lfConfig.tinymceMaxLength, // max. allowed chars
                                                 

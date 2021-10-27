@@ -63,7 +63,7 @@ const ContactUs: React.FC = () => {
           <IonCol sizeMd="6" sizeXs="12">
             <IonCard className="card-center mt-2">
               <IonCardHeader color="light">
-                <IonCardTitle className="fs-18">{page.title}</IonCardTitle>
+                <IonCardTitle className="card-custom-title">{page.title}</IonCardTitle>
               </IonCardHeader>
 
               <IonCardContent className="pt-3">
@@ -77,7 +77,7 @@ const ContactUs: React.FC = () => {
           <IonCol sizeMd="6" sizeXs="12">
             <IonCard className="card-center mt-2">
               <IonCardHeader color="light">
-                <IonCardTitle className="fs-18">{page.c_title}</IonCardTitle>
+                <IonCardTitle className="card-custom-title">{page.c_title}</IonCardTitle>
               </IonCardHeader>
 
               <IonCardContent className="pt-3">

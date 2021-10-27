@@ -20,6 +20,7 @@ import * as uiActions from '../../../../store/reducers/ui';
 import * as dealActions from '../../../../store/reducers/dashboard/deal';
 import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
+import CommonService from '../../../../shared/services/CommonService';
 import ImageModal from '../../../../components/Image/ImageModal';
 import StepInd from './StepInd';
 import PreviewModal from './PreviewModal';
@@ -66,7 +67,7 @@ const DDMedia: React.FC = () => {
             ddID: (dd && Object.keys(dd).length > 0)? dd.id: ''
         });
     }
-    const ddImage = ( dd && Object.keys(dd).length > 0 && dd.image) ? `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.image}` : `${basename}/assets/img/placeholder.png`;
+    const ddImage = ( dd && Object.keys(dd).length > 0 && dd.image) ? `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.rep_id}/${dd.image}` : `${basename}/assets/img/placeholder.png`;
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -102,7 +103,7 @@ const DDMedia: React.FC = () => {
             <IonCardContent>
                 <IonRow>
                     <IonCol className="">
-                        <IonCardTitle className="text-center mb-3 fs-18">
+                        <IonCardTitle className="text-center mb-3 card-custom-title">
                             <span>Upload Supporting Media</span>
                             <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deals`} className="float-right router-link-anchor" title="Deal Listing">
                                 <i className="fa fa-list green cursor" aria-hidden="true"></i>
@@ -111,7 +112,7 @@ const DDMedia: React.FC = () => {
                         <IonList>
                             <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Upload Supporting Media', 'local_deal')}>
                                 <div className="profile-logo">
-                                    <img src={ddImage} alt="Deal Media"/>
+                                    <img src={ddImage} alt="Deal Media" />
                                     <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true"></i>
                                 </div>
                             </IonItem>

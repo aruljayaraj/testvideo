@@ -32,7 +32,7 @@ const DealPayment = () => {
   return (
     <IonCard className="general-card mt-4">
       <IonCardHeader color="titlebg">
-          <IonCardTitle className="fs-18">
+          <IonCardTitle className="card-custom-title">
               <span>Deal Purchase Payment</span>
           </IonCardTitle>
       </IonCardHeader>

@@ -33,9 +33,10 @@
       margin: 0 auto;
     }
     .profile-logo{
+      position: relative;
       margin: 0 auto;
       i{
-        position: relative;
+        position: absolute;
         bottom: 10px;
         right: 8px;
       }

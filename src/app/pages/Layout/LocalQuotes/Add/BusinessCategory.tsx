@@ -65,7 +65,7 @@ const BusinessCategory: React.FC = () => {
         <QQStepInd />
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">
+                <IonCardTitle className="card-custom-title">
                     {`${rfqType === 'retail' ? 'Retail' : 'B2B'} Category`}
                     <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')} className="float-right router-link-anchor">
                         <i className="fa fa-plus green cursor" aria-hidden="true"></i>
@@ -78,7 +78,7 @@ const BusinessCategory: React.FC = () => {
                 <IonList className="buscat-section-content">
                     { qq && qq.buscats && qq.buscats.length > 0 &&  qq.buscats.map((item: any)=> {
                         return (<div key={item.id}>
-                            { (isPlatform('android') || isPlatform('ios')) &&   
+                            { (!isPlatform('desktop')) &&    
                                 <IonItemSliding > 
                                     <IonItem lines="none" >
                                         <IonAvatar slot="start" color="greenbg">

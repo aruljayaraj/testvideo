@@ -57,7 +57,7 @@ const LocalDealsUnpaid: React.FC = () => {
     { unpaid && unpaid.length > 0  &&  unpaid.map((item: any, index: number)=> {
         const ddImage = `${basename}/assets/img/placeholder.png`;
         return (<div key={nanoid()}>
-            { (isPlatform('android') || isPlatform('ios')) &&
+            { (!isPlatform('desktop')) && 
             <IonItemSliding >
                 <IonItem lines="inset" routerLink={`${basename}/layout/deals/buy-deal/${item.id}`}>
                     <IonAvatar slot="start" color="greenbg">

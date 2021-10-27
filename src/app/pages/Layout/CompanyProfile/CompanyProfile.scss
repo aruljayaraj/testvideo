@@ -14,8 +14,9 @@ ion-content ion-toolbar {
     }
     .profile-logo{
       margin: 0 auto;
+      position: relative;
       i{
-        position: relative;
+        position: absolute;
         bottom: 10px;
         right: 8px;
       }
@@ -29,6 +30,7 @@ ion-content ion-toolbar {
         width:90%;
     }
     .profile-logo {
+      position: relative;
       i {
         position: absolute !important;
         right: 0px !important;
@@ -41,6 +43,7 @@ ion-content ion-toolbar {
 @media (min-width: 576px) and (max-width: 767.98px) { 
   .company-profile-page{
     .profile-logo {
+      position: relative;
       i {
         position: absolute !important;
         right: 0px !important;

@@ -8,7 +8,8 @@ import {
     IonContent,
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IonText
   } from '@ionic/react';
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { close } from 'ionicons/icons';
@@ -80,8 +81,8 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     
     let initialCropValues = {
         unit: "px", 
-        width: (actionType && rectTypes.includes(actionType) )? 300: 200, 
-        height: (actionType && rectTypes.includes(actionType) )? 150: 200, 
+        width: (actionType && rectTypes.includes(actionType) )? 300: 320, 
+        height: (actionType && rectTypes.includes(actionType) )? 150: 320, 
         aspect: (actionType && rectTypes.includes(actionType) )? 16/9: 1,
         minContainerWidth: 548,
         minContainerHeight: 400
@@ -162,6 +163,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                 action: 'delete_image',
                 formId: frmId,
                 memId: memId,
+                repId: authUser.repID,
                 actionType: actionType
             };
             CoreService.onPostFn('file_upload', formData, deleteImageFnCb);
@@ -172,43 +174,60 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     
     const handleFileChange = (e: any) => {    
         e.preventDefault();
-        let files;
+        let files: any;
         if (e.dataTransfer) {
             files = e.dataTransfer.files;
         } else if (e.target) {
             files = e.target.files;
         }
-        
-        const imgname = files.item(0).name;
-        const reader = new FileReader();
-        reader.onload = () => {
-            setPicture({
-                ...picture,
-                name: imgname,
-                image: reader.result as any 
-            });
-            // setImage(reader.result as any);
-        };
-        reader.readAsDataURL(files[0]);
+        if( ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'].includes(files.item(0).type) ){
+            if( files.item(0).size <= 5242880 ){
+                const reader = new FileReader();
+                const imgname = files.item(0).name;
+                
+                reader.onload = () => { 
+                    let image: any = new Image();
+                    image.src = reader.result as any;
+                    console.log(initialCropValues.width, initialCropValues.height);
+                    console.log(image.width, image.height);
+                    if( image.width > initialCropValues.width &&  image.height > initialCropValues.height ){
+                        setPicture({
+                            ...picture,
+                            name: imgname,
+                            image: reader.result as any 
+                        });
+                        
+                    }else{
+                        reader.abort();
+                        dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: `File dimensions should be more than ${initialCropValues.width}X${initialCropValues.height}.` }));
+                    }
+                };
+                reader.readAsDataURL(files[0]);
+            }else{
+                dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: 'File size should be less than 5MB is allowed.' }));
+            }
+        }else{
+            dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: 'Only (png, jpg, gif) Image is allowed.' }));
+        }
     }
 
     let cropTempURL = '';
     let cropImgName = '';
-    if( !picture.image ){    
+    if( !picture.image ){
         if( actionType === 'rep_profile' && repProfile && (Object.keys(repProfile).length > 0 && repProfile.profile_image)){
-            cropTempURL = `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.profile_image}`;
+            cropTempURL = `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.id}/${repProfile.profile_image}`;
             cropImgName = repProfile.profile_image;
         }else if( actionType === 'rep_logo' && repProfile && (Object.keys(repProfile).length > 0 && repProfile.profile_logo)){
-            cropTempURL = `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.profile_logo}`;
+            cropTempURL = `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.id}/${repProfile.profile_logo}`;
             cropImgName = repProfile.profile_logo;
         }else if( actionType === 'company_logo' && comProfile && (Object.keys(comProfile).length > 0 && comProfile.company_logo)){
             cropTempURL = `${apiBaseURL}uploads/member/${comProfile.mem_id}/${comProfile.company_logo}`;
             cropImgName = comProfile.company_logo;
         }else if( actionType === 'press_release' && pr && (Object.keys(pr).length > 0 && pr.pr_image)){
-            cropTempURL = `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_image}`;
+            cropTempURL = `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_rep_id}/${pr.pr_image}`;
             cropImgName = pr.pr_image;
         }else if( actionType === 'local_deal' && dd && (Object.keys(dd).length > 0 && dd.image)){
-            cropTempURL = `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.image}`;
+            cropTempURL = `${apiBaseURL}uploads/member/${dd.mem_id}/${dd.rep_id}/${dd.image}`;
             cropImgName = dd.image;
         }
     }
@@ -235,7 +254,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
                         </IonButton>
                     </IonButtons>
-                    { (isPlatform('android') || isPlatform('ios')) &&  
+                    { (!isPlatform('desktop')) &&  
                     <IonButtons slot="end">
                         <IonButton color="blackbg" type="submit">
                             <strong>Save</strong>
@@ -278,6 +297,11 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                         
                     </IonCol>
                 </IonRow>
+                <IonRow>
+                    <IonCol>
+                        <IonText>Image Size to be: {initialCropValues.width}px X {initialCropValues.height}px (jpg, png {(actionType && !rectTypes.includes(actionType) )? 'or gif' : ''})</IonText>
+                    </IonCol>
+                </IonRow>    
                 
                 <div className="mt-4">           
                     <>

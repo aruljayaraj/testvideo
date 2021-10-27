@@ -39,7 +39,7 @@ const HomePR: React.FC = () => {
     }
   }, [dispatch, id, onPrBuscatCb]);
 
-  const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
+  const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_rep_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
 
   return (
     <IonPage className="press-release-page">
@@ -47,7 +47,7 @@ const HomePR: React.FC = () => {
         <IonContent>
           <IonCard className="card-center my-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18"> 
+                <IonCardTitle className="card-custom-title"> 
                   {pr.pr_name}
                 </IonCardTitle>
                 <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(pr.pr_date)} </IonText>

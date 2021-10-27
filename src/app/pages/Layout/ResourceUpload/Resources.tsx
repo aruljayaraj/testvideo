@@ -36,7 +36,8 @@ const Resources: React.FC = () => {
       const data = {
         action: 'get_resources',
         resType: res_type,
-        memID: authUser.ID
+        memID: authUser.ID,
+        repID: authUser.prepID
       };
       CoreService.onPostFn('res_update', data, onCallbackFn);
     }
@@ -67,7 +68,7 @@ const Resources: React.FC = () => {
         <IonContent>
           <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">
+                <IonCardTitle className="card-custom-title">
                   { res_type && res_type === 'document'? 'Documents': '' }
                   { res_type && res_type === 'article'? 'Articles': '' }
                   { res_type && res_type === 'audio'? 'Audio': '' }

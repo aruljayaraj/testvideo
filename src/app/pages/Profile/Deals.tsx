@@ -21,7 +21,7 @@ const Deals: React.FC = () => {
         { Object.keys(repProfile).length > 0 && dds && dds.length > 0 && 
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">
+                <IonCardTitle className="card-custom-title">
                     <span>Local Deals</span>
                 </IonCardTitle>
             </IonCardHeader>
@@ -30,11 +30,11 @@ const Deals: React.FC = () => {
                 <IonList className="buscat-section-content">
                     { dds.map((item: any)=> {
                         return (<div className="pl-3" key={item.id}>
-                            <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deal/${item.id}`} className="">
-                            <IonText>
-                                <i className="fa fa-image pr-2" aria-hidden="true"></i>
-                                {item.name}
-                            </IonText>
+                            <IonRouterLink color="greenbg" href={`${basename}/local-deal/${item.id}`} className="">
+                                <IonText>
+                                    <i className="fa fa-image pr-2" aria-hidden="true"></i>
+                                    {item.name}
+                                </IonText>
                             </IonRouterLink>
                         </div>)
                     })}

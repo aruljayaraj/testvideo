@@ -40,7 +40,11 @@
     .view-modal-wrap {
         .modal-wrapper{
             width: 90% !important;
-            height: 85% !important;  
+            height: 85% !important;  // 85%
+            form{
+                height: 100%; 
+                margin-bottom: 50px;
+            }
         }
     }
     .general-card{
@@ -57,7 +61,11 @@
     .view-modal-wrap {
         .modal-wrapper{
             width: 90% !important;  
-            height: 85% !important;
+            height: 85% !important; // 85%
+            form{
+                height: 100%; 
+                margin-bottom: 50px;
+            }
         }
     }
     .general-card{
@@ -81,7 +89,11 @@
     .view-modal-wrap {
         .modal-wrapper{
             width: 80% !important;  
-            height: 85% !important;
+            height: 85% !important; // 85%
+            form{
+                height: 100%; 
+                margin-bottom: 50px;
+            }
         }
     }
     .general-card{

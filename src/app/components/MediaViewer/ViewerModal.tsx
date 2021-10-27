@@ -20,6 +20,7 @@ import Video from '../../components/MediaViewer/Video';
     formType: '', //  repProfile / comProfile / resource(document, audio, video, etc) / localquote
     formId: 0, // id or qq id
     memId: 0, // Member Id
+    repId: 0, // rep Id
     mediaType: '', // // document, article, audio, video
     fileName: '',
     converted: 0
@@ -31,7 +32,7 @@ interface PropsInterface {
 }
 const ViewerModal: React.FC<PropsInterface> = (props: PropsInterface) => {
     
-    let { title, mediaType, formType, formId, memId, fileName, converted } = props.showViewerModal;
+    let { title, mediaType, formType, formId, memId, repId, fileName, converted } = props.showViewerModal;
     
     return (<>
         <IonHeader translucent>
@@ -52,6 +53,7 @@ const ViewerModal: React.FC<PropsInterface> = (props: PropsInterface) => {
             { fileName && memId && ['document','article'].includes(mediaType) && 
                 <Document 
                     memId={memId}
+                    repId={repId}
                     formId={formId}
                     fileName={fileName}
                     formType={formType}
@@ -64,6 +66,7 @@ const ViewerModal: React.FC<PropsInterface> = (props: PropsInterface) => {
             { fileName && memId && mediaType === 'audio' && 
                 <Audio
                     memId={memId}
+                    repId={repId}
                     formId={formId}
                     fileName={fileName}
                     formType={formType}
@@ -76,6 +79,7 @@ const ViewerModal: React.FC<PropsInterface> = (props: PropsInterface) => {
             { fileName && memId && mediaType === 'video' && 
                 <Video
                     memId={memId}
+                    repId={repId}
                     formId={formId}
                     fileName={fileName}
                     formType={formType}

@@ -64,7 +64,7 @@ const ProfileSetup: React.FC = () => {
     return (<>
         <IonCard className="card-center mt-4">
             <IonCardHeader color="light">
-                <IonCardTitle color="medium" className="ion-text-center fs-18">
+                <IonCardTitle color="medium" className="ion-text-center card-custom-title">
                     Complete Your Profile Set Up
                 </IonCardTitle>
             </IonCardHeader>

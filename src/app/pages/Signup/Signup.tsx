@@ -85,7 +85,7 @@ const Signup: React.FC = () => {
    *
    * @param data
    */
-  const onSubmit = (data: any) => { console.log(data);
+  const onSubmit = (data: any) => { // console.log(data);
     // loaderRef.current.setShowLoading(true);
     dispatch(authActions.signIn({ data: data}));
     // AuthService.onSignup(data, onSignupCb);

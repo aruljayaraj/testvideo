@@ -46,7 +46,7 @@ function* signUpAction(action) {
                 password: action.payload.data.password,
             };
             const tokenData = yield call(api.getToken, user);
-            yield put(authActions.setToken(tokenData)); console.log(res.user);
+            yield put(authActions.setToken(tokenData)); // console.log(res.user);
              
         }    
         yield put(uiActions.setShowLoading({loading: false}));

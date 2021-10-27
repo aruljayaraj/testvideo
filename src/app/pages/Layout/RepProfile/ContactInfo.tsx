@@ -32,7 +32,7 @@ const ContactInfo: React.FC = () => {
         { Object.keys(repProfile).length > 0 &&
         <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18" onClick={() => setShowContactModal(true)}>
+                <IonCardTitle className="card-custom-title" onClick={() => setShowContactModal(true)}>
                     <span>Contact Information</span>
                     <i className="fa fa-pencil float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>

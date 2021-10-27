@@ -29,7 +29,7 @@ const Audio: React.FC<Props> = ({res_type, setShowAlert}) => {
       <IonList className="buscat-section-content">
         { resources && resources.length > 0 &&  resources.map((item: any, index: number)=> {
           return (<div key={nanoid()}>
-            { (isPlatform('android') || isPlatform('ios')) &&   
+            { (!isPlatform('desktop')) &&    
               <IonItemSliding > 
                 <IonItem lines={ (resources.length === index+1)? "none": "inset" } routerLink={`${basename}/layout/resources/${res_type}/${item.id}`}>
                   <IonAvatar slot="start" color="greenbg">

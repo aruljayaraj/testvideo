@@ -14,7 +14,7 @@ import React, { useState, useCallback } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import '../PressRelease.scss';
-
+import CommonService from '../../../../shared/services/CommonService';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as prActions from '../../../../store/reducers/dashboard/pr';
 import { lfConfig } from '../../../../../Constants';
@@ -65,7 +65,7 @@ const PRMedia: React.FC = () => {
             prID: (pr && Object.keys(pr).length > 0)? pr.pr_id: ''
         });
     }
-    const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
+    const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_rep_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -101,7 +101,7 @@ const PRMedia: React.FC = () => {
             <IonCardContent>
                 <IonRow>
                     <IonCol className="">
-                        <IonCardTitle className="text-center fs-18">
+                        <IonCardTitle className="text-center card-custom-title">
                             <span>Upload Supporting Media</span>
                         </IonCardTitle>
                         <IonList>

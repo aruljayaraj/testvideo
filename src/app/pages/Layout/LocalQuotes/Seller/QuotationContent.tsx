@@ -23,7 +23,7 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
 
     if( qt.localquote && Object.keys(qt.localquote).length > 0  ){
         qq = qt.localquote;
-        repImage = (Object.keys(qq).length > 0 && qq.profile_image) ? `${apiBaseURL}uploads/member/${qq.mem_id}/${qq.profile_image}` : `${basename}/assets/img/avatar.svg`;
+        repImage = (Object.keys(qq).length > 0 && qq.profile_image) ? `${apiBaseURL}uploads/member/${qq.mem_id}/${qq.rep_id}/${qq.profile_image}` : `${basename}/assets/img/avatar.svg`;
     }
     return (<IonCard className="card-center mt-3 mb-1">
         <IonCardHeader color="titlebg">
@@ -46,7 +46,7 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
                             <IonCol>
                                 <IonItem lines="none" >
                                     <IonThumbnail slot="start" color="greenbg">
-                                        <img src={repImage} alt="Rep Profile" />
+                                        <img src={repImage} alt="Rep Profile" onError={() => CommonService.onImgErr('profile')} />
                                     </IonThumbnail>
                                     
                                     <IonLabel>

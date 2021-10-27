@@ -21,7 +21,7 @@ const Notification: React.FC = () => {
     return (<>
         <IonCard className="card-center mt-4">
             <IonCardHeader color="light">
-                <IonCardTitle className="fs-18">Dashboard</IonCardTitle>
+                <IonCardTitle className="card-custom-title">Dashboard</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -34,7 +34,7 @@ const Notification: React.FC = () => {
         ) &&
         <IonCard className="card-center mt-4">
             <IonCardHeader color="light">
-                <IonCardTitle color="medium" className="ion-text-center fs-18">
+                <IonCardTitle color="medium" className="ion-text-center card-custom-title">
                     Complete Your Profile Set Up
                 </IonCardTitle>
             </IonCardHeader>

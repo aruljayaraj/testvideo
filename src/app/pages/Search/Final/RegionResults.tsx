@@ -5,6 +5,7 @@ import { isPlatform } from '@ionic/react';
 import '../Search.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../Constants';
+import CommonService from '../../../shared/services/CommonService';
 import NoData from '../../../components/Common/NoData';
 import ViewRepresentatives from "./ViewRepresentatives";
 interface Props{
@@ -12,7 +13,7 @@ interface Props{
   region: string
 }
 
-const RegionResults: React.FC<Props> = ({ btype, region }) => { console.log(btype, region);
+const RegionResults: React.FC<Props> = ({ btype, region }) => { 
   const localResults = useSelector( (state:any) => state.search.finalResults[region]);
   const { apiBaseURL, basename } = lfConfig;
   const [isLocalOpen, setIsLocalOpen] = useState(true);
@@ -28,28 +29,29 @@ const RegionResults: React.FC<Props> = ({ btype, region }) => { console.log(btyp
   return (<>
     { localResults && localResults.length > 0 && <IonCard className="card-center my-4">
     <IonCardHeader color="titlebg">
-        <IonCardTitle className="fs-18 ion-text-capitalize">{`${region} ${btype}(s)`} 
+        <IonCardTitle className="card-custom-title ion-text-capitalize">{`Your ${region} ${btype === 1 ? 'B2B Supplier': 'Consumer Supplier'}(s)`} 
           <i className={`ion-float-right gray cursor fa ${isLocalOpen? 'fa-chevron-down': 'fa-chevron-up'}`} aria-hidden="true" onClick={e => setIsLocalOpen(!isLocalOpen)}></i>
         </IonCardTitle>
     </IonCardHeader>
 
     { isLocalOpen && <IonCardContent className="px-0 px-sm-2">
       { localResults.map((item: any) => { 
-          const logoImage = (Object.keys(item).length > 0 && item.company_logo) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.company_logo}` : `${basename}/assets/img/placeholder.png`;
+          // console.log(item);
+          const logoImage = (Object.keys(item).length > 0 && item.company_logo) ? `${apiBaseURL}uploads/member/${item.mem_id}/${CommonService.getThumbImg(item.company_logo)}` : `${basename}/assets/img/placeholder.png`;
           return (
           <IonCard className="mt-3" key={nanoid()}>
             <IonCardContent className="px-0 px-sm-2">
               <IonGrid className="mb-3 p-0">
                 <IonRow className="res-item">
-                  <IonCol sizeSm="4" >
+                  <IonCol sizeSm="3" >
                     <div className="profile-logo mr-3 pb-2 pl-2">
                       <img src={logoImage} alt="Company Logo"/>
                     </div>
-                    { (isPlatform('android') || isPlatform('ios')) && <>
+                    { (!isPlatform('desktop')) && <>
                       < ViewRepresentatives reps={item.reps} />
                     </>}
                   </IonCol>
-                  <IonCol sizeMd="4" sizeXl="4" className="px-3">
+                  <IonCol sizeMd="5" sizeXl="5" className="px-3">
                     <p><strong>{item.company_name}</strong></p>
                     { item.address1 && <p><i className="fa fa-address-card-o fa-lg green" aria-hidden="true"></i> {item.address1},</p> }
                     { item.address2 && <p>{item.address2},</p> }
@@ -62,7 +64,7 @@ const RegionResults: React.FC<Props> = ({ btype, region }) => { console.log(btyp
                     { item.fax && <p className="gray-medium"><i className="fa fa-fax fa-lg green" aria-hidden="true"></i> {`${item.fax}`}</p> }
                   </IonCol>
                   
-                  { isPlatform('desktop') && <IonCol className="pl-3">
+                  { isPlatform('desktop') && <IonCol sizeSm="4" className="pl-3">
                     < ViewRepresentatives reps={item.reps} />
                   </IonCol> }
                 </IonRow>

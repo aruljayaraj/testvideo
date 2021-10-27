@@ -22,7 +22,7 @@ const Resources: React.FC = () => {
         { Object.keys(repProfile).length > 0 && resources && resources.length > 0 && 
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">
+                <IonCardTitle className="card-custom-title">
                     <span>Resource Uploads</span>
                 </IonCardTitle>
             </IonCardHeader>
@@ -31,13 +31,14 @@ const Resources: React.FC = () => {
                 <IonList className="buscat-section-content">
                     { resources.map((item: any)=> {
                         return (<div className="pl-3" key={item.id}>
-                            <IonRouterLink color="greenbg" href={`${basename}/layout/resources/${item.res_type}/${item.id}`} className="">
-                            <IonText>
-                                {item.res_type === 'video' && <i className="fa fa-video-camera pr-2" aria-hidden="true"></i> }
-                                {item.res_type === 'audio' && <i className="fa fa-file-audio-o pr-2" aria-hidden="true"></i> }
-                                {['article', 'document'].includes(item.res_type) === true && <i className="fa fa-file-pdf-o pr-2" aria-hidden="true"></i> }
-                                {item.title}
-                            </IonText>
+                            <IonRouterLink color="greenbg" href={`${basename}/resource/${item.res_type}/${item.id}`} className="">
+                                <IonText>
+                                    {item.res_type === 'video' && <i className="fa fa-video-camera pr-2" aria-hidden="true"></i> }
+                                    {item.res_type === 'audio' && <i className="fa fa-file-audio-o pr-2" aria-hidden="true"></i> }
+                                    {item.res_type === 'document' && <i className="fa fa-file-excel-o pr-2" aria-hidden="true"></i> }
+                                    {item.res_type === 'article' && <i className="fa fa-file-pdf-o pr-2" aria-hidden="true"></i> }
+                                    {item.title}
+                                </IonText>
                             </IonRouterLink>
                         </div>)
                     })}

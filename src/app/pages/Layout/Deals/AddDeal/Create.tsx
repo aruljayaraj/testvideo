@@ -108,7 +108,7 @@ const CreateDeals: React.FC = () => {
         <StepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Create your Local Deal
+                <IonCardTitle className="card-custom-title">Create your Local Deal
                     <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deals`} className="float-right router-link-anchor" title="Deal Listing">
                         <i className="fa fa-list green cursor" aria-hidden="true"></i>
                     </IonRouterLink>
@@ -277,7 +277,6 @@ const CreateDeals: React.FC = () => {
                                         return <Editor
                                             value={value}
                                             apiKey={lfConfig.tinymceKey}
-                                            initialValue=""
                                             init={{
                                                 max_chars: lfConfig.tinymceMaxLength, // max. allowed chars
                                                 

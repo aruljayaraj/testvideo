@@ -41,7 +41,7 @@ const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, set
             
             <IonGrid>
                 { qq.quotations && qq.quotations.length > 0 && qq.quotations.map((qt: any, index: number) => {
-                    const repImage = (Object.keys(qt).length > 0 && qt.profile_image) ? `${apiBaseURL}uploads/member/${qt.mem_id}/${qt.profile_image}` : `${basename}/assets/img/avatar.svg`;
+                    const repImage = (Object.keys(qt).length > 0 && qt.profile_image) ? `${apiBaseURL}uploads/member/${qt.mem_id}/${qt.rep_id}/${qt.profile_image}` : `${basename}/assets/img/avatar.svg`;
                     return (
                         <IonItem key={index} lines={ (index+1) < qq.quotations.length?  "full" : "none"}>
                         <IonGrid>   
@@ -50,7 +50,7 @@ const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, set
                             <IonItem lines="none" >
                                 <IonThumbnail slot="start" color="greenbg">
                                 {/* <IonRouterLink href={`${basename}/member/${item.pr_mem_id}/${item.pr_id}`}> */}
-                                    <img src={repImage} alt="Rep Profile" />
+                                    <img src={repImage} alt="Rep Profile" onError={() => CommonService.onImgErr('profile')} />
                                 {/* </IonRouterLink> */}
                                 </IonThumbnail>
                                 

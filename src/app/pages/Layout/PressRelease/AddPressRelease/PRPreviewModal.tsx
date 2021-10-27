@@ -9,6 +9,8 @@ import * as prActions from '../../../../store/reducers/dashboard/pr';
 import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
 import CommonService from '../../../../shared/services/CommonService';
+import BuscatsList from '../../../../components/Common/BuscatsList';
+import ContactsList from '../../../../components/Common/ContactsList';
 
 interface Props {
     prPreviewModal: any,
@@ -40,7 +42,7 @@ const PRPreviewModal: React.FC<Props> = ({ prPreviewModal, setPrPreviewModal }) 
         }
     }, [dispatch, memID, prID, onPrBuscatCb]);
 
-    const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
+    const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_rep_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
 
     return (<>
         { pr && Object.keys(pr).length > 0 && 
@@ -62,7 +64,7 @@ const PRPreviewModal: React.FC<Props> = ({ prPreviewModal, setPrPreviewModal }) 
         <IonContent fullscreen className="ion-padding">
           <IonCard className="preview-card card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18"> {pr.pr_name}</IonCardTitle>
+                <IonCardTitle className="card-custom-title"> {pr.pr_name}</IonCardTitle>
                 <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(pr.pr_date)}</IonText>
                 <IonText className="fs-12" color={ +(pr.pr_active) === 1? 'success': 'danger'}> { +(pr.pr_active) === 1? '(Active)': '(Pending)'}</IonText>
             </IonCardHeader>
@@ -77,7 +79,8 @@ const PRPreviewModal: React.FC<Props> = ({ prPreviewModal, setPrPreviewModal }) 
                     <div className="pl-3">  { /* pt-sm-3 mt-sm-4 */}
                     { pr.pr_overview && <h2 className="mb-4"><strong>{pr.pr_overview}</strong></h2> }
                     { pr.pr_quote && <div className="quote mb-3">" {pr.pr_quote} "</div> }
-                    { pr.buscats && pr.buscats.length > 0 &&  pr.buscats.map((item: any, index: number)=> { 
+                    { pr.buscats && pr.buscats.length > 0 && <BuscatsList buscats={pr.buscats} />}
+                    {/* { pr.buscats && pr.buscats.length > 0 &&  pr.buscats.map((item: any, index: number)=> { 
                       return (<IonItem lines="none" key={index}>
                         <IonAvatar slot="start" color="greenbg">
                             <i className="fa fa-chevron-right fa-lg green" aria-hidden="true"></i>
@@ -87,7 +90,7 @@ const PRPreviewModal: React.FC<Props> = ({ prPreviewModal, setPrPreviewModal }) 
                             <h3><IonText color="medium">{item.sub_catname}</IonText></h3>
                             <p><strong>Keywords:</strong> {item.keywords}</p>
                         </IonLabel>
-                    </IonItem>) }) }
+                    </IonItem>) }) } */}
                     </div>
                   </IonCol>
                 </IonRow>
@@ -98,12 +101,18 @@ const PRPreviewModal: React.FC<Props> = ({ prPreviewModal, setPrPreviewModal }) 
                 </IonRow>}
               </IonGrid>    
             </IonCardContent>
-            <IonCardHeader color="titlebg"><strong>Contacts:</strong>  
+            <IonCardHeader color="titlebg">
+              <h3 className="mt-0 font-weight-bold fs-16">Contacts:</h3> 
+              <div className="d-flex flex-row reps-container">
+                { pr.reps && pr.reps.length > 0 && <ContactsList contacts={pr.reps} />}
+              </div>  
+            </IonCardHeader>
+            {/* <IonCardHeader color="titlebg"><strong>Contacts:</strong>  
             { pr.reps && pr.reps.length > 0 &&  pr.reps.map((item: any, index: number)=> { 
                 return (
                   <IonText className="font-weight-bold" key={index}> {`${item.firstname} ${item.lastname} ${ (pr.reps.length > index+1)? ", ": "" } `}</IonText>
                 ) }) }
-            </IonCardHeader>
+            </IonCardHeader> */}
           </IonCard>  
         </IonContent> 
       </>}

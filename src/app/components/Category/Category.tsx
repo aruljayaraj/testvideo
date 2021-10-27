@@ -256,7 +256,7 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
                         </IonButton>
                     </IonButtons>
-                    { (isPlatform('android') || isPlatform('ios')) &&  
+                    { (!isPlatform('desktop')) &&   
                     <IonButtons slot="end">
                         <IonButton color="blackbg" type="submit">
                             <strong>Save</strong>

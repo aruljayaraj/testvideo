@@ -80,7 +80,7 @@ const AboutProfileModal: React.FC<Props> = ({showAboutProfileModal, setShowAbout
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
                         </IonButton>
                     </IonButtons>
-                    { (isPlatform('android') || isPlatform('ios')) &&  
+                    { (!isPlatform('desktop')) &&   
                     <IonButtons slot="end">
                         <IonButton color="blackbg" type="submit">
                             Save

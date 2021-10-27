@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
           CoreService.onPostFn('get_location', user, onCallbackFn);
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
-      } catch (e) {
+      } catch (e: any) {
         let errMsg = e.message;
         if( +(e.code) === 1 ){
           errMsg = `Location is mandatory for this app to serve you better. Please select your Location.`;
@@ -83,28 +83,28 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <IonFooter >
-        <IonToolbar color="blackbg" mode="ios">
-          { geolocation && geolocation.city && isPlatform('desktop') && <IonButtons slot="start"> 
+      <IonFooter>
+        <IonToolbar color="footerbg" mode="ios">
+          { geolocation && geolocation.city && <IonButtons slot="start"> 
             <IonButton routerLink={`${basename}/signup`}>
               <IonIcon slot="start" icon={eyeOutline}></IonIcon>
-              <IonLabel slot="end">LocalQuote Requests</IonLabel>
+              <IonLabel slot="end" className="fs-13">LocalQuote Requests</IonLabel>
             </IonButton>
           </IonButtons>}
 
           <IonButtons slot="end"> 
             <IonButton onClick={() => setShowLocationModal(true)}>
-              <IonLabel slot="start">Change Location</IonLabel>
+              <IonLabel slot="start" className="fs-13">Change Location</IonLabel>
               <IonIcon slot="end" icon={locate}></IonIcon>
             </IonButton>
           </IonButtons>
           
-          <IonTitle size="small" class="hidden-xs hidden-sm" >{copyright}</IonTitle>
+          { isPlatform('desktop') && <IonTitle size="small" >{copyright}</IonTitle> }
           
         </IonToolbar>
-        <IonToolbar color="blackbg" mode="ios" class="hidden-md hidden-lg hidden-xl">
+        {/* { isPlatform('desktop') &&  <IonToolbar color="footerbg" mode="ios">
           <IonTitle size="small" >{copyright}</IonTitle>
-        </IonToolbar>
+        </IonToolbar> } */}
       </IonFooter>
       <Loader />
       <Toast />

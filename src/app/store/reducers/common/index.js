@@ -1,8 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+
+const adsLocalData = JSON.parse(sessionStorage.getItem('ads') || '[]');
 let state = {
     isdCodes: [],
     item: {},
-    items: []
+    items: [],
+    ads: Object.keys(adsLocalData).length !== 0? adsLocalData: []
 }
 
 const slice = createSlice({
@@ -14,9 +17,15 @@ const slice = createSlice({
                 const data = action.payload.data;
                 fdataState[action.payload.key] = data;
             }
+        },
+        setAds: (fdataState, action) => { 
+            if( action.payload.ads ){
+                fdataState.ads = action.payload.ads;
+                sessionStorage.setItem('ads', JSON.stringify(fdataState.ads));
+            }
         }
     }
 });
 
-export const {setFormData} = slice.actions;
+export const {setFormData, setAds} = slice.actions;
 export default slice.reducer;

@@ -28,7 +28,7 @@ const OtherInfo: React.FC = () => {
         { Object.keys(comProfile).length > 0 &&
         <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18" onClick={() => setShowOtherModal(true)}>
+                <IonCardTitle className="card-custom-title" onClick={() => setShowOtherModal(true)}>
                     <span>Other Information</span>
                     <i className="fa fa-pencil float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>
@@ -106,7 +106,7 @@ const OtherInfo: React.FC = () => {
                         </IonAvatar>
                         <IonLabel>
                             <p><b>Member Organizations</b></p>
-                            {JSON.parse(comProfile.member_organizations).map((field: any, index: number) => {
+                            { JSON.parse(comProfile.member_organizations).length > 0 && JSON.parse(comProfile.member_organizations).map((field: any, index: number) => {
                                 return (
                                     <p key={index}>{field.name}</p>
                                 );

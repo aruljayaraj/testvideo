@@ -281,7 +281,7 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
                         </IonButton>
                     </IonButtons>
-                    { (isPlatform('android') || isPlatform('ios')) &&  
+                    { (!isPlatform('desktop')) &&   
                     <IonButtons slot="end">
                         <IonButton color="blackbg" type="submit">
                             Save
@@ -759,7 +759,7 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
                                 }}
                                 rules={{
                                     pattern: {
-                                        value: /^[0-9]{3,15}$/i,
+                                        value: /^[0-9 ]{3,15}$/i,
                                         message: "Invalid Fax"
                                     }
                                 }}

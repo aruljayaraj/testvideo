@@ -29,7 +29,7 @@ const AboutCompany: React.FC = () => {
         { Object.keys(comProfile).length > 0 &&
         <IonCard className="card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18" onClick={() => setShowAboutCompanyModal(true)}>
+                <IonCardTitle className="card-custom-title" onClick={() => setShowAboutCompanyModal(true)}>
                     <span>About Company Profile</span>
                     <i className="fa fa-pencil float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>

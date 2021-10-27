@@ -35,12 +35,16 @@ const slice = createSlice({
             let data;
             if( action.payload.data ){
                 if( action.payload.actionFrom === 'loadmore' ){
-                    data = [...sState.homeResults.items, ...action.payload.data]
+                    data = [...sState.homeResults.items, ...action.payload.data];
                 }else{
                     data = action.payload.data;
                 }
                 sState.homeResults.items = data;
-                sState.homeResults.total =action.payload.total;
+                sState.homeResults.total = action.payload.total;
+
+                /*if( action.payload.pageAds && action.payload.pageAds.length > 0 ){ 
+                    sState.homeResults.pageAds = action.payload.pageAds;
+                }*/
             }
         }
     }

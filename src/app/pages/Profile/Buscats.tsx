@@ -21,7 +21,7 @@ const Buscats: React.FC = () => {
         { Object.keys(repProfile).length > 0 && ( (b2bCategory && b2bCategory.length > 0) || (b2cCategory && b2cCategory.length > 0)) && 
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">
+                <IonCardTitle className="card-custom-title">
                     <span>Product & Services</span>
                 </IonCardTitle>
             </IonCardHeader>

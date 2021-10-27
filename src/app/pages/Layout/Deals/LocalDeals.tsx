@@ -91,7 +91,7 @@ const LocalDeals: React.FC = () => {
         <IonContent>
           <IonCard className="card-center my-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Local Deals
+                <IonCardTitle className="card-custom-title">Local Deals
                   { +(memOpts.localdeals!.total!) < +(memOpts.localdeals!.no_free_deals!) &&
                     <IonRouterLink color="greenbg" href={`${basename}/layout/deals/add-deal`} className="float-right router-link-anchor" title="Add a Deal">
                       <i className="fa fa-plus green cursor" aria-hidden="true"></i>
@@ -110,17 +110,16 @@ const LocalDeals: React.FC = () => {
                 { unpaid && unpaid.length > 0  && <LocalDealsUnpaid />}
                 { dds.length > 0  &&  dds.map((item: any, index: number)=> {
                   // console.log(item.id+"==" + (!item.sdate || (item.sdate && new Date(Date.parse(item.sdate.replace(/[-]/g,'/'))).valueOf()/1000 > Date.now())));
-                  const img = (item.image).split(".");
-                  const ddImage = ( item && Object.keys(item).length > 0 && item.image) ? `${apiBaseURL}uploads/member/${item.mem_id}/${img[0]}-thumb.${img[1]}` : `${basename}/assets/img/placeholder.png`;
+                  const ddImage = ( item && Object.keys(item).length > 0 && item.image) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.rep_id}/${CommonService.getThumbImg(item.image)}` : `${basename}/assets/img/placeholder.png`;
                   if(!item.name){
                     noNameCount++;
                   }
                   return (<div key={nanoid()}>
-                    { (isPlatform('android') || isPlatform('ios')) &&   
+                    { (!isPlatform('desktop')) &&   
                       <IonItemSliding >
                         <IonItem lines={ (dds.length === index+1)? "none": "inset" } routerLink={`${basename}/layout/deals/local-deal/${item.id}`}>
                           <IonAvatar slot="start" color="greenbg">
-                            <img className="roundcorner" src={ddImage} alt="Local Deal Media"/>
+                            <img className="roundcorner" src={ddImage} alt="Local Deal Media" />
                           </IonAvatar>
                           <IonLabel>
                             <h2>{item.name? item.name: `No Deal Name ${noNameCount}`}</h2>
@@ -143,7 +142,7 @@ const LocalDeals: React.FC = () => {
                     <IonItem lines={ (dds.length === index+1)? "none": "inset" }>
                       <IonThumbnail slot="start" color="greenbg">
                         <IonRouterLink href={`${basename}/layout/deals/local-deal/${item.id}`}>
-                          <img className="roundcorner" src={ddImage} alt="LocalDeal Media"/>
+                          <img className="roundcorner" src={ddImage} alt="LocalDeal Media" />
                         </IonRouterLink>
                       </IonThumbnail>
                       <IonLabel>

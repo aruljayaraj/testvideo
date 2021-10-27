@@ -42,7 +42,7 @@ const PressRelease: React.FC = () => {
     }
   }, [dispatch, id, authUser, onPrBuscatCb]);
 
-  const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
+  const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_rep_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
 
   return (
     <IonPage className="press-release-page">
@@ -50,12 +50,16 @@ const PressRelease: React.FC = () => {
         <IonContent>
           <IonCard className="card-center my-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18"> 
+                <IonCardTitle className="card-custom-title"> 
                   {pr.pr_name}
+                  <IonRouterLink color="greenbg" href={`${basename}/layout/press-releases`} className="float-right router-link-anchor ml-2" title="Press Releases List">
+                    <i className="fa fa-list green cursor" aria-hidden="true"></i>
+                  </IonRouterLink>
                   { +(pr.pr_active) === 0 && pr.pr_mem_id === authUser.ID &&
-                  <IonRouterLink color="greenbg" href={`${basename}/layout/add-press-release/${pr.pr_id}/${pr.pr_mem_id}/1`} className="float-right router-link-anchor">
+                  <IonRouterLink color="greenbg" href={`${basename}/layout/add-press-release/${pr.pr_id}/${pr.pr_mem_id}/1`} className="float-right router-link-anchor" title="Press Release Edit">
                     <i className="fa fa-pencil green cursor" aria-hidden="true"></i>
                   </IonRouterLink>}
+                  
                 </IonCardTitle>
                 <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(pr.pr_date)} </IonText>
                 { authUser.ID === pr.pr_mem_id && 

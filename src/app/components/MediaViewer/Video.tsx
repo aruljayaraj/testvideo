@@ -5,6 +5,7 @@ import { lfConfig } from '../../../Constants';
 
 interface PropsInterface{
     memId: number,
+    repId: number,
     fileName: string,
     formId: number,
     formType: string,
@@ -16,7 +17,7 @@ interface PropsInterface{
 
 const Video: React.FC<PropsInterface> = (props: PropsInterface) => {
     const { apiBaseURL } = lfConfig; 
-    let { memId, fileName, formId, formType, mediaType, converted, showViewerModal, setShowViewerModal } = props;
+    let { memId, repId, fileName, formId, formType, mediaType, converted, showViewerModal, setShowViewerModal } = props;
     let resFile = '';
     let imgFile = '';
     if(formId && memId && fileName) {
@@ -24,8 +25,8 @@ const Video: React.FC<PropsInterface> = (props: PropsInterface) => {
             resFile = fileName ? `${apiBaseURL}uploads/localquote/${formId}/${fileName}` : ``;
             imgFile = fileName ? `${apiBaseURL}uploads/localquote/${formId}/${fileName.split(".")[0]}.png` : ``;
         }else if( props.formType === 'resource' ){
-            resFile = fileName ? `${apiBaseURL}uploads/member/${memId}/${fileName}` : ``;
-            imgFile = fileName ? `${apiBaseURL}uploads/member/${memId}/${fileName.split(".")[0]}.png` : ``;
+            resFile = fileName ? `${apiBaseURL}uploads/member/${memId}/${repId}/${fileName}` : ``;
+            imgFile = fileName ? `${apiBaseURL}uploads/member/${memId}/${repId}/${fileName.split(".")[0]}.png` : ``;
         }
     } // console.log(resFile);
 

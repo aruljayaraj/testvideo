@@ -36,7 +36,7 @@ const PreListItems: React.FC<Props> = ({itemType}) => {
   return (<>
      { preResults && preResults && preResults.length > 0 && <IonCard className="card-center my-4">
     <IonCardHeader color="titlebg">
-        <IonCardTitle className="fs-18">{title}</IonCardTitle>
+        <IonCardTitle className="card-custom-title">{title}</IonCardTitle>
     </IonCardHeader>
 
     <IonCardContent>

@@ -88,7 +88,7 @@ const CreateResource: React.FC = () => {
         <ResStepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-            <IonCardTitle className="fs-18">Create a {resTypeText}</IonCardTitle>
+            <IonCardTitle className="card-custom-title">Create a {resTypeText}</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -200,7 +200,6 @@ const CreateResource: React.FC = () => {
                                         return <Editor
                                             value={value}
                                             apiKey={lfConfig.tinymceKey}
-                                            initialValue=""
                                             init={{
                                                 max_chars: lfConfig.tinymceResourceMaxLength, // max. allowed words
                                                 

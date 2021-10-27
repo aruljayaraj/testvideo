@@ -80,7 +80,7 @@ const NewRepProfileInfo: React.FC = () => {
             <IonContent className="ion-padding">
                 <IonCard className="card-center mt-2">
                 <IonCardHeader>
-                    <IonCardTitle color="medium" className="ion-text-center fs-18">Additional Rep Profile</IonCardTitle>
+                    <IonCardTitle color="medium" className="ion-text-center card-custom-title">Additional Rep Profile</IonCardTitle>
                 </IonCardHeader>
 
                 <IonCardContent>

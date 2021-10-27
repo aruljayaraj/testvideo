@@ -101,7 +101,7 @@ const CreateQuotation: React.FC = () => {
         <QuotationStepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-            <IonCardTitle className="fs-18">Complete Your Quotation in the Appropriate Areas Below</IonCardTitle>
+            <IonCardTitle className="card-custom-title">Complete Your Quotation in the Appropriate Areas Below</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>

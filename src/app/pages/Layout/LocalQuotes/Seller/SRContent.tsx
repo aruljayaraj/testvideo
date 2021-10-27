@@ -16,7 +16,7 @@ const SRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover}) =>
     const { basename } = lfConfig;
     let { rfqType } = useParams<any>();
     const { apiBaseURL } = lfConfig;
-    const repImage = (Object.keys(qq).length > 0 && qq.profile_image) ? `${apiBaseURL}uploads/member/${qq.mem_id}/${qq.profile_image}` : `${basename}/assets/img/avatar.svg`;
+    const repImage = (Object.keys(qq).length > 0 && qq.profile_image) ? `${apiBaseURL}uploads/member/${qq.mem_id}/${qq.rep_id}/${qq.profile_image}` : `${basename}/assets/img/avatar.svg`;
     
     return (<IonCard className="card-center mt-3 mb-1">
         
@@ -27,7 +27,7 @@ const SRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover}) =>
                         <IonItem lines="none" >
                             <IonThumbnail slot="start" color="greenbg">
                             {/* <IonRouterLink href={`${basename}/member/${item.pr_mem_id}/${item.pr_id}`}> */}
-                                <img src={repImage} alt="Rep Profile" />
+                                <img src={repImage} alt="Rep Profile" onError={() => CommonService.onImgErr('profile')} />
                             {/* </IonRouterLink> */}
                             </IonThumbnail>
                             

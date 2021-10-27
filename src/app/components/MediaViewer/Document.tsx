@@ -10,6 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 interface PropsInterface{
     memId: number,
+    repId: number,
     fileName: string,
     formId: number,
     formType: string,
@@ -21,7 +22,7 @@ interface PropsInterface{
 
 const DocumentViewer: React.FC<PropsInterface> = (props: PropsInterface) => {
     const { apiBaseURL} = lfConfig;
-    let { memId, fileName, formId, formType, mediaType, converted, showViewerModal, setShowViewerModal } = props;
+    let { memId, repId, fileName, formId, formType, mediaType, converted, showViewerModal, setShowViewerModal } = props;
     let resFile = '';
     // let routerLink = '';
     let fileExt: any = '';
@@ -49,7 +50,7 @@ const DocumentViewer: React.FC<PropsInterface> = (props: PropsInterface) => {
             resFile = fileName ? `${apiBaseURL}uploads/localquote/${formId}/${fileName}` : ``;
             // routerLink = `${basename}/layout/buyer-request-center/${mediaType}`;
         }else if( formType === 'resource' ){
-            resFile = fileName ? `${apiBaseURL}uploads/member/${memId}/${fileName}` : ``;
+            resFile = fileName ? `${apiBaseURL}uploads/member/${memId}/${repId}/${fileName}` : ``;
             // routerLink = `${basename}${redirectTo}`;
         }
     }

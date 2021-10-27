@@ -7,6 +7,7 @@ const optionsLocalData = JSON.parse(sessionStorage.getItem('options') || '{}');
 // console.log(JSON.parse(localStorage.getItem('location')));
 const locationLocalData = JSON.parse(localStorage.getItem('location') || '{}');
     // console.log(Object.keys(locationLocalData).length !== 0? locationLocalData: {});
+
 let state = {
     token: Object.keys(tokenLocalData).length !== 0? tokenLocalData: '',
     data: Object.keys(userLocalData).length !== 0? userLocalData: {
@@ -88,6 +89,7 @@ const slice = createSlice({
                 localStorage.setItem('location', JSON.stringify(authState.location));
             }
         }
+        
     }
 });
 

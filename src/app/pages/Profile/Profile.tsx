@@ -1,14 +1,17 @@
 import { IonCard, IonCardContent, IonCol, IonContent, IonPage, IonRow } from '@ionic/react'; 
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState, useLayoutEffect} from 'react';
 import { useParams } from "react-router-dom";
 import CoreService from '../../shared/services/CoreService';
+import { isPlatform } from '@ionic/react';
 import './Profile.scss';
+import { lfConfig } from '../../../Constants';
 import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../store/reducers/dashboard/rep';
 import * as resActions from '../../store/reducers/dashboard/resource';
 import * as dealActions from '../../store/reducers/dashboard/deal';
 import * as prActions from '../../store/reducers/dashboard/pr';
 import * as uiActions from '../../store/reducers/ui';
+import PartnerAds from '../../components/Common/PartnerAds';
 
 import Overview from './Overview';
 import RepOverview from './RepOverview';
@@ -19,13 +22,19 @@ import GeneralInfo from './GeneralInfo';
 
 const CompanyProfile: React.FC = () => {
   const dispatch = useDispatch();
-  // const memid = useSelector( (state:any) => state.auth.data.user.ID);
-  // const repProfile = useSelector( (state:any) => state.rep.repProfile);
+  const { ADS } = lfConfig;
   const comProfile = useSelector( (state:any) => state.rep.comProfile);
-  // const memOpts = useSelector( (state:any) => state.auth.memOptions );
-  // const resources = useSelector( (state:any) => state.res.resources);
-
   let { memid, repid } = useParams<any>();
+  const [width, setWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    function updateSize() {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -71,7 +80,7 @@ const CompanyProfile: React.FC = () => {
       { comProfile && 
         <IonContent>
           <IonRow>
-            <IonCol sizeMd="6">
+            <IonCol sizeSm="7" sizeMd="6">
               <Overview />
               <RepOverview />
               <Buscats />
@@ -79,19 +88,18 @@ const CompanyProfile: React.FC = () => {
               <Deals />
             </IonCol>
 
-            <IonCol sizeMd="4">
+            <IonCol sizeSm="5" sizeMd="3" sizeXl="4">
               <GeneralInfo />
+              { (width < 768) && <div className="mt-4 side-ads-container">
+              <PartnerAds limit={ADS.PROFILE} /> 
+              </div>}
             </IonCol>
 
-            <IonCol sizeMd="2">
-              <IonCard className="card-center mt-4">
-                <IonCardContent>
-                  <div className="py-3">
-                  Logo's content goes here
-                  </div>
-                </IonCardContent> 
-              </IonCard>   
+            { (width >= 768) && 
+            <IonCol sizeXs="12" sizeMd="3" sizeXl="2" className="mt-4 side-ads-container">
+              <PartnerAds limit={ADS.PROFILE} />
             </IonCol>
+            }
           </IonRow>
             
         </IonContent> 

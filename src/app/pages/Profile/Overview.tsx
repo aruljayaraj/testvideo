@@ -16,7 +16,7 @@ const Overview: React.FC = () => {
         { Object.keys(comProfile).length > 0 &&
         <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">
+                <IonCardTitle className="card-custom-title">
                     <span>{comProfile.company_name} - Overview</span>
                 </IonCardTitle>
             </IonCardHeader>

@@ -64,7 +64,7 @@ const BusinessCategory: React.FC = () => {
         <PRStepInd />
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">
+                <IonCardTitle className="card-custom-title">
                     <span>B2B Category</span>
                     <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')} className="float-right router-link-anchor">
                         <i className="fa fa-plus green cursor" aria-hidden="true"></i>
@@ -77,7 +77,7 @@ const BusinessCategory: React.FC = () => {
                 <IonList className="buscat-section-content">
                     { pr && pr.buscats && pr.buscats.length > 0 &&  pr.buscats.map((item: any)=> {
                         return (<div key={item.id}>
-                            { (isPlatform('android') || isPlatform('ios')) &&   
+                            { (!isPlatform('desktop')) &&   
                                 <IonItemSliding > 
                                     <IonItem lines="none" >
                                         <IonAvatar slot="start" color="greenbg">

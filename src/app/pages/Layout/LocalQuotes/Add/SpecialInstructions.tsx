@@ -86,7 +86,7 @@ const SpecialInstructions: React.FC = () => {
         <QQStepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Special Instructions</IonCardTitle>
+                <IonCardTitle className="card-custom-title">Special Instructions</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>

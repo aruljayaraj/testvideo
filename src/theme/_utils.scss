@@ -363,3 +363,32 @@ p.textbold{
     border-radius: 3px !important;
     padding: 10px;
 }
+
+.side-ads-container{
+    margin:10px 0px;
+    padding:6px;
+    .aditem{
+      padding:0;
+      margin:0 0 20px 0;
+      position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 0.25rem;
+      .adheader{
+        padding: 8px 12px;
+        background-color: #D3D5D6;
+        // background-color: '#E9E7E7';
+        text-transform: capitalize !important;
+      }
+    }
+}

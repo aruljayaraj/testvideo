@@ -131,7 +131,7 @@ const ViewQuotation: React.FC = () => {
               
             </IonCol>
             <IonCol sizeMd="6" sizeXs="12">
-              {qq.buscats && Object.keys(qq.buscats).length > 0 && <IonCard className={ "card-center mb-3 " + ((isPlatform('android') || isPlatform('ios'))? 'mt-1': 'mt-3' )}>
+              {qq.buscats && Object.keys(qq.buscats).length > 0 && <IonCard className={ "card-center mb-3 " + ( (!isPlatform('desktop'))? 'mt-1': 'mt-3' )}>
                 <IonCardContent>
                   <p className="card-custom-title">Product or Service Category(s)</p>
                   <BuscatsList buscats={qq.buscats} />

@@ -18,19 +18,14 @@ import { useSelector } from 'react-redux';
 // import { IntfMember } from '../../../interfaces/Member';
 import { lfConfig } from '../../../../Constants';
 import ImageModal from '../../../components/Image/ImageModal';
-let initialValues = {
-    isOpen: false,
-    title: '',
-    actionType: '', // new or edit
-    memId: '',
-    frmId: ''
-};
+import CommonService from '../../../shared/services/CommonService';
+import CommonInitService from '../../../shared/services/CommonInitService';
 
 const CompanyAndLogo: React.FC = () => {
     // console.log('Profile Logo Page');
-    // const dispatch = useDispatch();
+    const authUser = useSelector( (state:any) => state.auth.data.user);
     const comProfile = useSelector( (state:any) => state.rep.comProfile);
-    const [showImageModal, setShowImageModal] = useState(initialValues);
+    const [showImageModal, setShowImageModal] = useState(CommonInitService.initialValuesImageModal(''));
     const { apiBaseURL, basename } = lfConfig;
 
     const imageModalFn = (title: string, actionType: string) => {
@@ -40,9 +35,10 @@ const CompanyAndLogo: React.FC = () => {
             title: title,
             actionType: actionType,
             memId: (Object.keys(comProfile).length > 0)? comProfile.mem_id: '',
+            repId: (Object.keys(authUser).length > 0)? authUser.prepID: '',
             frmId: (Object.keys(comProfile).length > 0)? comProfile.id: ''
         });
-    }
+    };
     const logoImage = (Object.keys(comProfile).length > 0 && comProfile.company_logo) ? `${apiBaseURL}uploads/member/${comProfile.mem_id}/${comProfile.company_logo}` : `${basename}/assets/img/placeholder.png`;
     return (<>
         { Object.keys(comProfile).length > 0 &&
@@ -51,13 +47,13 @@ const CompanyAndLogo: React.FC = () => {
             <IonCardContent>
                 <IonRow>
                     <IonCol sizeMd="6" sizeXs="12" >
-                        <IonCardTitle className="text-center fs-18 mb-3">
+                        <IonCardTitle className="text-center card-custom-title mb-3">
                             <span>Logo</span>
                         </IonCardTitle>
                         <IonList>
                             <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Edit Logo', 'company_logo')}>
                                 <div className="profile-logo">
-                                    <img src={logoImage} alt="Company Logo"/>
+                                    <img src={logoImage} alt="Company Logo" />
                                     <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true"></i>
                                 </div>
                             </IonItem>

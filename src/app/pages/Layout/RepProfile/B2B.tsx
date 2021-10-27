@@ -56,7 +56,7 @@ const B2B: React.FC = () => {
         { Object.keys(repProfile).length > 0 &&
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18" onClick={() => categoryModalFn('Add B2B Category', 'new')}>
+                <IonCardTitle className="card-custom-title" onClick={() => categoryModalFn('Add B2B Category', 'new')}>
                     <span>B2B Category</span>
                     <i className="fa fa-plus float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>
@@ -72,7 +72,7 @@ const B2B: React.FC = () => {
                 <IonList className="buscat-section-content">
                     { b2bCategory && b2bCategory.length > 0 &&  b2bCategory.map((item: any)=> {
                         return (<div key={item.id}>
-                            { (isPlatform('android') || isPlatform('ios')) &&   
+                            { (!isPlatform('desktop')) &&    
                                 <IonItemSliding > 
                                     <IonItem lines="none" >
                                         <IonAvatar slot="start" color="greenbg">

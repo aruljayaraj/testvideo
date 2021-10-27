@@ -3,7 +3,7 @@ ion-content ion-toolbar {
 }
 .search-page{
   .card-center{
-      width:90%;
+      width:94%;
       display:block;
       margin: 0 auto;
   }
@@ -28,24 +28,65 @@ ion-content ion-toolbar {
       }
     }
   }
-}
 
-@media (max-width: 575.98px) { 
-  // .search-page{
-    
-  // }
+  // Non Member Page
+  .nm-container-wrap{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100%);
+    grid-gap: 12px;
+    padding: 10px 8px !important;
+    width: 100%;
+    max-height: 420px;
+    overflow-y: auto;
+    .nm-item {
+      margin: 0 !important;
+      padding: 0px 12px !important;
+      width: 100%;
+    }
+  }
 }
 
 // Small devices (landscape phones, 576px and up)
-@media (min-width: 576px) and (max-width: 767.98px) { 
-  // .search-page{
-    
-  // }
-}
+@media (min-width: 576px) { 
+  .search-page{
+    .nm-container-wrap{
+      grid-template-columns: repeat(auto-fill, 48%);
+    }
+  }
+ }
 
 // Medium devices (tablets, 768px and up)
-@media (min-width: 768px) and (max-width: 991.98px) {
-  // .search-page{
-    
-  // }
+@media (min-width: 768px) { 
+  .search-page{
+    .nm-container-wrap{
+      grid-template-columns: repeat(auto-fit, 32%);
+    }
+  }
+ }
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) { 
+  .search-page{
+    .nm-container-wrap{
+      grid-template-columns: repeat(auto-fill, 24%);
+    }
+  }
+ }
+
+// X-Large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) { 
+  .search-page{
+    .nm-container-wrap{
+      grid-template-columns: repeat(auto-fill, 19%);
+    }
+  }
+ }
+
+// XX-Large devices (larger desktops, 1400px and up)
+@media (min-width: 1400px) { 
+  .search-page{
+    .nm-container-wrap{
+      grid-template-columns: repeat(auto-fill, 14%);
+    }
+  }
 }

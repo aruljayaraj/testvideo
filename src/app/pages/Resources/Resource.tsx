@@ -10,6 +10,8 @@ import { lfConfig } from '../../../Constants';
 import CoreService from '../../shared/services/CoreService';
 import CommonService from '../../shared/services/CommonService';
 import MediaList from '../../components/Common/MediaList';
+import BuscatsList from '../../components/Common/BuscatsList';
+import ContactsList from '../../components/Common/ContactsList';
 
 const HomeResource: React.FC = () => {
   let attachments = [];
@@ -47,6 +49,7 @@ const HomeResource: React.FC = () => {
      let attach = {
       title: '', 
       mem_id: resource.mem_id,
+      rep_id: resource.rep_id,
       filename: resource.filename,
       uploaded_name: resource.uploaded_name,
       form_id: resource.id,
@@ -63,7 +66,7 @@ const HomeResource: React.FC = () => {
         <IonContent>
           <IonCard className="card-center mt-4 mb-3">
             <IonCardHeader color="titlebg">
-              <IonCardTitle className="fs-18"> 
+              <IonCardTitle className="card-custom-title"> 
                 {resource.title}
               </IonCardTitle>
               <IonText className="mt-2 fs-12" color="medium">{CommonService.dateFormat(resource.added_date)} </IonText>
@@ -84,17 +87,7 @@ const HomeResource: React.FC = () => {
                     </> }
                     <div className="pl-md-3">  { /* pt-sm-3 mt-sm-4 */}
                       <p className="card-custom-title">Business Category</p>
-                      { resource.buscats && resource.buscats.length > 0 &&  resource.buscats.map((item: any, index: number)=> { 
-                        return (<IonItem lines="none" key={index}>
-                          <IonAvatar slot="start" color="greenbg">
-                              <i className="fa fa-chevron-right fa-lg green" aria-hidden="true"></i>
-                          </IonAvatar>
-                          <IonLabel>
-                              <h2>{item.catname}</h2>
-                              <h3><IonText color="medium">{item.sub_catname}</IonText></h3>
-                              <p><strong>Keywords:</strong> {item.keywords}</p>
-                          </IonLabel>
-                      </IonItem>) }) }
+                      { resource.buscats && resource.buscats.length > 0 && <BuscatsList buscats={resource.buscats} />}
                     </div>
                   </IonCol>
                    
@@ -109,20 +102,8 @@ const HomeResource: React.FC = () => {
             </IonCardContent>
             <IonCardHeader color="titlebg">
               <h3 className="mt-0 font-weight-bold fs-16">Contacts:</h3> 
-              <div className="reps-container">
-                { resource.reps && resource.reps.length > 0 &&  resource.reps.map((item: any, index: number)=> { 
-                  const repImage = (item.profile_image) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${item.profile_image}` : `${basename}/assets/img/avatar.svg`;
-                  return (
-                    <div key={index}>
-                      <IonRouterLink href={`${basename}/profile/${item.mem_id}/${item.rep_id}`}>
-                        <IonAvatar color="greenbg">
-                          <img src={repImage} alt={`${item.firstname} ${item.lastname}`}/>
-                        </IonAvatar>
-                        <p className="mb-0"><IonText color="dark" className="mt-2" key={index}> {`${item.firstname} ${item.lastname}`}</IonText></p>
-                      </IonRouterLink>
-                    </div>
-                  ) 
-                }) }
+              <div className="d-flex flex-row reps-container">
+                { resource.reps && resource.reps.length > 0 && <ContactsList contacts={resource.reps} />}
               </div>  
             </IonCardHeader>
             </>}

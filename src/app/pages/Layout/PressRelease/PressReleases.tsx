@@ -72,7 +72,7 @@ const PressReleases: React.FC = () => {
         <IonContent>
           <IonCard className="card-center my-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Press Releases
+                <IonCardTitle className="card-custom-title">Press Releases
                   <IonRouterLink color="greenbg" href={`${basename}/layout/add-press-release`} className="float-right router-link-anchor">
                     <i className="fa fa-plus green cursor" aria-hidden="true"></i>
                   </IonRouterLink>  
@@ -81,9 +81,9 @@ const PressReleases: React.FC = () => {
             <IonCardContent>
             <IonList className="buscat-section-content">
               { prs.length > 0  &&  prs.map((item: any, index: number)=> {
-                const prImage = ( item && Object.keys(item).length > 0 && item.pr_image) ? `${apiBaseURL}uploads/member/${item.pr_mem_id}/${item.pr_image}` : `${basename}/assets/img/placeholder.png`;
+                const prImage = ( item && Object.keys(item).length > 0 && item.pr_image) ? `${apiBaseURL}uploads/member/${item.pr_mem_id}/${item.pr_rep_id}/${CommonService.getThumbImg(item.pr_image)}` : `${basename}/assets/img/placeholder.png`;
                 return (<div key={nanoid()}>
-                  { (isPlatform('android') || isPlatform('ios')) &&   
+                  { (!isPlatform('desktop')) &&    
                     <IonItemSliding >
                       <IonItem lines={ (prs.length === index+1)? "none": "inset" } routerLink={`${basename}/layout/press-release/${item.pr_id}`}>
                         <IonAvatar slot="start" color="greenbg">

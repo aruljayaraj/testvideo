@@ -41,7 +41,7 @@ const QQPreviewModal: React.FC<Props> = ({ resPreviewModal, setResPreviewModal }
         <IonContent fullscreen className="ion-padding">
           <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18"> 
+                <IonCardTitle className="card-custom-title"> 
                   {resource.title}
                   { +(resource.status) === 0 && resource.mem_id === authUser.ID &&
                   <IonRouterLink color="greenbg" href={`${basename}/layout/add-resource/${resource.id}/${resource.mem_id}/1`} className="float-right router-link-anchor">
@@ -108,12 +108,12 @@ const QQPreviewModal: React.FC<Props> = ({ resPreviewModal, setResPreviewModal }
               <h3 className="mt-0 font-weight-bold fs-16">Contacts:</h3> 
               <div className="reps-container">
                 { resource.reps && resource.reps.length > 0 &&  resource.reps.map((item: any, index: number)=> { 
-                  const repImage = (item.profile_image) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${item.profile_image}` : `${basename}/assets/img/avatar.svg`;
+                  const repImage = (item.profile_image) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${resource.rep_id}/${item.profile_image}` : `${basename}/assets/img/avatar.svg`;
                   return (
                     <div key={index}>
                       <IonRouterLink href={`${basename}/profile/${item.mem_id}/${item.rep_id}`}>
                         <IonAvatar color="greenbg">
-                          <img src={repImage} alt={`${item.firstname} ${item.lastname}`}/>
+                          <img src={repImage} alt={`${item.firstname} ${item.lastname}`} onError={() => CommonService.onImgErr('profile')}/>
                         </IonAvatar>
                         <p className="mb-0"><IonText color="dark" className="mt-2" key={index}> {`${item.firstname} ${item.lastname}`}</IonText></p>
                       </IonRouterLink>

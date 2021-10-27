@@ -17,8 +17,9 @@
     }
     .profile-logo {
       margin: 0 auto;
+      position: relative;
       i {
-        position: relative;
+        position: absolute;
         bottom: 10px;
         right: 8px;
       }

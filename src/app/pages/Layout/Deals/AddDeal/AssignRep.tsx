@@ -102,7 +102,7 @@ const AssignRep: React.FC = () => {
         <StepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Assign Representative Profile
+                <IonCardTitle className="card-custom-title">Assign Representative Profile
                     <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deals`} className="float-right router-link-anchor" title="Deal Listing">
                         <i className="fa fa-list green cursor" aria-hidden="true"></i>
                     </IonRouterLink>
@@ -148,7 +148,7 @@ const AssignRep: React.FC = () => {
                                 name="reps"
                                 render={({ message }) => <div className="invalid-feedback">{message}</div>}
                             />
-                            { [1,2].includes(+(dd.is_premium)) && <p className="mt-2">Premium deals we can't edit reps here. You need to choose appropirate reps during deal purcahse.</p> }
+                            { [1,2].includes(+(dd.is_premium)) && <p className="mt-2">Premium deals we can't edit reps here. You need to choose appropirate reps during deal purchase.</p> }
                         </IonCol>
                         
                     </IonRow>

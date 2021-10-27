@@ -7,11 +7,13 @@ import * as searchActions from '../../../store/reducers/search';
 import * as uiActions from '../../../store/reducers/ui';
 import { SearchProps } from '../../../interfaces/Common';
 import RegionResults from './RegionResults';
+import RegionNonMemResults from './RegionNonMemResults';
 
 const FinalResults: React.FC<SearchProps> = (props: any) => {
   const dispatch = useDispatch();
   const location = useSelector( (state:any) => state.auth.location);
   const localResults = useSelector( (state:any) => state.search.finalResults.local);
+  const localNonMemResults = useSelector( (state:any) => state.search.finalResults.localNonMem);
   const regionalResults = useSelector( (state:any) => state.search.finalResults.regional);
   const nationalResults = useSelector( (state:any) => state.search.finalResults.national);
   const internationalResults = useSelector( (state:any) => state.search.finalResults.international);
@@ -28,8 +30,8 @@ const FinalResults: React.FC<SearchProps> = (props: any) => {
     dispatch(uiActions.setShowLoading({ loading: false }));
   }, [dispatch]);
 
-  useEffect(() => { // console.log("Meow", key , type , display);
-    if(category && type ){
+  useEffect(() => { // console.log("Meow", type , category);
+    if(category){
       dispatch(uiActions.setShowLoading({ loading: true }));
       const data = {
         action: 'final_search',
@@ -49,6 +51,7 @@ const FinalResults: React.FC<SearchProps> = (props: any) => {
     <IonPage className="search-page">
       <IonContent>
         { localResults && localResults.length > 0 && <RegionResults btype={type} region="local" /> }
+        { localNonMemResults && localNonMemResults.length > 0 && <RegionNonMemResults region="localNonMem" /> }
         { regionalResults && regionalResults.length > 0 && <RegionResults btype={type} region="regional" /> }
         { nationalResults && nationalResults.length > 0 && <RegionResults btype={type} region="national" /> }
         { internationalResults && internationalResults.length > 0 && <RegionResults btype={type} region="international" /> }

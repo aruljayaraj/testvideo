@@ -82,6 +82,7 @@ const QQMedia: React.FC = () => {
         const fd = {
             action: 'qq_upload_delete',
             memID: authUser.ID,
+            repID: authUser.repID,
             rfqType: rfqType,
             qqType: 'buyer',
             resType: mSelected? mSelected: '',
@@ -180,9 +181,10 @@ const QQMedia: React.FC = () => {
                 for (let i = 0; i < files.length; i++) { 
                     const file = files[i]; 
                         
-                    if(file){
+                    if(file && authUser){
                         const fd = new FormData();
                         fd.append('memID', authUser.ID);
+                        fd.append('repID', authUser.repID);
                         fd.append('formID', id? id: '');
                         fd.append('action', 'qq_upload' );
                         fd.append('rfqType', rfqType? rfqType: '' );
@@ -312,7 +314,7 @@ const QQMedia: React.FC = () => {
                 <IonCol>
                     <IonCard className="card-center mb-2">
                         <IonCardContent>
-                            <IonCardTitle className="text-center mb-3 fs-18">
+                            <IonCardTitle className="text-center mb-3 card-custom-title">
                                 <span>Upload {resTypeText} Documents</span>
                             </IonCardTitle>
                             <IonCardSubtitle className="text-center">
@@ -371,7 +373,7 @@ const QQMedia: React.FC = () => {
                 <IonCol>
                     <IonCard className="card-center mb-2">
                         <IonCardContent>
-                            <IonCardTitle className="text-center mb-3 fs-18">
+                            <IonCardTitle className="text-center mb-3 card-custom-title">
                                 <span>Upload {resTypeText} Audios</span>
                             </IonCardTitle>
                             <IonCardSubtitle className="text-center">
@@ -428,7 +430,7 @@ const QQMedia: React.FC = () => {
                 <IonCol>
                     <IonCard className="card-center mb-2">
                         <IonCardContent>
-                            <IonCardTitle className="text-center mb-3 fs-18">
+                            <IonCardTitle className="text-center mb-3 card-custom-title">
                                 <span>Upload {resTypeText} Videos</span>
                             </IonCardTitle>
                             <IonCardSubtitle className="text-center">

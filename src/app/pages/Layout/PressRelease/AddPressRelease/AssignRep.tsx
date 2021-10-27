@@ -99,7 +99,7 @@ const AssignRep: React.FC = () => {
         <PRStepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="fs-18">Assign Representative Profile</IonCardTitle>
+                <IonCardTitle className="card-custom-title">Assign Representative Profile</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>

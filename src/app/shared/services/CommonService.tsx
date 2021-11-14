@@ -74,6 +74,43 @@ const CommonService = (function() {
         return url;
     }
 
+    // On get Tinymce Editor config object
+    const onEditorConfig = function(maxLength: number = 250){
+        return {
+            max_chars: maxLength, // max. allowed chars
+            //setup: function(editor: any) {
+            //  editor.on('click', function(e: any) {
+            //  console.log('Editor was clicked');
+            // });
+            //  },
+            init_instance_callback: function (editor: any) {
+                editor.on('change', function (e: Event) {
+                    let content = editor.contentDocument.body.innerText;
+                    // console.log(content.split(/[\w\u2019\'-]+/).length);
+                    if(content.split(/[\w\u2019\'-]+/).length > maxLength){
+                        editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, maxLength).join(" ");
+                    }
+                });
+            },
+            branding: false,
+            height: 300,
+            menubar: false,
+            mobile: {
+                menubar: true
+            },
+            default_link_target: '_blank',
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar:
+                'undo redo | formatselect | bold italic backcolor | \
+                alignleft aligncenter alignright alignjustify | \
+                bullist numlist outdent indent | removeformat | help'
+        }
+    }
+
     return {
         // Common Fns
         getBase64Image: getBase64Image,
@@ -83,7 +120,8 @@ const CommonService = (function() {
         dateReadFormat: dateReadFormat,
         mysqlToJsDateFormat: mysqlToJsDateFormat,
         getThumbImg: getThumbImg,
-        onImgErr: onImgErr
+        onImgErr,
+        onEditorConfig
     }
 
 })();

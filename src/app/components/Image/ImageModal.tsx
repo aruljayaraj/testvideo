@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-
+import './ImageModal.scss';
 import { useDispatch, useSelector } from 'react-redux';
 
 import CoreService from '../../shared/services/CoreService';
@@ -84,8 +84,9 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
         width: (actionType && rectTypes.includes(actionType) )? 300: 320, 
         height: (actionType && rectTypes.includes(actionType) )? 150: 320, 
         aspect: (actionType && rectTypes.includes(actionType) )? 16/9: 1,
-        minContainerWidth: 548,
-        minContainerHeight: 400
+        // aspect: 1,
+        // minContainerWidth: 800, // 548
+        // minContainerHeight: 800 // 400
     }
 
     /* useEffect(() => () => {
@@ -188,19 +189,23 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                 reader.onload = () => { 
                     let image: any = new Image();
                     image.src = reader.result as any;
-                    console.log(initialCropValues.width, initialCropValues.height);
-                    console.log(image.width, image.height);
-                    if( image.width > initialCropValues.width &&  image.height > initialCropValues.height ){
-                        setPicture({
-                            ...picture,
-                            name: imgname,
-                            image: reader.result as any 
-                        });
-                        
-                    }else{
-                        reader.abort();
-                        dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: `File dimensions should be more than ${initialCropValues.width}X${initialCropValues.height}.` }));
-                    }
+                    image.onload = function() {
+                        // console.log("The width of the image is " + image.width + "px.");
+                        console.log(initialCropValues.width, initialCropValues.height);
+                        console.log(image.width, image.height);
+                        if( image.width > initialCropValues.width &&  image.height > initialCropValues.height ){
+                            setPicture({
+                                ...picture,
+                                name: imgname,
+                                image: reader.result as any 
+                            });
+                            
+                        }else{
+                            reader.abort();
+                            dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: `File dimensions should be more than ${initialCropValues.width}X${initialCropValues.height}.` }));
+                        }
+                    };
+                    
                 };
                 reader.readAsDataURL(files[0]);
             }else{
@@ -243,7 +248,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     }, [cropTempURL, repProfile, comProfile, pr]);
     
     return (<>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="image-modal-container" onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
                 <IonToolbar color="greenbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
@@ -265,18 +270,20 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                 </IonToolbar>
                 
             </IonHeader>
-            <IonContent fullscreen className="ion-padding">
+            <IonContent fullscreen className="ion-padding ion-content-modal">
             <IonIcon color="danger" icon={close} slot="icon-only"></IonIcon>
             <IonGrid>
 
                 <IonRow>
-                    <IonCol className="d-flex justify-content-center">
+                    <IonCol className="d-flex justify-content-center p-3">
                         { !picture.image && 
-                            <img src={`${basename}/assets/img/placeholder.png`} alt="placeholder" width="100%"/>
+                            <img src={`${basename}/assets/img/placeholder.png`} alt="placeholder" width="75%"/>
                         }
                         { picture.image && initialCropValues.height &&
                         <Cropper
-                            style={{ minHeight: initialCropValues.minContainerHeight, height: "100%", width: initialCropValues.minContainerWidth }}
+                            style={{ height: "100%", width: '100%' }}
+                            // style={{ minHeight: initialCropValues.minContainerHeight, height: "100%", width: initialCropValues.minContainerWidth }}
+                            // style={{ height: initialCropValues.height, width: initialCropValues.width }}
                             // initialAspectRatio={1}
                             aspectRatio={initialCropValues.aspect}
                             src={picture.image}
@@ -284,8 +291,8 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                             guides={true}
                             minCropBoxWidth={initialCropValues.width}
                             minCropBoxHeight={initialCropValues.height}
-                            minContainerWidth={initialCropValues.minContainerWidth}
-                            minContainerHeight={initialCropValues.minContainerHeight}
+                            // minContainerWidth={initialCropValues.minContainerWidth}
+                            // minContainerHeight={initialCropValues.minContainerHeight}
                             background={false}
                             responsive={true}
                             autoCropArea={1}
@@ -299,7 +306,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                 </IonRow>
                 <IonRow>
                     <IonCol>
-                        <IonText>Image Size to be: {initialCropValues.width}px X {initialCropValues.height}px (jpg, png {(actionType && !rectTypes.includes(actionType) )? 'or gif' : ''})</IonText>
+                        <IonText>Image Size minimum to be: {initialCropValues.width}px X {initialCropValues.height}px (jpg, png {(actionType && !rectTypes.includes(actionType) )? 'or gif' : ''})</IonText>
                     </IonCol>
                 </IonRow>    
                 

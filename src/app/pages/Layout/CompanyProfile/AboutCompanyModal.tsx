@@ -27,6 +27,7 @@ import './CompanyProfile.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as repActions from '../../../store/reducers/dashboard/rep';
 import * as uiActions from '../../../store/reducers/ui';
+import CommonService from '../../../shared/services/CommonService';
 
 type FormInputs = {
     description: string;
@@ -156,38 +157,7 @@ const AboutCompanyModal: React.FC<Props> = ({showAboutCompanyModal, setShowAbout
                                     return <Editor
                                         value={value}
                                         apiKey={lfConfig.tinymceKey}
-                                        init={{
-                                            max_chars: lfConfig.tinymceMaxLength, // max. allowed chars
-                                            //setup: function(editor: any) {
-                                            //  editor.on('click', function(e: any) {
-                                            //  console.log('Editor was clicked');
-                                            // });
-                                            //  },
-                                            init_instance_callback: function (editor: any) {
-                                                editor.on('change', function (e: Event) {
-                                                    let content = editor.contentDocument.body.innerText;
-                                                    // console.log(content.split(/[\w\u2019\'-]+/).length);
-                                                    if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceMaxLength){
-                                                        editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceMaxLength).join(" ");
-                                                    }
-                                                });
-                                            },
-                                            branding: false,
-                                            height: 300,
-                                            menubar: false,
-                                            mobile: {
-                                                menubar: true
-                                            },
-                                            plugins: [
-                                                'advlist autolink lists link image charmap print preview anchor',
-                                                'searchreplace visualblocks code fullscreen',
-                                                'insertdatetime media table paste code help wordcount'
-                                            ],
-                                            toolbar:
-                                                'undo redo | formatselect | bold italic backcolor | \
-                                                alignleft aligncenter alignright alignjustify | \
-                                                bullist numlist outdent indent | removeformat | help'
-                                        }}
+                                        init={CommonService.onEditorConfig(lfConfig.tinymceMaxLength)}
                                         // onEditorChange={handleEditorChange}
                                         onEditorChange={(val: any) =>{
                                             onChange(val);
@@ -203,7 +173,7 @@ const AboutCompanyModal: React.FC<Props> = ({showAboutCompanyModal, setShowAbout
                                 }}
                             />
                             }
-                            <IonNote className="mt-2">Write a profile of your skills that will be seen on our system: (maximum 500 words)</IonNote><br />
+                            <IonNote className="mt-2">Provide a snapshot of your company and its services that will be seen on LocalFirst (maximum 500 words)</IonNote><br />
                         </IonItem>
                         <ErrorMessage
                             errors={errors}

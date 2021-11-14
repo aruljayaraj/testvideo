@@ -6,8 +6,7 @@ import {
     IonButton,
     IonGrid,
     IonRow,
-    IonCol,
-    IonTextarea
+    IonCol
   } from '@ionic/react';
   import React, { useCallback } from 'react';
   import { useForm, Controller } from "react-hook-form";
@@ -41,7 +40,7 @@ import {
   
     const onContactCb = useCallback((res: any) => {
         dispatch(uiActions.setShowLoading({loading: false}));
-        if(res.status === 'SUCCESS'){
+        if(res.status === 'SUCCESS'){ 
             reset(defaultValues);
         }
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
@@ -62,12 +61,13 @@ import {
                             <Controller 
                                 name="name"
                                 control={control}
-                                render={({ field: {onChange, onBlur} }) => {
+                                render={({ field: {onChange, onBlur, value} }) => {
                                     return <IonInput 
                                     type="text"
                                     placeholder="John"
                                     onIonChange={onChange} 
-                                    onBlur={onBlur} />
+                                    onBlur={onBlur} 
+                                    value={value}/>
                                 }}
                                 rules={{
                                     required: {
@@ -92,12 +92,13 @@ import {
                             <Controller 
                                 name="email"
                                 control={control}
-                                render={({ field: {onChange, onBlur} }) => {
+                                render={({ field: {onChange, onBlur, value} }) => {
                                     return <IonInput 
                                     type="email"
                                     placeholder="john@example.com"
                                     onIonChange={onChange} 
-                                    onBlur={onBlur} />
+                                    onBlur={onBlur} 
+                                    value={value}/>
                                 }}
                                 rules={{
                                     required: {
@@ -122,12 +123,13 @@ import {
                             <Controller 
                                 name="company"
                                 control={control}
-                                render={({ field: {onChange, onBlur} }) => {
+                                render={({ field: {onChange, onBlur, value} }) => {
                                     return <IonInput 
                                     type="text"
                                     placeholder="Isondai Corporation"
                                     onIonChange={onChange} 
-                                    onBlur={onBlur} />
+                                    onBlur={onBlur} 
+                                    value={value} />
                                 }}
                                 rules={{
                                     minLength: {
@@ -152,12 +154,13 @@ import {
                             <Controller 
                                 name="phone"
                                 control={control}
-                                render={({ field: {onChange, onBlur} }) => {
+                                render={({ field: {onChange, onBlur, value} }) => {
                                     return <IonInput 
                                     type="tel"
                                     placeholder="1.306.525.1655"
                                     onIonChange={onChange} 
-                                    onBlur={onBlur} />
+                                    onBlur={onBlur} 
+                                    value={value} />
                                 }}
                                 rules={{
                                     required: {
@@ -182,12 +185,13 @@ import {
                             <Controller 
                                 name="message"
                                 control={control}
-                                render={({ field: {onChange, onBlur} }) => {
+                                render={({ field: {onChange, onBlur, value} }) => {
                                     return <IonInput 
                                     type="text"
                                     placeholder="Enter your query here..."
                                     onIonChange={onChange} 
-                                    onBlur={onBlur} />
+                                    onBlur={onBlur} 
+                                    value={value} />
                                 }}
                                 rules={{
                                     required: {

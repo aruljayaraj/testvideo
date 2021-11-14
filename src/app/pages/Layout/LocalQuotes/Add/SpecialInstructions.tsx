@@ -12,7 +12,8 @@ import {
     IonText,
     IonDatetime,
     IonTextarea,
-    IonCheckbox
+    IonCheckbox,
+    IonModal
 } from '@ionic/react';
 import React, { useState, useCallback } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
@@ -26,6 +27,8 @@ import * as qqActions from '../../../../store/reducers/dashboard/qq';
 import '../LocalQuotes.scss';
 import CoreService from '../../../../shared/services/CoreService';
 import QQStepInd from './QQStepInd';
+import Modal from '../../../../components/Modal/Modal';
+import { lfConfig } from '../../../../../Constants';
 
 type FormInputs = {
     qq_qdate: string;
@@ -37,12 +40,18 @@ type FormInputs = {
 
 const SpecialInstructions: React.FC = () => {
     const dispatch = useDispatch();
+    const { WPPAGES } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const qq = useSelector( (state:any) => state.qq.localQuote);
     const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
+    const [showModal, setShowModal] = useState({status: false, title: ''});
     let { id, rfqType } = useParams<any>(); 
     const [quoDate, setQuoDate] = useState<string>();
     const [delDate, setDelDate] = useState<string>();
+
+    async function closeModal() {
+        await setShowModal({status: false, title: ''});
+    }
 
     let initialValues = {
         qq_qdate: (qq && Object.keys(qq).length > 0 && qq.quotation_req_date) ? qq.quotation_req_date : "",
@@ -251,29 +260,14 @@ const SpecialInstructions: React.FC = () => {
                             />
                         </IonCol>
                     </IonRow>
-                    <IonRow>    
-                        <IonCol>
-                            <IonItem lines="none">
-                                <IonLabel className="fs-13">I Agree to the terms and conditions <IonText color="danger">*</IonText></IonLabel>
-                                {/* <Controller
-                                    as={
-                                        <IonCheckbox slot="start" />
-                                    }
-                                    control={control}
-                                    onChangeName="onIonChange"
-                                    onChange={([selected]) => {
-                                        return selected.detail.checked;
-                                    }}
-                                    name="qq_terms"
-                                    rules={{
-                                        required: true
-                                    }}
-                                /> */}
+                    <IonRow className="ion-justify-content-start">    
+                        <IonCol size="1" sizeMd="0.5">
+                            <div className="mt-2">
                                 <Controller 
                                     name="qq_terms"
                                     control={control}
                                     render={({ field: {onChange, onBlur, value} }) => {
-                                        return <IonCheckbox slot="start"
+                                        return <IonCheckbox mode="md" slot="start"
                                             onIonChange={(selected: any) =>{
                                                 onChange(selected.detail.checked);
                                             }}
@@ -288,7 +282,13 @@ const SpecialInstructions: React.FC = () => {
                                         }
                                     }}
                                 />
-                            </IonItem>
+                            </div>
+                            
+                        </IonCol>
+                        <IonCol>
+                            <p className="mt-2 ml-2 cursor fs-16" onClick={() => setShowModal({status: true, title: WPPAGES.LQ_TC})}>
+                                <IonText className="fs-13" color="primary">I Agree to the terms and conditions <i className="fa fa-question-circle-o" aria-hidden="true"></i></IonText>
+                            </p>
                             <ErrorMessage
                                 errors={errors}
                                 name="qq_terms"
@@ -305,6 +305,9 @@ const SpecialInstructions: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </form>}
+        <IonModal backdropDismiss={false} isOpen={showModal.status} cssClass='my-custom-class'>
+            <Modal title = {showModal.title} closeAction={closeModal} />
+        </IonModal>
     </>);
 };
  

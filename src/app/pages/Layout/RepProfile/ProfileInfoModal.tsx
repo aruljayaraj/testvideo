@@ -486,7 +486,7 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
                         />
                     </IonCol>
                     <IonCol>
-                    <IonLabel className="fs-12" position="stacked">State <IonText color="danger">*</IonText></IonLabel>
+                    <IonLabel className="fs-12" position="stacked">State/Province <IonText color="danger">*</IonText></IonLabel>
                         <div className="mt-1">
                             {/* { listState.length > 0 && */}
                                 <Controller 
@@ -495,7 +495,7 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
                                     render={({ field }) => {
                                         return <Select
                                             {...field}
-                                            placeholder="Select State"
+                                            placeholder="Select State/Province"
                                             options={listState}
                                             onChange={(selected: any) =>{
                                                 onStateChange(selected.value);
@@ -507,7 +507,7 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
                                     rules={{ 
                                         required: {
                                             value: true,
-                                            message: "State is required"
+                                            message: "State/Province is required"
                                         }
                                     }}
                                 />
@@ -596,13 +596,13 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
                                 render={({ field }) => {
                                     return <IonInput 
                                         {...field}
-                                        type="url"
+                                        type="text"
                                         onIonChange={(e: any) => field.onChange(e.target.value)}
                                     />
                                 }}
                                 rules={{
                                     pattern: {
-                                        value: /^(http[s]?:\/\/){0,1}(w{3,3}\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/,
+                                        value: /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/g,
                                         message: "Invalid Website"
                                     }
                                 }}

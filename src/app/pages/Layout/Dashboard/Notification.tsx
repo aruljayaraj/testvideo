@@ -41,7 +41,7 @@ const Notification: React.FC = () => {
 
             <IonCardContent>
                 <p className="mt-4 mb-3">
-                    <IonText>In order to serve better need the following things to complete.</IonText>
+                    <IonText>In order to serve you better complete your profile.</IonText>
                 </p>
                 { repProfile && (!repProfile.country || !repProfile.phone || !repProfile.profile_description) && 
                     <p><IonRouterLink href={`${basename}/layout/rep-profile/${repProfile.mem_id}/${repProfile.id}`}>Complete your { parseInt(memOpts.profile) === 2? 'Profile': 'Rep Profile'}</IonRouterLink></p>

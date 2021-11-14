@@ -77,7 +77,7 @@ const CompanyAndLogo: React.FC = () => {
                 
             </IonCardContent>
         </IonCard>}
-        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='image-crop-modal-container'>
             { Object.keys(comProfile).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}
             setShowImageModal={setShowImageModal} 

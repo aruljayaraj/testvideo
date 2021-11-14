@@ -90,13 +90,13 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
           </IonButtons> */}
           
           <IonButtons slot="primary">
-            <IonButton onClick={() => setSearchModal(true)}>
+            <IonButton onClick={() => setSearchModal(true)} className="mr-3">
               <IonIcon slot="icon-only" icon={search}></IonIcon>
             </IonButton>
-            <IonButton className="notify-icon-wrap" onClick={() => setShowPopover(true)}>
+            {/* <IonButton className="notify-icon-wrap" onClick={() => setShowPopover(true)}>
               <IonIcon slot="icon-only" icon={notificationsOutline}></IonIcon>
               <IonBadge color="warning">25</IonBadge>
-            </IonButton>
+            </IonButton> */}
           </IonButtons>
           { (authValues.authenticated && authValues.isVerified &&  authValues.user) &&
             <IonButtons slot="end">

@@ -392,3 +392,11 @@ p.textbold{
       }
     }
 }
+
+// Crop container grey background remove
+.cropper-container{
+    .cropper-modal {
+        background-color: #fff !important;
+        opacity: 0.5;
+    }
+}

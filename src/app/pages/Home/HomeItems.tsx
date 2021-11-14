@@ -1,5 +1,5 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle } from '@ionic/react';
-import React from 'react';
+import React, {memo} from 'react';
 import './Home.scss';
 import { nanoid } from 'nanoid';
 import { shuffle } from 'lodash';
@@ -9,12 +9,13 @@ import { isPlatform } from '@ionic/react';
 import PartnerAds from '../../components/Common/PartnerAds';
 
 interface Props {
-  dwidth: number
+  dwidth: number,
+  homeResults: any
 }
 
-const HomeItems: React.FC<Props> = ({dwidth}) => {
+const HomeItems: React.FC<Props> = ({dwidth, homeResults}) => {
   const { apiBaseURL, basename } = lfConfig;
-  const homeResults = useSelector( (state:any) => state.search.homeResults.items);
+  // const homeResults = useSelector( (state:any) => state.search.homeResults.items);
   const adResults = useSelector( (state:any) => state.search.homeResults.pageAds);
 
   let items = '';
@@ -51,7 +52,7 @@ const HomeItems: React.FC<Props> = ({dwidth}) => {
         typeItem = 'Local Deal';
         itemLink = `${basename}/local-deal/${item.id}`;
       }else if(item.type === 'pressreleases'){
-        typeItem = 'Press Release';
+        typeItem = 'Business News';
         itemLink = `${basename}/press-release/${item.id}`;
       }
       return (<IonCard className={`home-item all ${item.type}`} key={nanoid()} routerLink={itemLink}>
@@ -90,4 +91,4 @@ const HomeItems: React.FC<Props> = ({dwidth}) => {
   return (<>{rows}</>);
 };
 
-export default HomeItems;
+export default memo(HomeItems);

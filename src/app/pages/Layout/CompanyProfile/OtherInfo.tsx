@@ -1,20 +1,15 @@
 import {
     IonItem, 
     IonLabel,
-    IonText,
     IonModal,
     IonCard,
     IonCardHeader,
     IonCardTitle,
-    IonCardSubtitle,
     IonCardContent,
     IonList,
-    IonAvatar,
-    IonIcon,
-    IonListHeader
+    IonAvatar
   } from '@ionic/react';
-import React, { useState } from 'react';
-import { callOutline } from 'ionicons/icons';
+import React, { useState, memo } from 'react';
 import './CompanyProfile.scss';
 import { useSelector } from 'react-redux';
 import OtherInfoModal from './OtherInfoModal';
@@ -25,7 +20,7 @@ const OtherInfo: React.FC = () => {
     const [showOtherModal, setShowOtherModal] = useState(false);
 
     return (<>
-        { Object.keys(comProfile).length > 0 &&
+        { comProfile && Object.keys(comProfile).length > 0 &&
         <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="card-custom-title" onClick={() => setShowOtherModal(true)}>
@@ -72,13 +67,13 @@ const OtherInfo: React.FC = () => {
                             </p>
                         </IonLabel>
                     </IonItem> }
-                    { comProfile.other_promotional_assets && <IonItem>
+                    { comProfile.other_promotional_assets && JSON.parse(comProfile.other_promotional_assets).length > 0 && <IonItem>
                         <IonAvatar slot="start">
                             <i className="fa fa-info-circle fa-2x green" aria-hidden="true"></i>
                         </IonAvatar>
                         <IonLabel>
                             <p><b>Other Promotional Assets</b></p>
-                            {JSON.parse(comProfile.other_promotional_assets).map((field: any, index: number) => {
+                            {JSON.parse(comProfile.other_promotional_assets).length > 0 && JSON.parse(comProfile.other_promotional_assets).map((field: any, index: number) => {
                                 return (
                                     <p key={index}>
                                         <a href={field.link} className="green" target="_blank" rel="noopener noreferrer">Other Link {index+1}</a>
@@ -87,20 +82,20 @@ const OtherInfo: React.FC = () => {
                             })} 
                         </IonLabel>
                     </IonItem> }        
-                    { comProfile.special_features && <IonItem>
+                    { comProfile.special_features && JSON.parse(comProfile.special_features).length > 0 && <IonItem>
                         <IonAvatar slot="start">
                             <i className="fa fa-info-circle fa-2x green" aria-hidden="true"></i>
                         </IonAvatar>
                         <IonLabel>
                             <p><b>Special Features</b></p>
-                            {JSON.parse(comProfile.special_features).map((field: any, index: number) => {
+                            {JSON.parse(comProfile.special_features).length > 0 && JSON.parse(comProfile.special_features).map((field: any, index: number) => {
                                 return (
                                     <p key={index}>{field.name}</p>
                                 );
                             })} 
                         </IonLabel>
                     </IonItem> } 
-                    { comProfile.member_organizations && <IonItem lines="none">
+                    { comProfile.member_organizations && JSON.parse(comProfile.member_organizations).length > 0 && <IonItem lines="none">
                         <IonAvatar slot="start">
                             <i className="fa fa-info-circle fa-2x green" aria-hidden="true"></i>
                         </IonAvatar>
@@ -128,5 +123,5 @@ const OtherInfo: React.FC = () => {
     </>);
 };
   
-export default OtherInfo;
+export default memo(OtherInfo);
   

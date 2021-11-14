@@ -492,14 +492,14 @@ const QQMedia: React.FC = () => {
             isOpen={showAudActSheet}
             onDidDismiss={() => setShowAudActSheet(false)}
             cssClass=''
-            buttons={[{
+            buttons={[/*{
                 text: 'Record Audio',
                 icon: cameraOutline,
                 handler: () => {
                     console.log('Record Audio clicked');
                     // uploadRecoredAudioFn();
                 }
-            }, {
+            }, */{
                 text: 'Browse',
                 icon: ellipsisHorizontalOutline,
                 handler: () => {
@@ -521,14 +521,14 @@ const QQMedia: React.FC = () => {
             isOpen={showVidActSheet}
             onDidDismiss={() => setShowVidActSheet(false)}
             cssClass=''
-            buttons={[{
+            buttons={[/*{
                 text: 'Record Video',
                 icon: cameraOutline,
                 handler: () => {
                     console.log('Record Video clicked');
                     // uploadRecoredVideoFn();
                 }
-            }, {
+            },*/ {
                 text: 'Browse',
                 icon: ellipsisHorizontalOutline,
                 handler: () => {

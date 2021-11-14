@@ -83,7 +83,7 @@ const ProfileAndLogo: React.FC = () => {
             
             <IonCardContent>
                 <IonRow>
-                    <IonCol sizeMd="6" sizeXs="12" className={(isPlatform('desktop')) ? 'border-right': 'my-3 border-bottom' }>
+                    <IonCol sizeMd="6" sizeXs="12" className={(isPlatform('desktop') || isPlatform('tablet')) ? 'border-right': 'my-3 border-bottom' }>
                         <IonCardTitle className="text-center mb-3 card-custom-title">
                             <span>Profile Picture</span>
                         </IonCardTitle>
@@ -101,7 +101,7 @@ const ProfileAndLogo: React.FC = () => {
                             <span>Logo</span>
                         </IonCardTitle>
                         <IonList>
-                            <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Edit Logo', 'rep_logo')}>
+                            <IonItem className="profile-logo-wrap p-0 m-0" lines="none" onClick={() => imageModalFn('Edit Logo', 'rep_logo')}>
                                 <div className="profile-logo">
                                     <img src={logoImage} alt="Rep Profile Logo" />
                                     <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true"></i>
@@ -141,7 +141,7 @@ const ProfileAndLogo: React.FC = () => {
             }]}
         >
         </IonActionSheet>
-        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='image-crop-modal-container'>
             { repProfile && Object.keys(repProfile).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}
             setShowImageModal={setShowImageModal} 

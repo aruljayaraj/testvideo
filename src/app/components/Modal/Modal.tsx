@@ -25,9 +25,10 @@ const Modal: React.FC<Props> = ({ title, closeAction }) => {
   const onGetPageCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
       setPage(res.data);
+    }else{
+      dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }
     dispatch(uiActions.setShowLoading({ loading: false }));
-    dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
   }, [dispatch, setPage]);
 
   useEffect(() => {
@@ -43,8 +44,8 @@ const Modal: React.FC<Props> = ({ title, closeAction }) => {
   return (
     <>
       <IonHeader translucent>
-        <IonToolbar>
-            <IonTitle>{page.title}</IonTitle>
+        <IonToolbar color="info-modal-header">
+            <IonTitle >{page.title}</IonTitle>
             <IonButtons slot="end">
                 <IonButton onClick={() => closeAction()}>
                     <IonIcon icon={close} slot="icon-only"></IonIcon>

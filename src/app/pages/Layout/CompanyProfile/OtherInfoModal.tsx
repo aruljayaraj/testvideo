@@ -54,9 +54,9 @@ const OtherInfoModal: React.FC<Props> = ({showOtherModal, setShowOtherModal}) =>
         linkedin: (Object.keys(comProfile).length > 0)? comProfile.linkedin: '',
         facebook: (Object.keys(comProfile).length > 0)? comProfile.facebook: '',
         twitter: (Object.keys(comProfile).length > 0)? comProfile.twitter: '',
-        other_promotional_assets: (Object.keys(comProfile).length > 0 && comProfile.other_promotional_assets)? JSON.parse(comProfile.other_promotional_assets): [],
-        special_features: (Object.keys(comProfile).length > 0 && comProfile.special_features)? JSON.parse(comProfile.special_features): [],
-        member_organizations: (Object.keys(comProfile).length > 0 && comProfile.member_organizations)? JSON.parse(comProfile.member_organizations): []
+        other_promotional_assets: (Object.keys(comProfile).length > 0 && comProfile.other_promotional_assets && JSON.parse(comProfile.other_promotional_assets).length > 0)? JSON.parse(comProfile.other_promotional_assets): [],
+        special_features: (Object.keys(comProfile).length > 0 && comProfile.special_features && JSON.parse(comProfile.special_features).length > 0)? JSON.parse(comProfile.special_features): [],
+        member_organizations: (Object.keys(comProfile).length > 0 && comProfile.member_organizations && JSON.parse(comProfile.member_organizations).length > 0)? JSON.parse(comProfile.member_organizations): []
     }; // console.log(initialValues);
     
     const {
@@ -130,8 +130,12 @@ const OtherInfoModal: React.FC<Props> = ({showOtherModal, setShowOtherModal}) =>
                 
             </IonHeader>
             <IonContent fullscreen>
-                <IonTitle className="my-3">Links to your other promotional assets: </IonTitle>
                 <IonGrid>
+                    <IonRow>
+                        <IonCol>
+                        <p className="my-3 fs-16">Links to your other promotional assets:</p>
+                        </IonCol>
+                    </IonRow>
                     <IonRow>
                         <IonCol sizeMd="9" sizeXs="10">
                             <IonItem class="ion-no-padding">
@@ -258,8 +262,12 @@ const OtherInfoModal: React.FC<Props> = ({showOtherModal, setShowOtherModal}) =>
                     </IonRow>
                 </IonGrid>
 
-                <IonTitle className="my-3">Special features or offers</IonTitle>
                 <IonGrid>
+                    <IonRow>
+                        <IonCol>
+                        <p className="my-1 fs-16">Special features or offers</p>
+                        </IonCol>
+                    </IonRow>
                     {sfFields.map((field, index) => {
                         return (
                             <IonRow key={field.id} >
@@ -298,8 +306,13 @@ const OtherInfoModal: React.FC<Props> = ({showOtherModal, setShowOtherModal}) =>
                     </IonRow>
                 </IonGrid>
 
-                <IonTitle className="my-3">List business organizations you're member of</IonTitle>
                 <IonGrid>
+                    <IonRow>
+                        <IonCol>
+                        <p className="my-1 fs-16">List business organizations you're member of</p>
+                        </IonCol>
+                    </IonRow>
+                
                     {moFields.map((field, index) => {
                         return (
                             <IonRow key={field.id} >

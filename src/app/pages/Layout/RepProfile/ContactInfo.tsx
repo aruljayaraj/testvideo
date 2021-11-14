@@ -51,9 +51,9 @@ const ContactInfo: React.FC = () => {
                             <IonIcon color="greenbg" size="large" icon={callOutline}></IonIcon>
                         </IonAvatar>
                         <IonLabel>
-                            { (repProfile.phone_code && repProfile.phone) && <h2>{`Phone: ${repProfile.phone_code} ${repProfile.phone}`}</h2> }
+                            { repProfile.phone && <h2>{`Phone: ${repProfile.phone_code} ${repProfile.phone}`}</h2> }
                             { repProfile.phoneext && <p>{`Ext: ${repProfile.phoneext}`}</p>}
-                            { (repProfile.mobile_code && repProfile.mobile) && <p>{`Mobile: ${repProfile.mobile_code} ${repProfile.mobile}`}</p>}
+                            { repProfile.mobile && <p>{`Mobile: ${repProfile.mobile_code} ${repProfile.mobile}`}</p>}
                             { repProfile.fax && <p>{`Fax: ${repProfile.fax}`}</p>}
                         </IonLabel>
                     </IonItem>}

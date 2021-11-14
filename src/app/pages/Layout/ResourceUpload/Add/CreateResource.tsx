@@ -26,6 +26,7 @@ import '../ResourceUpload.scss';
 import CoreService from '../../../../shared/services/CoreService';
 import { lfConfig } from '../../../../../Constants';
 import ResStepInd from './ResStepInd';
+import CommonService from '../../../../shared/services/CommonService';
 
 type FormInputs = {
     res_title: string;
@@ -200,35 +201,7 @@ const CreateResource: React.FC = () => {
                                         return <Editor
                                             value={value}
                                             apiKey={lfConfig.tinymceKey}
-                                            init={{
-                                                max_chars: lfConfig.tinymceResourceMaxLength, // max. allowed words
-                                                
-                                                init_instance_callback: function (editor: any) {
-                                                    editor.on('change', function (e: Event) {
-                                                        let content = editor.contentDocument.body.innerText;
-                                                        // console.log(content.split(/[\w\u2019\'-]+/).length);
-                                                        if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceResourceMaxLength){
-                                                            editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceResourceMaxLength).join(" ");
-                                                        }
-                                                    });
-                                                },
-                                                branding: false,
-                                                height: 300,
-                                                width: '100%',
-                                                menubar: false,
-                                                mobile: {
-                                                    menubar: true
-                                                },
-                                                plugins: [
-                                                    'advlist autolink lists link image charmap print preview anchor',
-                                                    'searchreplace visualblocks code fullscreen',
-                                                    'insertdatetime media table paste code help wordcount'
-                                                ],
-                                                toolbar:
-                                                    'undo redo | formatselect | bold italic backcolor | \
-                                                    alignleft aligncenter alignright alignjustify | \
-                                                    bullist numlist outdent indent | removeformat | help'
-                                            }}
+                                            init={CommonService.onEditorConfig(lfConfig.tinymceResourceMaxLength)}
                                             onEditorChange={(val: any) =>{
                                                 onChange(val);
                                             }}

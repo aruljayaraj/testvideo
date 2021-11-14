@@ -1,0 +1,12 @@
+.image-crop-modal-container{
+    .scroll-content { 
+        padding-bottom: 0 !important; 
+     }
+    .modal-wrapper {
+        --width: 90%;
+        --height: 80%;
+        // .ion-content-modal{
+        //     --offset-bottom: auto !important;
+        // }
+    }
+}

@@ -63,10 +63,10 @@ export const lfConfig =  {
     ],
     acceptedQQDocSize: '104857600',
     acceptedQQDocSizeMB: '100MB',
-    acceptedQQAudSize: '104857600',
-    acceptedQQAudSizeMB: '100MB',
-    acceptedQQVidSize: '104857600',
-    acceptedQQVidSizeMB: '100MB',
+    acceptedQQAudSize: '157286400',
+    acceptedQQAudSizeMB: '150MB',
+    acceptedQQVidSize: '314572800',
+    acceptedQQVidSizeMB: '300MB',
     LOCAL_DEAL: 'local_deal',
     PRESS_RELEASE: 'press_release',
     RESOURCE: 'resource',
@@ -86,5 +86,13 @@ export const lfConfig =  {
         HOME: 5,
         PROFILE: 5,
         DEFAULT: 3
+    },
+    WPPAGES:{
+        SIGNUP_SELL: 'i-sell-products-or-services',
+        SIGNUP_BUY: 'i-only-want-to-buy-products-or-services',
+        USER_AGREEMENT: 'user-agreement',
+        PRIVACY_POLICY: 'privacy-policy',
+        COOKIE_POLICY: 'cookie-policy',
+        LQ_TC: 'terms-of-service-quickquotes'
     }
 }; 

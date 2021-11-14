@@ -29,7 +29,7 @@ const Buscats: React.FC = () => {
             <IonCardContent>
                 { b2bCategory && b2bCategory.length > 0 && <IonList className="buscat-section-content">
                     <IonListHeader>
-                        <IonLabel>B2B Category</IonLabel>
+                        <IonLabel className="fs-16">B2B Category</IonLabel>
                     </IonListHeader>
                     { b2bCategory.map((item: any)=> {
                         return (<div className="pl-3" key={item.id}>
@@ -41,7 +41,7 @@ const Buscats: React.FC = () => {
                 </IonList>}
                 { b2cCategory && b2cCategory.length > 0 && <IonList className="buscat-section-content">
                     <IonListHeader>
-                        <IonLabel>B2C Category</IonLabel>
+                        <IonLabel className="fs-16">B2C Category</IonLabel>
                     </IonListHeader>
                     { b2cCategory.map((item: any)=> {
                         return (<div className="pl-3" key={item.id}>

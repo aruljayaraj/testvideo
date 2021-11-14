@@ -18,6 +18,7 @@ import RepOverview from './RepOverview';
 import Buscats from './Buscats';
 import Resources from './Resources';
 import Deals from './Deals';
+import ProfileItems from './ProfileItems';
 import GeneralInfo from './GeneralInfo';
 
 const CompanyProfile: React.FC = () => {
@@ -80,23 +81,23 @@ const CompanyProfile: React.FC = () => {
       { comProfile && 
         <IonContent>
           <IonRow>
-            <IonCol sizeSm="7" sizeMd="6">
+            <IonCol sizeSm="7" sizeLg="6">
               <Overview />
               <RepOverview />
               <Buscats />
               <Resources />
-              <Deals />
+              <ProfileItems />
             </IonCol>
 
-            <IonCol sizeSm="5" sizeMd="3" sizeXl="4">
+            <IonCol sizeSm="5" sizeLg="3" sizeXl="3">
               <GeneralInfo />
-              { (width < 768) && <div className="mt-4 side-ads-container">
+              { (width < 992) && <div className="mt-4 side-ads-container">
               <PartnerAds limit={ADS.PROFILE} /> 
               </div>}
             </IonCol>
 
-            { (width >= 768) && 
-            <IonCol sizeXs="12" sizeMd="3" sizeXl="2" className="mt-4 side-ads-container">
+            { (width >= 992) && 
+            <IonCol sizeXs="12" sizeLg="3" sizeXl="3" className="mt-4 side-ads-container">
               <PartnerAds limit={ADS.PROFILE} />
             </IonCol>
             }

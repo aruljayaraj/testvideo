@@ -28,6 +28,7 @@ import '../LocalQuotes.scss';
 import CoreService from '../../../../shared/services/CoreService';
 import { lfConfig } from '../../../../../Constants';
 import QQStepInd from './QQStepInd';
+import CommonService from '../../../../shared/services/CommonService';
 
 type FormInputs = {
     qq_title: string;
@@ -396,35 +397,7 @@ const CreateQQ: React.FC = () => {
                                             value={value}
                                             apiKey = {lfConfig.tinymceKey}
                                             initialValue={(qq && Object.keys(qq).length > 0) && qq.p_desc ? qq.p_desc : ''}
-                                            init={{
-                                                max_chars: lfConfig.tinymceMaxLength, // max. allowed words
-                                                
-                                                init_instance_callback: function (editor: any) {
-                                                    editor.on('change', function (e: Event) {
-                                                        let content = editor.contentDocument.body.innerText;
-                                                        // console.log(content.split(/[\w\u2019\'-]+/).length);
-                                                        if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceMaxLength){
-                                                            editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceMaxLength).join(" ");
-                                                        }
-                                                    });
-                                                },
-                                                branding: false,
-                                                height: 300, // 300,
-                                                width: '100%', // '100%',
-                                                menubar: false,
-                                                mobile: {
-                                                    menubar: true
-                                                },
-                                                plugins: [
-                                                    'advlist autolink lists link image charmap print preview anchor',
-                                                    'searchreplace visualblocks code fullscreen',
-                                                    'insertdatetime media table paste code help wordcount'
-                                                ],
-                                                toolbar:
-                                                    'undo redo | formatselect | bold italic backcolor | \
-                                                    alignleft aligncenter alignright alignjustify | \
-                                                    bullist numlist outdent indent | removeformat | help'
-                                            }}
+                                            init={CommonService.onEditorConfig(lfConfig.tinymceMaxLength)}
                                             // onEditorChange={handleEditorChange}
                                             onEditorChange={(val: any) =>{
                                                 onChange(val);

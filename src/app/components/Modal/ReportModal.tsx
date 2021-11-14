@@ -36,7 +36,7 @@ type FormInputs = {
 }
 
 const ReportModal: React.FC<Props> = ({ showReportModal, setShowReportModal}) => {
-    let { repID, memID } = showReportModal;
+    let { formID, memID, type } = showReportModal;
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const dispatch = useDispatch();
     let initialValues = {
@@ -61,8 +61,9 @@ const ReportModal: React.FC<Props> = ({ showReportModal, setShowReportModal}) =>
             dispatch(uiActions.setShowLoading({ loading: true }));
             const formData = {
                 action: 'send_report_profile',
-                repID,
+                repID: formID,
                 memID,
+                type,
                 name: data.name,
                 email: data.email,
                 reason: data.reason

@@ -91,7 +91,7 @@ const ProfileSetup: React.FC = () => {
                                         <IonRadio slot="start" value="5" />
                                     </IonItem>
                                     <IonItem>
-                                        <IonLabel color="medium">I serve the primary business</IonLabel>
+                                        <IonLabel color="medium">I primarily serve business</IonLabel>
                                         <IonRadio slot="start" value="1" />
                                     </IonItem>
                                     <IonItem>

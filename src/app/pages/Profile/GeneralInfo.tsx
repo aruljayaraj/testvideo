@@ -27,7 +27,7 @@ const RepOverview: React.FC = () => {
     const other_promotional_assets = comProfile.other_promotional_assets? JSON.parse(comProfile.other_promotional_assets): [];
     const special_features = comProfile.special_features? JSON.parse(comProfile.special_features): [];
     const member_organizations = comProfile.member_organizations? JSON.parse(comProfile.member_organizations): [];
-    const [showReportModal, setShowReportModal] = useState({isOpen: false, memID: '', repID: '' });
+    const [showReportModal, setShowReportModal] = useState({isOpen: false, type: 'member', memID: '', formID: '' });
     const prepID = (Object.keys(comProfile).length > 0 && repProfile.rep_account === 'sub' && repProfile.wp_mem_id > 0) ? repProfile.wp_mem_pri_id : repProfile.id;
     const logoImage = (Object.keys(comProfile).length > 0 && comProfile.company_logo) ? `${apiBaseURL}uploads/member/${comProfile.mem_id}/${comProfile.company_logo}` : `${basename}/assets/img/placeholder.png`;
 
@@ -48,9 +48,9 @@ const RepOverview: React.FC = () => {
 
     return (<>
         { Object.keys(repProfile).length > 0 &&
-        <IonCard className="card-center mt-4">
+        <IonCard className="card-center m-1 mt-4">
             
-            <IonCardContent>
+            <IonCardContent className="ion-padding">
                 <div className="py-3">
                     <img src={logoImage} alt="Company Logo"/>
                 </div>
@@ -116,20 +116,20 @@ const RepOverview: React.FC = () => {
                     <IonItem lines="none">
                         <IonIcon color="greenbg" slot="start" icon={alertCircleOutline}></IonIcon>
                         <IonLabel>
-                            <p><IonRouterLink className="cursor" onClick={() => setShowReportModal({ ...showReportModal, isOpen: true, memID: repProfile.mem_id, repID:repProfile.id })}>Report Profile</IonRouterLink></p>
+                            <p><IonRouterLink className="cursor" onClick={() => setShowReportModal({ ...showReportModal, isOpen: true, memID: repProfile.mem_id, formID:repProfile.id })}>Report Profile</IonRouterLink></p>
                         </IonLabel>
                     </IonItem>
                     
                 </IonList>
 
-                <p  className="py-2"><b>Other Promotional Assets</b></p>
+                { other_promotional_assets && other_promotional_assets.length > 0 && <p  className="py-2"><b>Other Promotional Assets</b></p> }
                 { other_promotional_assets && other_promotional_assets.length > 0 && other_promotional_assets.map((item: any, index: number)=> {
                     return (<div className="pl-3" key={index}>
                         <p><IonRouterLink href={item.link} target="_blank" rel="noopener noreferrer">Other Link {index+1}</IonRouterLink></p>
                     </div>)
                 })}
 
-                <p  className="py-2"><b>Special Services</b></p>
+                { special_features && special_features.length > 0 && <p  className="py-2"><b>Special Services</b></p> }
                 { special_features && special_features.length > 0 && special_features.map((item: any, index: number)=> {
                     return (<div className="pl-3" key={index}>
                         <IonText>
@@ -137,7 +137,7 @@ const RepOverview: React.FC = () => {
                         </IonText>
                     </div>)
                 })} 
-                <p className="py-2"><b>Member Organizations</b></p>
+                { member_organizations && member_organizations.length > 0 && <p className="py-2"><b>Member Organizations</b></p> }
                 { member_organizations && member_organizations.length > 0 && member_organizations.map((item: any, index: number)=> {
                     return (<div className="pl-3" key={index}>
                         <IonText>

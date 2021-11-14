@@ -52,11 +52,7 @@
       .home-item {
         margin: 12px auto;
         padding: 0 !important;
-        animation: fadeIn 5s;
-        
-      }
-      .ion-hide{
-        animation: fadeOut 5s;
+        min-height: 300px;
       }
       
     }

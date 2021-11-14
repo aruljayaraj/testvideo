@@ -25,9 +25,10 @@ const AboutUs: React.FC = () => {
   const onGetPageCb = useCallback((res: any) => { 
     if(res.status === 'SUCCESS'){
       setPage(res.data);
+    }else{
+      dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }
     dispatch(uiActions.setShowLoading({ loading: false }));
-    dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
   }, [dispatch, setPage]);
 
   useEffect(() => {

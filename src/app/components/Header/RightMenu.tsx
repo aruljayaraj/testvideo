@@ -90,7 +90,9 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   <IonText>
                     <h2><strong>{authValues.user.firstname+" "+authValues.user.lastname}</strong></h2>
                   </IonText>
-                  <IonText><h3>{authValues.user.business_type}{`${authValues.user.accType==='sub'? ' (Sub)': '(Primary)'}`}</h3></IonText>
+                  <IonText><h3>
+                    {authValues.user.business_type === 'Seller'? 'Provider': authValues.user.business_type}
+                    {`${authValues.user.accType==='sub'? ' (Sub)': ' (Primary)'}`}</h3></IonText>
                   
                   <IonButton color="greenbg" onClick={(e) => logout(e)}>
                     <IonIcon slot="icon-only" icon={logOut}></IonIcon>
@@ -138,7 +140,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </IonItemGroup>}
                 </IonMenuToggle>} 
                 
-                { authValues.user.accType === 'full' && memOpts && ([2,3].includes(parseInt(memOpts.profile))) === true  && 
+                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'press_release' && value.menu_value === 'yes')) && 
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/add-press-release/', '/layout/press-releases/'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowPressRelease(!showPressRelease) }>
                       <IonIcon className="mr-3" slot="start" icon={newspaperOutline}></IonIcon>
@@ -158,7 +160,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </IonItemGroup>}
                 </IonMenuToggle>}
 
-                { authValues.user.accType === 'full' && 
+                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'resources' && value.menu_value === 'yes')) &&
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/my-uploads/', '/layout/add-resource/document/', '/layout/resources/video/', '/layout/resources/audio/', '/layout/resources/document/'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowResource(!showResource) }>
                       <IonIcon className="mr-3" slot="start" icon={fileTrayFullOutline}></IonIcon>
@@ -189,14 +191,14 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                     </IonItem>
                   </IonItemGroup>}
                 </IonMenuToggle>}
-                { authValues.user.accType === 'full' && memOpts && ([2,3].includes(parseInt(memOpts.profile))) === true  && 
+                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'local_deals' && value.menu_value === 'yes')) && 
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/deals/local-deal','/layout/deals/add-deal', '/layout/deals/local-deals'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowLocalDeal(!showLocalDeal) }>
                       <IonIcon className="mr-3" slot="start" icon={newspaperOutline}></IonIcon>
                       <IonIcon className="hidden-xs hidden-sm" slot="end" icon={showLocalDeal ? chevronUpOutline : chevronDownOutline}></IonIcon>
                       <IonLabel>Local Deals</IonLabel>
                   </IonItem>
-                  { menuItems && showLocalDeal  && 
+                  { menuItems && showLocalDeal  &&
                   <IonItemGroup className="custom-list-sidemenu"> 
                     { (+(memOpts.localdeals!.total!) < +(memOpts.localdeals!.no_free_deals!)) && 
                     <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/deals/add-deal/`} onClick={ (e) => removeOverlay(e) }>

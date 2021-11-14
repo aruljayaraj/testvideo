@@ -16,9 +16,10 @@ import {
   IonRadioGroup,
   IonRadio,
   IonList,
-  IonModal
+  IonModal,
+  IonText
 } from '@ionic/react';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, memo } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
@@ -49,9 +50,8 @@ let initialValues = {
 };
 
 const Signup: React.FC = () => {
-  console.log('Signup Page');
   const dispatch = useDispatch();
-  const { baseurl } = lfConfig;
+  const { baseurl, WPPAGES } = lfConfig;
   // const token = useSelector( (state:any) => state.auth.token);
   const authValues = useSelector( (state:any) => state.auth.data);
   const { control, handleSubmit, watch, formState: { errors } } = useForm<FormInputs>({
@@ -113,11 +113,11 @@ const Signup: React.FC = () => {
                 <IonRow>
                   <IonCol sizeMd="6" sizeXs="12">
                     <IonItem class="ion-no-padding">
-                      <Controller 
+                      <Controller
                         name="firstname"
                         control={control}
                         render={({ field: {onChange, onBlur} }) => {
-                          return <IonInput 
+                          return <IonInput
                             type="text"
                             placeholder="First Name *"
                             onIonChange={onChange} 
@@ -144,6 +144,7 @@ const Signup: React.FC = () => {
                   <IonCol>
                     <IonItem class="ion-no-padding">
                       <Controller 
+                      
                         name="lastname"
                         control={control}
                         render={({ field: {onChange, onBlur} }) => {
@@ -371,19 +372,35 @@ const Signup: React.FC = () => {
                     name="business_type"
                     control={control}
                     render={({ field: {onChange, onBlur, value} }) => {
-                      return <IonRadioGroup
+                      return <IonRow className="ion-justify-content-start">
+                        <IonCol size="1">
+                        <IonRadioGroup
                         onIonChange={onChange} 
+                        /*onIonChange={(e: any) =>{
+                          if( e.detail.value === 'Seller' ){
+                            setShowModal({status: true, title: 'i-sell-products-or-services'});
+                            onChange(e.detail.value);
+                          }else if( e.detail.value === 'Buyer' ){
+                            setShowModal({status: true, title: 'i-only-want-to-buy-products-or-services'});
+                            onChange(e.detail.value);
+                          }
+                        }}*/
                         onBlur={onBlur}
                         value={value}>
-                          <IonItem>
-                            <IonLabel color="medium">I sell products or services</IonLabel>
-                            <IonRadio slot="start" value="Seller" />
-                          </IonItem>
-                          <IonItem>
-                            <IonLabel color="medium">I only want to buy product or services</IonLabel>
-                            <IonRadio slot="start" value="Buyer" />
-                          </IonItem>
+                            <p className="mt-0"><IonRadio mode="md" slot="start" value="Seller" /></p>
+                            <p className="mt-3"><IonRadio mode="md" slot="start" value="Buyer" /></p>
                         </IonRadioGroup>
+                        </IonCol>
+                        <IonCol>
+                          <p className="mt-0 ml-2 cursor fs-16" onClick={() => setShowModal({status: true, title: WPPAGES.SIGNUP_SELL})}>
+                            <IonText color="primary">I provide products or services <i className="fa fa-question-circle-o" aria-hidden="true"></i></IonText>
+                          </p>
+                          <p className="mt-3 ml-2 cursor fs-16" onClick={() => setShowModal({status: true, title: WPPAGES.SIGNUP_BUY})}>
+                            <IonText color="primary">I only want to buy product or services <i className="fa fa-question-circle-o" aria-hidden="true"></i></IonText>
+                          </p>
+                        </IonCol>
+                        </IonRow>
+                      
                     }}
                     rules={{ 
                       required: {
@@ -395,11 +412,11 @@ const Signup: React.FC = () => {
               </IonList>
               <IonRow>
                 <IonCol>
-                  <div color="medium" className="ion-text-center">
-                    <small>By clicking Agree & Join, You agree to the Local-First App User 
-                      <IonRouterLink onClick={() => setShowModal({status: true, title: 'user-agreement'})} color="tertiary"> Agreement</IonRouterLink>, 
-                      <IonRouterLink onClick={() => setShowModal({status: true, title: 'privacy-policy'})} color="tertiary"> Privacy Policy</IonRouterLink> and 
-                      <IonRouterLink onClick={() => setShowModal({status: true, title: 'cookie-policy'})} color="tertiary"> Cookie Policy</IonRouterLink>.</small></div>
+                  <div color="medium" className="ion-text-center fs-13">
+                    By clicking <strong>Submit</strong>, You agree to the Local-First App User 
+                      <IonRouterLink onClick={() => setShowModal({status: true, title: WPPAGES.USER_AGREEMENT})} color="primary"> Agreement</IonRouterLink>, 
+                      <IonRouterLink onClick={() => setShowModal({status: true, title: WPPAGES.PRIVACY_POLICY})} color="primary"> Privacy Policy</IonRouterLink> and 
+                      <IonRouterLink onClick={() => setShowModal({status: true, title: WPPAGES.COOKIE_POLICY})} color="primary"> Cookie Policy</IonRouterLink>.</div>
                 </IonCol>  
               </IonRow>
               <IonButton color="greenbg" className="ion-margin-top mt-4" expand="block" type="submit">
@@ -412,7 +429,7 @@ const Signup: React.FC = () => {
                   <IonRouterLink color="blackbg" href={`${baseurl}/forget-password`} className="text-left">Can't log in?</IonRouterLink>
                 </IonCol>
                 <IonCol className="ion-text-end">
-                  <IonRouterLink color="blackbg" href={`${baseurl}/login`} className="text-right">Login for an account</IonRouterLink>
+                  <IonRouterLink color="blackbg" href={`${baseurl}/login`} className="text-right">Login to an account</IonRouterLink>
                 </IonCol>
             </IonRow>
             
@@ -429,4 +446,4 @@ const Signup: React.FC = () => {
   );
 };
 
-export default Signup;
+export default memo(Signup);

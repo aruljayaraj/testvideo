@@ -7,11 +7,13 @@ import {
     IonContent,
     IonChip,
     IonInput,
-    IonSpinner
+    IonSpinner,
+    IonTitle
 } from '@ionic/react';
 import { checkmarkOutline, close, searchOutline } from 'ionicons/icons';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useForm, Controller } from "react-hook-form";
+import axios from 'axios';
 // import { ErrorMessage } from '@hookform/error-message';
 // import { isPlatform } from '@ionic/react';
 import { nanoid } from 'nanoid';
@@ -20,7 +22,7 @@ import { lfConfig } from '../../../../Constants';
 import CoreService from '../../../shared/services/CoreService';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
-// import { SearchProps } from '../../../interfaces/Common';
+import * as uiActions from '../../../store/reducers/ui';
     
 interface Props {
   // title: string,
@@ -32,17 +34,13 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
     const dispatch = useDispatch();
     const location = useSelector( (state:any) => state.auth.location);
     const { ICONS  } = lfConfig;
+    const [keyword, setKeyword] = useState('');
+    const [loading, setLoading] = useState(false);
     /*function useQuery() {
       return new URLSearchParams(useLocation().search);
     }
     let query = useQuery(); // console.log(query);
     const b2b = query.get("b2b");
-    const b2c = query.get("b2c");
-    const br = query.get("br");
-    const d = query.get("d");
-    const bn = query.get("bn");
-    const key = query.get("key");
-    // const display = query.get("display");
     // const type = query.get("type");*/
     // const { b2b, b2c, br, d, bn, keyword, display, type } = props.location.state;
     let initialValues = {
@@ -55,13 +53,12 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
     const [state, setState] = useState({
       activeOption: 0,
       filteredResults: [],
-      showOptions: false,
-      keyword: "", // keyword? keyword: ""
-      loading: false
+      showOptions: false
     });
     const [searchFilter, setSearchFilter] = useState({
       filterBy: 'b2b'
     });
+    const [redirectData, setRedirectData] = useState({ status: false, data: {} });
     /*const [searchFilter, setSearchFilter] = useState({
       b2b: true, // b2b? b2b : true // Supplier
       b2c: false, // b2c? b2c: false // Consumer
@@ -70,70 +67,72 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
       bn: false, // bn? bn: false Business News/ Press Release
       cn: false // cn? cn: false Company Name/Business Name
     });*/
-    const [redirectData, setRedirectData] = useState({ status: false, data: {} });
 
-    const onCommonCb = useCallback((res: any) => {
-      if(res.status === 'SUCCESS'){
-        setState({
-          ...state,
-          activeOption: 0,
-          filteredResults: res.data,
-          showOptions: true,
-          keyword: res.keyword,
-          loading: false
+    useEffect(() => {
+      let cancel: any;
+      if( keyword.length > 2 ){
+        setLoading(true);
+        const data = {
+          action: 'autosearch',
+          keyword: keyword,
+          filters: searchFilter.filterBy,
+          location: location
+        }
+        axios.post(`v2/search`, data, {
+          cancelToken: new axios.CancelToken((c: any)=> cancel = c)
+        })
+        .then( (result: any) => { 
+          const res = result.data;
+          setLoading(false);
+          if (result.status === 200 && res.status === 'SUCCESS') {
+            setState( {
+                ...state,
+                activeOption: 0,
+                filteredResults: res.data,
+                showOptions: true
+            });
+          }
+        })
+        .catch( (error: any) => {
+          if(axios.isCancel(error)) return; 
+          setLoading(false);
+          dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: error }));
+          console.error(error);
         });
-      }
-    }, [dispatch]);
-
+      }  
+      return () => {
+        if( cancel ){
+          cancel();
+          setLoading(false);
+        }
+      };
+    },[keyword,location, searchFilter.filterBy]);
     const onHandleChange = (e: any) => {
       const currentKeyword = (e.currentTarget.value).toLowerCase();
-      if( currentKeyword.length > 2 ){
-        setState({
-          ...state,
-          loading: true
-        });
-        const fd = {
-            action: 'autosearch',
-            keyword: currentKeyword,
-            filters: searchFilter,
-            location: location
-        };
-        CoreService.onPostFn('search', fd, onCommonCb);
-      }else{
-          setState({
-            ...state,
-            activeOption: 0,
-            filteredResults: [],
-            showOptions: false,
-            keyword: currentKeyword,
-            loading: false
-          });
-      }
+      setKeyword(currentKeyword);
     };
 
     const clearSearch = () => {
       setValue('keyword', '', { shouldValidate: true });
+      setKeyword('');
       setState({
         ...state,
         activeOption: 0,
         filteredResults: [],
-        showOptions: false,
-        keyword: "",
-        loading: false
+        showOptions: false
       });
-    }
-    
+    } 
 
-    const onSubmit = (data: any) => {
-      const currentKeyword = data.keyword;
-      if( currentKeyword.length > 2 ){
-        setRedirectData({ status: true, data: { ...searchFilter, keyword: currentKeyword, display: '', type:'Rep' } });
-        props.setSearchModal(false);
-      }
-    }
+    // const onSubmit = (data: any) => {
+    //   const currentKeyword = data.keyword;
+    //   if( currentKeyword.length > 2 ){
+    //     setRedirectData({ status: true, data: { ...searchFilter, keyword: currentKeyword, display: '', type:'Rep' } });
+    //     props.setSearchModal(false);
+    //   }
+    // }
 
     const onListSelect = (item: any) => {
-      const currentKeyword = state.keyword; 
+      const currentKeyword = keyword; 
       if( currentKeyword.length > 2 ){
         setRedirectData({ ...redirectData, status: true, data: { ...searchFilter, keyword: currentKeyword, display: item.display, type: item.type, mem_id: item.mem_id, form_id: item.form_id, form_type: item.form_type } });
         setTimeout(() => {
@@ -144,13 +143,13 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
     }
   
     let optionList; 
-    if (state.showOptions && state.keyword) { 
+    if (state.showOptions && keyword) {
       optionList = (
         <div className="suggestions-container">
           <ul className="options">
             {state.filteredResults.length > 0 && state.filteredResults.map((item: any, index: number) => { 
               let iconClassName;
-              if(item.type === 'Rep'){ 
+              if(['Rep','Non'].includes(item.type)){ 
                 iconClassName = ICONS.ICON_USERS; 
               }else if(item.type === 'Res'){ 
                 iconClassName = ICONS.ICON_RESOURCE;
@@ -176,17 +175,17 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
       );
     }
 
-    if( redirectData.status  ){ 
+    if( redirectData.status ){
       if(redirectData.data && Object.keys(redirectData.data).length > 0){
         let itemLink = "";
         let itemData = {};
         let item:any = redirectData.data;
-        if(item.type === 'Rep'){ 
+        if(['Rep','Non'].includes(item.type)){ 
           //itemLink = `/preliminary-results`;
           //itemData = { ...searchFilter, keyword: state.keyword, display: item.display, type: item.type };
           const bcat_type = item.filterBy === 'b2c'? 1: 0;
           itemLink = `/search-results`;
-          itemData = { ...searchFilter, keyword: state.keyword, category: item.display, type: bcat_type };
+          itemData = { ...searchFilter, keyword: keyword, category: item.display, type: bcat_type };
         }else if(item.type === 'Res'){
           itemLink = `/resource/${item.form_type}/${item.form_id}`;
         }else if(item.type === 'Deal'){
@@ -204,15 +203,50 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
     return (<>
       <IonContent fullscreen className="ion-padding">
         <IonToolbar>
+          <IonTitle>Searching for (select one) : </IonTitle>
           <IonButtons slot="end">
               <IonButton onClick={() => props.setSearchModal(false)}>
                   <IonIcon icon={close} slot="icon-only"></IonIcon>
               </IonButton>
           </IonButtons>
         </IonToolbar>
-        <form className="searchbar" onSubmit={handleSubmit(onSubmit)}> {/* onSubmit={handleSubmit(onSubmitFn)} */}
+        <form className="searchbar"> {/* onSubmit={handleSubmit(onSubmitFn)} */}
+        {loading}
           <div className="inner-form">
-              <div className="basic-search">
+              <div className="advance-search">
+                <div className="filterbox">
+                  <IonChip color={searchFilter.filterBy === 'b2b'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'b2b'}) }>
+                    { searchFilter.filterBy === 'b2b' && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                    <IonLabel>B2B Products & Services</IonLabel>
+                  </IonChip>
+                  <IonChip color={searchFilter.filterBy === 'b2c'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'b2c'}) }>
+                    { searchFilter.filterBy === 'b2c' && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                    <IonLabel>Consumer Products & Services</IonLabel>
+                  </IonChip>
+                  <IonChip color={searchFilter.filterBy === 'br'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'br'}) }>
+                    { searchFilter.filterBy === 'br' && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                    <IonLabel>Business Resources</IonLabel>
+                  </IonChip>
+                  <IonChip color={searchFilter.filterBy === 'd'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'd'}) }>
+                    { searchFilter.filterBy === 'd' && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                    <IonLabel>Local Deals</IonLabel>
+                  </IonChip>
+                  <IonChip color={searchFilter.filterBy === 'bn'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'bn'}) }>
+                    { searchFilter.filterBy === 'bn' && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                    <IonLabel>Business News</IonLabel>
+                  </IonChip>
+                  <IonChip color={searchFilter.filterBy === 'cn'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'cn'}) }>
+                    { searchFilter.filterBy === 'cn' && <IonIcon icon={checkmarkOutline}></IonIcon> }
+                    <IonLabel>Business Name</IonLabel>
+                  </IonChip>
+
+                </div>
+                {/* <IonButton className="ion-margin-top mt-5" expand="block" type="submit">
+                  Search
+                </IonButton> */}
+              </div>
+
+              <div className="basic-search  mt-3">
                 <div className="input-field">
                     <div className="icon-wrap">
                       <IonIcon icon={searchOutline} slot="icon-only"></IonIcon>
@@ -257,8 +291,8 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
                       value={state.keyword}
                     /> */}
                     <div className="spinner-wrap">
-                      {state.loading && <IonSpinner name="dots" /> }
-                      {state.keyword && state.keyword.length > 0 && !state.loading && <IonIcon icon={close} slot="icon-only" onClick={clearSearch}></IonIcon>}
+                      {loading && <IonSpinner name="dots" /> }
+                      {keyword && keyword.length > 0 && !loading && <IonIcon icon={close} slot="icon-only" onClick={clearSearch}></IonIcon>}
                     </div>
                 </div>
                 {optionList}
@@ -268,38 +302,7 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
                   name="keyword"
                   render={({ message }) => <div className="invalid-feedback">{message}</div>}
               /> */}
-              <div className="advance-search mt-3">
-                <div className="filterbox">
-                  <IonChip color={searchFilter.filterBy === 'b2b'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'b2b'}) }>
-                    { searchFilter.filterBy === 'b2b' && <IonIcon icon={checkmarkOutline}></IonIcon> }
-                    <IonLabel>B2B Products & Services</IonLabel>
-                  </IonChip>
-                  <IonChip color={searchFilter.filterBy === 'b2c'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'b2c'}) }>
-                    { searchFilter.filterBy === 'b2c' && <IonIcon icon={checkmarkOutline}></IonIcon> }
-                    <IonLabel>Consumer Products & Services</IonLabel>
-                  </IonChip>
-                  <IonChip color={searchFilter.filterBy === 'br'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'br'}) }>
-                    { searchFilter.filterBy === 'br' && <IonIcon icon={checkmarkOutline}></IonIcon> }
-                    <IonLabel>Business Resources</IonLabel>
-                  </IonChip>
-                  <IonChip color={searchFilter.filterBy === 'd'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'd'}) }>
-                    { searchFilter.filterBy === 'd' && <IonIcon icon={checkmarkOutline}></IonIcon> }
-                    <IonLabel>Local Deals</IonLabel>
-                  </IonChip>
-                  <IonChip color={searchFilter.filterBy === 'bn'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'bn'}) }>
-                    { searchFilter.filterBy === 'bn' && <IonIcon icon={checkmarkOutline}></IonIcon> }
-                    <IonLabel>Business News</IonLabel>
-                  </IonChip>
-                  <IonChip color={searchFilter.filterBy === 'cn'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'cn'}) }>
-                    { searchFilter.filterBy === 'cn' && <IonIcon icon={checkmarkOutline}></IonIcon> }
-                    <IonLabel>Business Name</IonLabel>
-                  </IonChip>
-
-                </div>
-                {/* <IonButton className="ion-margin-top mt-5" expand="block" type="submit">
-                  Search
-                </IonButton> */}
-              </div>
+              
           </div>
         </form>
       </IonContent>

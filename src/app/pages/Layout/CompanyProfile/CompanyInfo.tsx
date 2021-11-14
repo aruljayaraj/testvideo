@@ -73,9 +73,9 @@ const CompanyInfo: React.FC = () => {
                             <IonIcon color="greenbg" size="large" icon={callOutline}></IonIcon>
                         </IonAvatar>
                         <IonLabel>
-                            { comProfile.phone_code && comProfile.phone && <h2>{`Phone: ${comProfile.phone_code} ${comProfile.phone}`}</h2> }
+                            { comProfile.phone && <h2>{`Phone: ${comProfile.phone_code} ${comProfile.phone}`}</h2> }
                             { comProfile.phoneext && <p>{`Ext: ${comProfile.phoneext}`}</p>}
-                            { comProfile.mobile_code && comProfile.mobile && <p>{`Mobile: ${comProfile.mobile_code} ${comProfile.mobile}`}</p>}
+                            { comProfile.mobile && <p>{`Mobile: ${comProfile.mobile_code} ${comProfile.mobile}`}</p>}
                             { comProfile.fax && <p>{`Fax: ${comProfile.fax}`}</p>}
                         </IonLabel>
                     </IonItem>}

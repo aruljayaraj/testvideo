@@ -162,6 +162,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-footerbg-shade: #babbbc;
   --ion-color-footerbg-tint: #d7d9da;
 
+  /** Information Modal Header background */
+  --ion-color-info-modal-header: #4C8DFF;
+  --ion-color-info-modal-header-rgb: 76,141,255;
+  --ion-color-info-modal-header-contrast: #FFFFFF;
+  --ion-color-info-modal-header-contrast-rgb: 255,255,255;
+  --ion-color-info-modal-header-shade: #437ce0;
+  --ion-color-info-modal-header-tint: #5e98ff;
+
   /** App Custom Color Starts **/
   --app-sidebar-bg-color: #424648;
   --app-overlay-bg-color: #B1B1B1;
@@ -242,6 +250,15 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-contrast-rgb: var(--ion-color-footerbg-contrast-rgb);
   --ion-color-shade: var(--ion-color-footerbg-shade);
   --ion-color-tint: var(--ion-color-footerbg-tint);
+}
+
+.ion-color-info-modal-header {
+  --ion-color-base: var(--ion-color-info-modal-header);
+  --ion-color-base-rgb: var(--ion-color-info-modal-header-rgb);
+  --ion-color-contrast: var(--ion-color-info-modal-header-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-info-modal-header-contrast-rgb);
+  --ion-color-shade: var(--ion-color-info-modal-header-shade);
+  --ion-color-tint: var(--ion-color-info-modal-header-tint);
 }
 
 @media (prefers-color-scheme: dark) {

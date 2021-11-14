@@ -28,6 +28,7 @@ import '../PressRelease.scss';
 import CoreService from '../../../../shared/services/CoreService';
 import { lfConfig } from '../../../../../Constants';
 import PRStepInd from './PRStepInd';
+import CommonService from '../../../../shared/services/CommonService';
 
 type FormInputs = {
     pr_headline: string;
@@ -244,35 +245,7 @@ const CreatePressRelease: React.FC = () => {
                                         return <Editor
                                             value={value}
                                             apiKey={lfConfig.tinymceKey}
-                                            init={{
-                                                max_chars: lfConfig.tinymceMaxLength, // max. allowed chars
-                                                
-                                                init_instance_callback: function (editor: any) {
-                                                    editor.on('change', function (e: Event) {
-                                                        let content = editor.contentDocument.body.innerText;
-                                                        // console.log(content.split(/[\w\u2019\'-]+/).length);
-                                                        if(content.split(/[\w\u2019\'-]+/).length > lfConfig.tinymceMaxLength){
-                                                            editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, lfConfig.tinymceMaxLength).join(" ");
-                                                        }
-                                                    });
-                                                },
-                                                branding: false,
-                                                height: 300,
-                                                width: '100%',
-                                                menubar: false,
-                                                mobile: {
-                                                    menubar: true
-                                                },
-                                                plugins: [
-                                                    'advlist autolink lists link image charmap print preview anchor',
-                                                    'searchreplace visualblocks code fullscreen',
-                                                    'insertdatetime media table paste code help wordcount'
-                                                ],
-                                                toolbar:
-                                                    'undo redo | formatselect | bold italic backcolor | \
-                                                    alignleft aligncenter alignright alignjustify | \
-                                                    bullist numlist outdent indent | removeformat | help'
-                                            }}
+                                            init={CommonService.onEditorConfig(lfConfig.tinymceMaxLength)}
                                             onEditorChange={(val: any) =>{
                                                 onChange(val);
                                             }}

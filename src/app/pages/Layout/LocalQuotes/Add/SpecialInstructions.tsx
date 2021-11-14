@@ -31,6 +31,7 @@ import Modal from '../../../../components/Modal/Modal';
 import { lfConfig } from '../../../../../Constants';
 
 type FormInputs = {
+    qq_req_date: string;
     qq_qdate: string;
     qq_ddate: string;
     qq_sdate: string;
@@ -54,6 +55,7 @@ const SpecialInstructions: React.FC = () => {
     }
 
     let initialValues = {
+        qq_req_date: (qq && Object.keys(qq).length > 0 && qq.quotation_date) ? qq.quotation_date : "",
         qq_qdate: (qq && Object.keys(qq).length > 0 && qq.quotation_req_date) ? qq.quotation_req_date : "",
         qq_ddate: (qq && Object.keys(qq).length > 0 && qq.delivery_date) ? qq.delivery_date : "",
         qq_sdate: (qq && Object.keys(qq).length > 0 && qq.special_event_date) ? qq.special_event_date : "",
@@ -103,8 +105,37 @@ const SpecialInstructions: React.FC = () => {
                 <IonGrid>
                     <IonRow>
                         <IonCol sizeMd="6" sizeLg="6" sizeXl="6" sizeXs="12">
+                        <IonItem class="ion-no-padding">
+                                <IonLabel position="stacked">Date of Request <IonText color="danger">*</IonText></IonLabel>
+                                <Controller 
+                                    name="qq_req_date"
+                                    control={control}
+                                    render={({ field: {onChange, onBlur, value} }) => { // console.log(quoDate);
+                                        return <IonDatetime 
+                                            placeholder="DD-MMM-YYYY"
+                                            displayFormat="DD-MMM-YYYY" 
+                                            min={format(new Date(), 'yyyy-MM-dd')}
+                                            max={format(new Date(addYears(new Date(), 2)), 'yyyy')}
+                                            onIonChange={(e: any) => onChange(e.target.value)}
+                                            onBlur={onBlur}
+                                            value={value}
+                                        ></IonDatetime>
+                                    }}
+                                    rules={{ 
+                                        required: {
+                                            value: true,
+                                            message: "Date of Request is required"
+                                        }
+                                    }}
+                                />
+                            </IonItem>
+                            <ErrorMessage
+                                errors={errors}
+                                name="qq_req_date"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
                             <IonItem class="ion-no-padding">
-                                <IonLabel position="stacked">Quotation Date and Time <IonText color="danger">*</IonText></IonLabel>
+                                <IonLabel position="stacked">Date and Time Quotation is Required by <IonText color="danger">*</IonText></IonLabel>
                                 <Controller 
                                     name="qq_qdate"
                                     control={control}

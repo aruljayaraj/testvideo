@@ -2,10 +2,9 @@ import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle }
 import React, {memo} from 'react';
 import './Profile.scss';
 import { nanoid } from 'nanoid';
-import { shuffle, spread } from 'lodash';
+import { shuffle} from 'lodash';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../Constants';
-import { isPlatform } from '@ionic/react';
 
 const ProfileItems: React.FC = () => {
   const { apiBaseURL, basename } = lfConfig;
@@ -17,14 +16,14 @@ const ProfileItems: React.FC = () => {
   }
   if(prs && prs.length > 0){
     profileItems = [...profileItems, ...prs];
-  } console.log(profileItems);
+  }
   
-  return (<IonCard>
+  return (<>
+  {profileItems && profileItems.length > 0 && <IonCard>
     <IonCardHeader>
     <IonCardTitle className="card-custom-title">
           <span>Postings</span>
       </IonCardTitle>
-      {/* <IonCardSubtitle className="fw-bold ion-text-capitalize"></IonCardSubtitle> */}
     </IonCardHeader>
     <IonCardContent className="ion-no-padding profile-items-container">
     {profileItems && profileItems.length > 0 && shuffle(profileItems).map((item: any, index: number)=> {
@@ -53,7 +52,8 @@ const ProfileItems: React.FC = () => {
       </IonCard>);
     })}
     </IonCardContent>
-  </IonCard>);
+  </IonCard>}
+  </>);
 };
 
 export default memo(ProfileItems);

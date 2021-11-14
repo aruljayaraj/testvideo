@@ -6,7 +6,6 @@ ion-content ion-toolbar {
     img{
       width:120px;
       height: 120px;
-      height:auto;
       border-radius: 50%;
       margin: 0 auto;
     }
@@ -25,7 +24,13 @@ ion-content ion-toolbar {
 
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) { 
-  .profile-page{ 
+  .profile-page{
+    .profile-image-wrap{
+      img{
+        width:120px;
+        height: 120px;
+      }
+    }
     .profile-items-container{
       grid-template-columns: repeat(auto-fill, 50%);
     }
@@ -34,7 +39,7 @@ ion-content ion-toolbar {
 
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) { 
-  .profile-page{ 
+  .profile-page{
     .profile-image-wrap{
       img{
         width:140px;
@@ -49,7 +54,7 @@ ion-content ion-toolbar {
 
 // Large devices (desktops, 992px and up)
 @media (min-width: 992px) { 
-  .profile-page{ 
+  .profile-page{
     .profile-image-wrap{
       img{
         width:180px;

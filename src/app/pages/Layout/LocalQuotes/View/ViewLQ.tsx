@@ -98,7 +98,8 @@ const ViewLQ: React.FC = () => {
                 <IonCardContent className="pt-3">
                   <p className="card-custom-title">Dates and Other Special Instructions</p>
                   {/* { qq.p_short_desc && <p><strong>Location of Member : </strong> {qq.p_short_desc}</p>} */}
-                  { qq.quotation_req_date && <p><span className="fw-bold">Date of Quotation  : </span> {CommonService.dateFormat(qq.quotation_req_date)}</p>}
+                  { qq.quotation_date && <p><span className="fw-bold">Date of Quotation  : </span> {CommonService.dateFormat(qq.quotation_date)}</p>}
+                  { qq.quotation_req_date && <p><span className="fw-bold">Quotation is Required by  : </span> {CommonService.dateFormat(qq.quotation_req_date)}</p>}
                   { qq.delivery_date && <p><span className="fw-bold">Requested Delivery Date : </span> {CommonService.dateFormat(qq.delivery_date)}</p>}
                   { qq.special_event_date  && <p><span className="fw-bold">Special Event Date : </span> {CommonService.dateFormat(qq.special_event_date)}</p>}
                 </IonCardContent>  

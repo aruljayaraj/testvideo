@@ -15,13 +15,13 @@ if( Object.keys(repLocalData).length !== 0 ){
         comProfile: {},
         user:{},
         usermeta: {},
-        b2b:{},
-        b2c:{}
+        buscats:{},
+        reps: []
     }
 }
 
 const slice = createSlice({
-    name: "rep",
+    name: 'rep',
     initialState: state,
     reducers: {
         
@@ -31,7 +31,7 @@ const slice = createSlice({
             repState.repProfile = data.repProfile;
             repState.comProfile = data.comProfile;
             repState.user = data.member;
-            // repState.usermeta = data.meta_member;
+            repState.reps = data.reps;
         },
         setCompanyProfile: (repState, action) => {
             if( action.payload.data ){
@@ -43,18 +43,13 @@ const slice = createSlice({
                 repState.repProfile = action.payload.data;
             }
         },
-        setB2B: (repState, action) => {
+        setBuscats: (repState, action) => {
             if( action.payload.data ){
-                repState.b2b = action.payload.data;
-            }
-        },
-        setB2C: (repState, action) => {
-            if( action.payload.data ){
-                repState.b2c = action.payload.data;
+                repState.buscats = action.payload.data;
             }
         }
     }
 });
 
-export const {setMemberProfile, setCompanyProfile, setRepProfile, setB2B, setB2C} = slice.actions;
+export const {setMemberProfile, setCompanyProfile, setRepProfile, setBuscats} = slice.actions;
 export default slice.reducer;

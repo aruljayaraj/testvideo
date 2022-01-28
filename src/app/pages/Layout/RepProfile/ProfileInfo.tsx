@@ -45,7 +45,7 @@ const ProfileInfo: React.FC = () => {
                         <i className="fa fa-building fa-2x green" aria-hidden="true"></i>
                         </IonAvatar>
                         <IonLabel>
-                            { repProfile.company_name && <h2>{repProfile.company_name}</h2> }
+                            { repProfile.rep_title && <h2>{repProfile.rep_title}</h2> }
                             { repProfile.firstname && <h3>{repProfile.firstname+" "+repProfile.lastname}</h3> }
                             { repProfile.email && <p>{repProfile.email}</p> }
                             { repProfile.website && 
@@ -73,7 +73,7 @@ const ProfileInfo: React.FC = () => {
         </IonCard>
         }
         
-        <IonModal backdropDismiss={false} isOpen={showProfileModal} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showProfileModal} className='my-custom-class'>
           { Object.keys(repProfile).length > 0 && <ProfileInfoModal
             showProfileModal={showProfileModal}
             setShowProfileModal={setShowProfileModal} /> }

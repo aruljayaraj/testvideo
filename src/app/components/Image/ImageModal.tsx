@@ -9,7 +9,10 @@ import {
     IonGrid,
     IonRow,
     IonCol,
-    IonText
+    IonText,
+    IonSegment,
+    IonSegmentButton,
+    IonLabel
   } from '@ionic/react';
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { close } from 'ionicons/icons';
@@ -41,7 +44,7 @@ interface ImageData {
     uploaded: boolean
 }
 
-let initialValues = {
+let initialValues: any = {
     name: '',
     image: '',
     uploaded: false
@@ -59,42 +62,27 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     const { handleSubmit} = useForm();
     let { title, actionType, memId, frmId } = showImageModal;
     const [ picture, setPicture ] = useState<ImageData>(initialValues);
+    const [zoomValue, setZoomValue] = useState<any>(0);
+    const [dragValue, setDragValue] = useState<any>('move');
     // const [ croppedPic, setCroppedPic ] = useState<ImageData>(initialValues);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { apiBaseURL } = lfConfig;
     const rectTypes = ['rep_logo', 'company_logo'];
 
-    // const cropperRef = useRef<HTMLImageElement>(null);
+    const cropperRef = useRef<any>(null);
     // const [image, setImage] = useState('');
     const [cropData, setCropData] = useState("#");
     const [cropper, setCropper] = useState<any>();
-
-    /*const onCrop = () => {
-        const imageElement: any = cropperRef?.current;
-        const cropper: any = imageElement?.cropper;
-        setPicture({
-            ...picture,
-            image: cropper.getCroppedCanvas().toDataURL('') 
-        });
-        console.log(cropper.getCroppedCanvas().toDataURL()); // image/jpeg
-    };*/
     
     let initialCropValues = {
         unit: "px", 
-        width: (actionType && rectTypes.includes(actionType) )? 300: 320, 
-        height: (actionType && rectTypes.includes(actionType) )? 150: 320, 
-        aspect: (actionType && rectTypes.includes(actionType) )? 16/9: 1,
+        width: (actionType && rectTypes.includes(actionType) )? 300: 300, 
+        height: (actionType && rectTypes.includes(actionType) )? 150: 300, 
+        aspect: (actionType && rectTypes.includes(actionType) )? 0: 1, // 16/9
         // aspect: 1,
         // minContainerWidth: 800, // 548
         // minContainerHeight: 800 // 400
     }
-
-    /* useEffect(() => () => {
-        if(picture.picURL && picture.picURL.startsWith("blob")){
-            URL.revokeObjectURL(picture.picURL);
-            // console.log("Revoked URL: ", picture.picURL);
-        }
-    }, [picture]);*/
 
     /**
      * @param data
@@ -188,24 +176,24 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                 
                 reader.onload = () => { 
                     let image: any = new Image();
-                    image.src = reader.result as any;
+                    // image.src = reader.result as any;
+                    image.src = reader.result;
                     image.onload = function() {
                         // console.log("The width of the image is " + image.width + "px.");
-                        console.log(initialCropValues.width, initialCropValues.height);
-                        console.log(image.width, image.height);
+                        // console.log(initialCropValues.width, initialCropValues.height);
+                        // console.log(image.width, image.height);
                         if( image.width > initialCropValues.width &&  image.height > initialCropValues.height ){
                             setPicture({
                                 ...picture,
                                 name: imgname,
-                                image: reader.result as any 
+                                image: reader.result
+                                // image: reader.result as any
                             });
-                            
                         }else{
                             reader.abort();
                             dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: `File dimensions should be more than ${initialCropValues.width}X${initialCropValues.height}.` }));
                         }
-                    };
-                    
+                    }; 
                 };
                 reader.readAsDataURL(files[0]);
             }else{
@@ -246,9 +234,47 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
             });
         }
     }, [cropTempURL, repProfile, comProfile, pr]);
+
+    const handleCropChange = () => {
+        const croppedImgData = cropperRef.current.cropper
+          .getCroppedCanvas()
+          .toDataURL();
+    }
+    const handleRotate = (dir: string) => {
+        let dirVal = 90;
+        if(dir === 'left'){
+            dirVal = -90;
+        }
+        if(cropperRef.current){
+            cropperRef.current.cropper.rotate(dirVal);
+            handleCropChange();
+            // console.log(dirVal);
+            // setRotateValue(dirVal);
+        }
+    }
+    const handleZoom = (dir: any) => {
+        let newZoomValue: any;
+        if(dir === 'plus'){
+            newZoomValue = parseFloat(zoomValue) + 0.20;
+            if(cropperRef.current){
+                setZoomValue(newZoomValue);
+            }
+        }else if(dir === 'minus' && parseFloat(zoomValue) > 0){
+            newZoomValue = parseFloat(zoomValue) - 0.20;
+            if(cropperRef.current){
+                setZoomValue(newZoomValue);
+            }
+        }else if(dir === 'reset'){
+            newZoomValue = 0.5;
+            if(cropperRef.current){
+                setZoomValue(newZoomValue);
+                cropperRef.current.cropper.rotate(0);
+            }
+        }
+    }
     
     return (<>
-        <form className="image-modal-container" onSubmit={handleSubmit(onSubmit)}>
+        <form className="image-crop-modal-container" onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
                 <IonToolbar color="greenbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
@@ -270,66 +296,104 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                 </IonToolbar>
                 
             </IonHeader>
-            <IonContent fullscreen className="ion-padding ion-content-modal">
-            <IonIcon color="danger" icon={close} slot="icon-only"></IonIcon>
-            <IonGrid>
+            <IonContent fullscreen className="ion-padding img-container">
+                <IonIcon color="danger" icon={close} slot="icon-only"></IonIcon>
+                <IonGrid>
 
-                <IonRow>
-                    <IonCol className="d-flex justify-content-center p-3">
-                        { !picture.image && 
-                            <img src={`${basename}/assets/img/placeholder.png`} alt="placeholder" width="75%"/>
-                        }
-                        { picture.image && initialCropValues.height &&
-                        <Cropper
-                            style={{ height: "100%", width: '100%' }}
-                            // style={{ minHeight: initialCropValues.minContainerHeight, height: "100%", width: initialCropValues.minContainerWidth }}
-                            // style={{ height: initialCropValues.height, width: initialCropValues.width }}
-                            // initialAspectRatio={1}
-                            aspectRatio={initialCropValues.aspect}
-                            src={picture.image}
-                            viewMode={1}
-                            guides={true}
-                            minCropBoxWidth={initialCropValues.width}
-                            minCropBoxHeight={initialCropValues.height}
-                            // minContainerWidth={initialCropValues.minContainerWidth}
-                            // minContainerHeight={initialCropValues.minContainerHeight}
-                            background={false}
-                            responsive={true}
-                            autoCropArea={1}
-                            checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
-                            onInitialized={(instance) => {
-                                setCropper(instance);
-                            }}
-                        /> }
+                    <IonRow>
+                        <IonCol className="d-flex justify-content-center">
+                            { !picture.image && 
+                                <img src={`${basename}/assets/img/placeholder.png`} alt="placeholder" width="75%"/>
+                            }
                         
-                    </IonCol>
-                </IonRow>
-                <IonRow>
-                    <IonCol>
-                        <IonText>Image Size minimum to be: {initialCropValues.width}px X {initialCropValues.height}px (jpg, png {(actionType && !rectTypes.includes(actionType) )? 'or gif' : ''})</IonText>
-                    </IonCol>
-                </IonRow>    
-                
-                <div className="mt-4">           
-                    <>
-                        { picture.image && picture.uploaded === true && 
-                        <IonButton color="medium" className="ion-margin-top mt-4 mb-3 float-left" onClick={() => deleteImageFn()}>
-                            Delete
-                        </IonButton>}
-                        <div className="float-right">
-                            <input id="customImageFile" type="file" name="imageFile" hidden
-                                ref={fileInputRef}
-                                onChange={handleFileChange} />
-                            <IonButton color="warning" className="ion-margin-top mt-4 mb-3" type="button" onClick={ () => fileInputRef.current!.click() } >
-                                { !picture.image? 'Add': 'Change' } Picture
-                            </IonButton>
-                            { (isPlatform('desktop')) && 
-                            <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
-                                Save
+                            { picture.image && initialCropValues.height &&
+                            <Cropper
+                                ref={cropperRef}
+                                className='cropper-container cropper-bg'
+                                style={{ height: "100%", width: '100%' }}
+                                // style={{ minHeight: initialCropValues.minContainerHeight, height: "100%", width: initialCropValues.minContainerWidth }}
+                                // style={{ height: initialCropValues.height, width: initialCropValues.width }}
+                                initialAspectRatio={1}
+                                // aspectRatio={initialCropValues.aspect}
+                                src={picture.image}
+                                dragMode={dragValue}
+                                // rotatable={true}
+                                // rotateTo={rotateValue}
+                                zoomTo={zoomValue}
+                                viewMode={1}
+                                guides={true}
+                                minCropBoxWidth={initialCropValues.width}
+                                minCropBoxHeight={initialCropValues.height}
+                                // minContainerWidth={initialCropValues.minContainerWidth}
+                                // minContainerHeight={initialCropValues.minContainerHeight}
+                                background={false}
+                                responsive={true}
+                                // autoCropArea={1}
+                                checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+                                onInitialized={(instance) => {
+                                    setCropper(instance);
+                                }}
+                            /> }
+                            
+                        </IonCol>
+                    </IonRow>
+                    <IonRow>
+                        <IonCol>
+                            <IonText>Image Size minimum to be: {initialCropValues.width}px X {initialCropValues.height}px (jpg, png {(actionType && !rectTypes.includes(actionType) )? 'or gif' : ''})</IonText>
+                        </IonCol>
+                    </IonRow>  
+                    { picture.image && initialCropValues.height && <IonRow>
+                        <IonCol>
+                            <div className="btn-group">
+                                <IonButton type="button" color="primary" title="Move" onClick={() => setDragValue('move')}>
+                                    <i className="fa fa-arrows fa-lg" aria-hidden="true"></i> 
+                                </IonButton>
+                                {/* <IonButton type="button" color="primary" title="Rotate Left" onClick={() => setDragValue('crop')}>
+                                    <i className="fa fa-crop fa-lg" aria-hidden="true"></i> 
+                                </IonButton> */}
+                                <IonButton type="button" color="primary" title="Rotate Left" onClick={() => handleRotate('left')}>
+                                    <i className="fa fa-undo fa-lg" aria-hidden="true"></i> 
+                                </IonButton>
+                                <IonButton type="button" color="primary" title="Rotate Right" onClick={() => handleRotate('right')}>
+                                    <i className="fa fa-repeat fa-lg" aria-hidden="true"></i>
+                                </IonButton>
+                                <IonButton type="button" color="primary" title="Zoom In" onClick={() => handleZoom('plus')}>
+                                    <i className="fa fa-search-plus fa-lg" aria-hidden="true"></i> 
+                                </IonButton>
+                                <IonButton type="button" color="primary" title="Zoom Out" onClick={() => handleZoom('minus')}>
+                                    <i className="fa fa-search-minus fa-lg" aria-hidden="true"></i>
+                                </IonButton>
+                                <IonButton type="button" color="primary" title="Reset" onClick={() => handleZoom('reset')}>
+                                    <i className="fa fa-refresh fa-lg" aria-hidden="true"></i>
+                                </IonButton>
+                            </div>
+                        </IonCol>
+                    </IonRow>} 
+                    
+                    <div>           
+                        <>
+                            { picture.image && picture.uploaded === true && 
+                            <IonButton color="medium" className="ion-margin-top mt-4 mb-3 float-left" onClick={() => deleteImageFn()}>
+                                Delete
                             </IonButton>}
-                        </div> 
-                    </>
-                </div>
+                            <div className="float-right">
+                                <input id="customImageFile" type="file" name="imageFile" hidden
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange} />
+                                <IonButton color="warning" className="ion-margin-top mt-4 mb-3" type="button" onClick={ () => {
+                                    if( fileInputRef && fileInputRef.current ){
+                                        fileInputRef.current.click();
+                                    }
+                                  }} >
+                                    { !picture.image? 'Add': 'Change' } Picture
+                                </IonButton>
+                                { (isPlatform('desktop')) && 
+                                <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
+                                    Save
+                                </IonButton>}
+                            </div> 
+                        </>
+                    </div>
                 </IonGrid>
             </IonContent> 
         </form> 

@@ -61,7 +61,7 @@ const ResCategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryM
     let listCategory: DropDown[]  = [];
     let listSubCategory: DropDown[] = [];
     
-    let { title, type, actionType, formType, formId, repId, memId } = showCategoryModal;
+    let { title, actionType, formType, formId, repId, memId } = showCategoryModal;
     let { id, buscat_id: catId, catname, subBuscat_id: subcatId, sub_catname, keywords } = selectedItem || {};
 
     const customStyles = {
@@ -157,7 +157,6 @@ const ResCategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryM
                 formId: formId,
                 repId: repId,
                 memId: memId,
-                type: type,
                 action: 'update_buscat',
                 actionType: actionType,
                 formType: formType,
@@ -178,7 +177,6 @@ const ResCategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryM
             formId: formId,
             repId: repId,
             memId: memId,
-            type: type,
             action: 'delete_buscat',
             actionType: actionType,
             formType: formType,

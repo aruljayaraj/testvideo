@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
           CoreService.onPostFn('get_location', user, onCallbackFn);
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
-      } catch (e: any) {
+      } catch (e) {
         let errMsg = e.message;
         if( +(e.code) === 1 ){
           errMsg = `Location is mandatory for this app to serve you better. Please select your Location.`;
@@ -80,6 +80,12 @@ const Footer: React.FC = () => {
       }
     }
   }, [geolocation, showLocationModal, location]);
+
+  const updateLocationHandler = (locationValue: any) => {
+    if(locationValue){
+      dispatch(authActions.setLocation({ location: locationValue })); 
+    }
+  }
 
   return (
     <>
@@ -108,10 +114,11 @@ const Footer: React.FC = () => {
       </IonFooter>
       <Loader />
       <Toast />
-      <IonModal backdropDismiss={false} isOpen={showLocationModal} cssClass='my-custom-class'>
+      <IonModal backdropDismiss={false} isOpen={showLocationModal} className='my-custom-class'>
           <LocationModal
             showLocationModal={showLocationModal}
-            setShowLocationModal={setShowLocationModal} />
+            setShowLocationModal={setShowLocationModal}
+            updateLocationHandler={updateLocationHandler} />
         </IonModal>
     </> 
   );

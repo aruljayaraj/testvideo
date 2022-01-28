@@ -13,12 +13,6 @@ import ResourceCategory from './ResourceCategory';
 import AssignRep from './AssignRep';
 import ResMedia from './ResMedia';
 
-interface Params {
-  id: number
-  mem_id: number,
-  step: number
-}
-
 const AddResource: React.FC = () => {
   const dispatch = useDispatch();
   const authUser = useSelector( (state:any) => state.auth.data.user );

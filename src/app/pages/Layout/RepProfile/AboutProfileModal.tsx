@@ -35,7 +35,7 @@ type FormInputs = {
 }
 
 interface Props {
-    showAboutProfileModal: boolean
+    showAboutProfileModal: boolean,
     setShowAboutProfileModal: Function
 }
 

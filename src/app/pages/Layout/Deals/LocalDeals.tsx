@@ -92,12 +92,12 @@ const LocalDeals: React.FC = () => {
           <IonCard className="card-center my-4">
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="card-custom-title">Local Deals
-                  { +(memOpts.localdeals!.total!) < +(memOpts.localdeals!.no_free_deals!) &&
+                  { +(memOpts.localdeals.total) < +(memOpts.localdeals.no_free_deals) &&
                     <IonRouterLink color="greenbg" href={`${basename}/layout/deals/add-deal`} className="float-right router-link-anchor" title="Add a Deal">
                       <i className="fa fa-plus green cursor" aria-hidden="true"></i>
                     </IonRouterLink> 
                   } 
-                  { +(memOpts.localdeals!.total!) >= +(memOpts.localdeals!.no_free_deals!) &&
+                  { +(memOpts.localdeals.total) >= +(memOpts.localdeals.no_free_deals) &&
                     <IonRouterLink color="greenbg" href={`${basename}/layout/deals/buy-deal`} className="float-right router-link-anchor" title="Buy a Deal">
                       <i className="fa fa-plus green cursor" aria-hidden="true"></i>
                     </IonRouterLink> 
@@ -131,7 +131,7 @@ const LocalDeals: React.FC = () => {
                           </IonLabel>
                         </IonItem>
                         <IonItemOptions side="end">
-                          { (!item.sdate || +(item.is_active) === 0 || (item.sdate && +(item.is_active) !== 0 && new Date(Date.parse(item.sdate.replace(/[-]/g,'/'))).valueOf()/1000 > Date.now())) &&
+                          { (!item.sdate || +(item.is_active) === 0 || (item.sdate && +(item.is_active) !== 0 && (item.sdate && (new Date()).getTime() < new Date(item.sdate).getTime() ))) &&
                             <IonItemOption className="px-2" color="greenbg" onClick={() => slideEdit(item) } title="Edit">Edit</IonItemOption>
                           }
                           <IonItemOption color="warning" onClick={() => setShowAlert({status: true, id: item.id, mem_id: item.mem_id })} title="Trash">Delete</IonItemOption>
@@ -156,7 +156,7 @@ const LocalDeals: React.FC = () => {
                         </p>}
                       </IonLabel>
                     
-                      { (!item.sdate || +(item.is_active) === 0 || (item.sdate && new Date(Date.parse(item.sdate.replace(/[-]/g,'/'))).valueOf()/1000 > Date.now())) &&
+                      { (!item.sdate || +(item.is_active) === 0 || (item.sdate && (new Date()).getTime() < new Date(item.sdate).getTime() )) &&
                       <IonRouterLink className="router-link-anchor" slot="end" color="greenbg" href={`${basename}/layout/deals/add-deal/${item.id}/${item.mem_id}/1`} title="Edit">
                         <i className="fa fa-pencil fa-lg green cursor" aria-hidden="true"></i>
                       </IonRouterLink>

@@ -31,9 +31,9 @@ let initialValues = {
     memId: '' // Member Id
 };
 
-const B2C: React.FC = () => {
+const Buscats: React.FC = () => {
     const repProfile = useSelector( (state:any) => state.rep.repProfile);
-    const b2cCategory = useSelector( (state:any) => state.rep.b2c);
+    const busCategory = useSelector( (state:any) => state.rep.buscats);
     const [showCategoryModal, setShowCategoryModal] = useState(initialValues);
     const [selectedItem, setSelectedItem] = useState({});
 
@@ -41,7 +41,7 @@ const B2C: React.FC = () => {
         setShowCategoryModal({ 
             ...showCategoryModal, 
             isOpen: true,
-            type: '1',
+            type: '0',
             title: title,
             formType: 'repProfile',
             actionType: actionType,
@@ -56,23 +56,23 @@ const B2C: React.FC = () => {
         { Object.keys(repProfile).length > 0 &&
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="card-custom-title" onClick={() => categoryModalFn('Add B2B Category', 'new')}>
-                    <span>B2C Category</span>
+                <IonCardTitle className="card-custom-title" onClick={() => categoryModalFn('Add Category', 'new')}>
+                    <span>Categories</span>
                     <i className="fa fa-plus float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>
                 
-                { b2cCategory && b2cCategory.length === 0 &&
+                { busCategory.length === 0 &&
                     <IonCardSubtitle>
-                        <IonText className="fs-10 ml-2" color="danger">(Update required)</IonText>
+                        <IonText className="text-10 ml-2" color="danger">(Update required)</IonText>
                     </IonCardSubtitle>        
                 }
             </IonCardHeader>
               
             <IonCardContent>
                 <IonList className="buscat-section-content">
-                    { b2cCategory && b2cCategory.length > 0 &&  b2cCategory.map((item: any)=> {
+                    { busCategory && busCategory.length > 0 &&  busCategory.map((item: any)=> {
                         return (<div key={item.id}>
-                            { (!isPlatform('desktop')) &&   
+                            { (!isPlatform('desktop')) &&    
                                 <IonItemSliding > 
                                     <IonItem lines="none" >
                                         <IonAvatar slot="start" color="greenbg">
@@ -84,8 +84,8 @@ const B2C: React.FC = () => {
                                             <p><strong>Keywords:</strong> {item.keywords}</p>
                                         </IonLabel>
                                         <IonItemOptions side="end">
-                                            <IonItemOption color="greenbg" onClick={() => categoryModalFn('Edit B2B Category', 'edit', item)}>Edit</IonItemOption>
-                                            <IonItemOption color="warning" onClick={() => categoryModalFn('Edit B2B Category', 'edit', item)}>Delete</IonItemOption>
+                                            <IonItemOption color="greenbg" onClick={() => categoryModalFn('Edit Category', 'edit', item)}>Edit</IonItemOption>
+                                            <IonItemOption color="warning" onClick={() => categoryModalFn('Delete Category', 'edit', item)}>Delete</IonItemOption>
                                         </IonItemOptions>
                                     </IonItem>
                                 </IonItemSliding>
@@ -100,14 +100,14 @@ const B2C: React.FC = () => {
                                     <h3>{item.sub_catname}</h3>
                                     <p><strong>Keywords:</strong> {item.keywords}</p>
                                 </IonLabel>
-                                <IonAvatar className="anchor-white" slot="end" color="greenbg" onClick={() => categoryModalFn('Edit B2B Category', 'edit', item)}>
+                                <IonAvatar className="anchor-white" slot="end" color="greenbg" onClick={() => categoryModalFn('Edit Category', 'edit', item)}>
                                     <i className="fa fa-pencil fa-lg green cursor" aria-hidden="true"></i>
                                 </IonAvatar>
                             </IonItem>
                             }
                         </div>)
                     })} 
-                    { b2cCategory && Object.keys(b2cCategory).length === 0 && 
+                    { busCategory && Object.keys(busCategory).length === 0 &&  
                         <IonItem lines="none" >
                             <IonText className="fs-13" color="warning">No categories added.</IonText>
                         </IonItem>
@@ -116,7 +116,7 @@ const B2C: React.FC = () => {
             </IonCardContent>
         </IonCard>
         }
-        <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} className='category-modal-wrap'>
           { repProfile && showCategoryModal.isOpen === true && <CategoryModal
             showCategoryModal={showCategoryModal}
             setShowCategoryModal={setShowCategoryModal}
@@ -126,5 +126,5 @@ const B2C: React.FC = () => {
     </>);
 };
   
-export default B2C;
+export default Buscats;
   

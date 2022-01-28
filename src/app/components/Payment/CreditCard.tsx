@@ -41,8 +41,8 @@ type FormInputs = {
     name: string;
     email: string;
     mobile_code: {
-        value: null|string;
-        label: null|string;
+        value: undefined|null|string;
+        label: undefined|null|string;
     };
     mobile: string;
 }

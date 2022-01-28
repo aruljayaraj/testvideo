@@ -15,11 +15,8 @@ const NewRep: React.FC = () => {
   const onGetMemberCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
       dispatch(repActions.setMemberProfile({ data: res.data.user }));
-      if(res.data.b2b){
-        dispatch(repActions.setB2B({ data: res.data.b2b }));
-      }
-      if(res.data.b2c){
-        dispatch(repActions.setB2C({ data: res.data.b2c }));
+      if(res.data.buscats){
+        dispatch(repActions.setBuscats({ data: res.data.buscats }));
       }
     }
     dispatch(uiActions.setShowLoading({ loading: false }));

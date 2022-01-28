@@ -20,7 +20,6 @@ interface Props {
 
 const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, setShowDeleteModal, onAwardedFn}) => {
     const { basename } = lfConfig;
-    let { rfqType } = useParams<any>();
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const { apiBaseURL } = lfConfig;
     
@@ -28,7 +27,7 @@ const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, set
         { qq && Object.keys(qq).length > 0 && <>
         <IonCardHeader color="titlebg">
             <IonCardTitle class="card-title">
-                <IonRouterLink color="greenbg" href={`${basename}/layout/view-localquote/${rfqType}/${qq.id}/${authUser.ID}/buyer/`}>
+                <IonRouterLink color="greenbg" href={`${basename}/layout/view-localquote/${qq.id}/${authUser.ID}/buyer/`}>
                     {qq.p_title}
                 </IonRouterLink>
                 { setShowActionSheet && <IonRouterLink color="greenbg" onClick={() => setShowActionSheet({status: true, qq: qq})} className="float-right router-link-anchor-vertical">
@@ -58,7 +57,7 @@ const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, set
                                     <h2>{qt.s_title}</h2>
                                     { qt.firstname && <h3 className="cursor anchor-link" onClick={() => setShowPopover({status: true, qq: qt})}>{`${qt.firstname} ${qt.lastname}`}</h3> }
                                     <p>
-                                        <IonRouterLink href={`${basename}/layout/view-quotation/${rfqType}/${qt.id}/${qt.mem_id}/${qq.id}/${qq.mem_id}/buyer`}>
+                                        <IonRouterLink href={`${basename}/layout/view-quotation/${qt.id}/${qt.mem_id}/${qq.id}/${qq.mem_id}/buyer`}>
                                             View Quotation
                                         </IonRouterLink>
                                     </p>

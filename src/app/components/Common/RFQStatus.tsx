@@ -34,9 +34,6 @@ const RFQStatus: React.FC<PropsInterface> = (props: PropsInterface) => {
   }else if( status === 6 ){
     stCls = 'status_withdrawn';
     stMsg = 'Withdrawn';
-  }else{
-    stCls = 'status_pending';
-    stMsg = 'Incomplete'; // Not Approved
   }
   
   return (<>

@@ -224,13 +224,31 @@ const OtherInfoModal: React.FC<Props> = ({showOtherModal, setShowOtherModal}) =>
                         </IonCol>
                     </IonRow> 
                                  
-                    {paFields.map((field, index) => {
+                    {paFields.map((field1, index) => {
+                        // // {...register(`other_promotional_assets.${index}.link` as const, {
                         return (
-                            <IonRow key={field.id} >
+                            <IonRow key={field1.id} >
                                 <IonCol sizeMd="9" sizeXs="10">
                                     <IonItem class="ion-no-padding">
                                         <IonLabel position="stacked">Other Link {(index+1)} </IonLabel>
-                                        <IonInput placeholder="Other Link"
+                                        <Controller 
+                                            name={`other_promotional_assets.${index}.link`}
+                                            control={control}
+                                            render={({ field }) => {
+                                                return <IonInput placeholder="Other Link"
+                                                    {...field}
+                                                    type="text"
+                                                    onIonChange={(e: any) => field.onChange(e.target.value)}
+                                                />
+                                            }}
+                                            rules={{
+                                                required: {
+                                                    value: true,
+                                                    message: "Other Link is required"
+                                                }
+                                            }}
+                                        />
+                                        {/* <IonInput placeholder="Other Link"
                                         {...register(`other_promotional_assets.${index}.link` as const, {
                                             required: {
                                                 value: true,
@@ -238,7 +256,7 @@ const OtherInfoModal: React.FC<Props> = ({showOtherModal, setShowOtherModal}) =>
                                             }
                                         })}
                                         value={field.link}
-                                        className="" />
+                                        className="" /> */}
                                     </IonItem>
                                     <ErrorMessage
                                         errors={errors}
@@ -268,21 +286,38 @@ const OtherInfoModal: React.FC<Props> = ({showOtherModal, setShowOtherModal}) =>
                         <p className="my-1 fs-16">Special features or offers</p>
                         </IonCol>
                     </IonRow>
-                    {sfFields.map((field, index) => {
+                    {sfFields.map((field2, index) => {
                         return (
-                            <IonRow key={field.id} >
+                            <IonRow key={field2.id} >
                                 <IonCol sizeMd="9" sizeXs="10">
                                     <IonItem class="ion-no-padding">
                                         <IonLabel position="stacked">My Special feature {(index+1)} </IonLabel>
-                                        <IonInput placeholder="My Special feature"
+                                        <Controller 
+                                            name={`special_features.${index}.name`}
+                                            control={control}
+                                            render={({ field }) => {
+                                                return <IonInput placeholder="My Special feature"
+                                                    {...field}
+                                                    type="text"
+                                                    onIonChange={(e: any) => field.onChange(e.target.value)}
+                                                />
+                                            }}
+                                            rules={{
+                                                required: {
+                                                    value: true,
+                                                    message: "My Special feature is required"
+                                                }
+                                            }}
+                                        />
+                                        {/* <IonInput placeholder="My Special feature"
                                         {...register(`special_features.${index}.name` as const, {
                                             required: {
                                                 value: true,
                                                 message: "My Special feature is required"
                                             }
                                         })}
-                                        value={field.name}
-                                        className="" />
+                                        value={field2.name}
+                                        className="" /> */}
                                     </IonItem>
                                     <ErrorMessage
                                         errors={errors}
@@ -313,13 +348,30 @@ const OtherInfoModal: React.FC<Props> = ({showOtherModal, setShowOtherModal}) =>
                         </IonCol>
                     </IonRow>
                 
-                    {moFields.map((field, index) => {
+                    {moFields.map((field3, index) => {
                         return (
-                            <IonRow key={field.id} >
+                            <IonRow key={field3.id} >
                                 <IonCol sizeMd="9" sizeXs="10">
                                     <IonItem class="ion-no-padding">
                                         <IonLabel position="stacked">Member Organizations {(index+1)} </IonLabel>
-                                        <IonInput placeholder="Member Organizations"
+                                        <Controller 
+                                            name={`member_organizations.${index}.name`}
+                                            control={control}
+                                            render={({ field }) => {
+                                                return <IonInput placeholder="Member Organizations"
+                                                    {...field}
+                                                    type="text"
+                                                    onIonChange={(e: any) => field.onChange(e.target.value)}
+                                                />
+                                            }}
+                                            rules={{
+                                                required: {
+                                                    value: true,
+                                                    message: "Member Organization is required"
+                                                }
+                                            }}
+                                        />
+                                        {/* <IonInput placeholder="Member Organizations"
                                         {...register(`member_organizations.${index}.name` as const, {
                                             required: {
                                                 value: true,
@@ -327,7 +379,7 @@ const OtherInfoModal: React.FC<Props> = ({showOtherModal, setShowOtherModal}) =>
                                             }
                                         })}
                                         value={field.name}
-                                        className="" />
+                                        className="" /> */}
                                     </IonItem>
                                     <ErrorMessage
                                         errors={errors}

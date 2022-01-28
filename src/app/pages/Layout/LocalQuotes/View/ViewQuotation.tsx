@@ -22,7 +22,7 @@ const ViewQuotation: React.FC = () => {
   const qq = useSelector( (state:any) => state.qq.localQuote);
   const qt = useSelector( (state:any) => state.qq.quotation);
   const { basename } = lfConfig;
-  let { id, mem_id, rfqType, qq_id, qq_mem_id, vfrom } = useParams<any>();
+  let { id, mem_id, qq_id, qq_mem_id, vfrom } = useParams<any>();
 
   // QQ deafult to load callback
   const onCallbackFn = useCallback((res: any) => {
@@ -39,15 +39,14 @@ const ViewQuotation: React.FC = () => {
     if( id ){
      dispatch(uiActions.setShowLoading({ loading: true }));
      CoreService.onPostFn('qq_update', {
-       action: 'get_seller_buyer_qq', 
-       rfqType: rfqType,
+       action: 'get_seller_buyer_qq',
        memID: mem_id, // Seller QQ Mem ID
        formID: id, // Seller QQ ID
        bqMemID: qq_mem_id, // Buyer QQ Mem ID
        bqID: qq_id, // Buyer QQ ID
      }, onCallbackFn);
    }
-  }, [dispatch, id, rfqType, onCallbackFn]);
+  }, [dispatch, id, onCallbackFn]);
 
   return (
     <IonPage className="rfq-page">
@@ -59,7 +58,7 @@ const ViewQuotation: React.FC = () => {
           <IonToolbar>
               <IonButtons slot="start">
                   <IonButton color="greenbg" 
-                    routerLink={`${basename}/layout/${ vfrom === 'buyer'? 'buyer-request-center': 'seller-request-center' }/${rfqType}`}
+                    routerLink={`${basename}/layout/${ vfrom === 'buyer'? 'buyer-request-center': 'seller-request-center' }`}
                     className="ion-margin-top mt-3 mb-3">
                     {`<< Back`}
                 </IonButton>
@@ -118,7 +117,7 @@ const ViewQuotation: React.FC = () => {
                 <IonCardContent className="pt-3">
                   <p className="card-custom-title">Dates and Other Special Instructions</p>
                   { qq.ongoing_order_date && <p><strong>Price on ongoing orders is valid until : </strong> {CommonService.dateFormat(qt.ongoing_order_date)}</p>} 
-                  { qq.quotation_date && <p><span className="fw-bold">Date of Quotation  : </span> {CommonService.dateFormat(qq.quotation_date)}</p>}
+                  { qq.quotation_date && <p><span className="fw-bold">Date of Request  : </span> {CommonService.dateFormat(qq.quotation_date)}</p>}
                   { qq.quotation_req_date && <p><span className="fw-bold">Quotation is Required by : </span> {CommonService.dateFormat(qq.quotation_req_date)}</p>}
                   { qq.delivery_date && <p><span className="fw-bold">Requested Delivery Date : </span> {CommonService.dateFormat(qq.delivery_date)}</p>}
                   { qq.special_event_date  && <p><span className="fw-bold">Special Event Date : </span> {CommonService.dateFormat(qq.special_event_date)}</p>}

@@ -13,4 +13,4 @@ export interface SearchProps{
     keyword?: string,
     display?: string,
     type?: string
-  }
+}

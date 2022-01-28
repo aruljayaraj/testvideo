@@ -13,17 +13,11 @@ import BusinessCategory from './BusinessCategory';
 import SpecialInstructions from './SpecialInstructions';
 import QQMedia from './QQMedia';
 
-interface Params {
-  id: number
-  mem_id: number,
-  step: number
-}
-
 const AddLQ: React.FC = () => {
   const dispatch = useDispatch();
   const authUser = useSelector( (state:any) => state.auth.data.user );
   const qq = useSelector( (state:any) => state.qq.localQuote);
-  let { id, mem_id, step, rfqType } = useParams<any>();
+  let { id, mem_id, step } = useParams<any>();
 
   // QQ deafult to load callback
   const onCallbackFn = useCallback((res: any) => {
@@ -39,14 +33,13 @@ const AddLQ: React.FC = () => {
      if( id ){
       dispatch(uiActions.setShowLoading({ loading: true }));
         CoreService.onPostFn('qq_update', {
-            action: 'get_buyer_qq', 
-            rfqType: rfqType,
+            action: 'get_buyer_qq',
             memID: authUser.ID,
             repID: authUser.repID,
             formID: id
       }, onCallbackFn);
     }
-}, [dispatch, authUser, id, rfqType, onCallbackFn]);
+}, [dispatch, authUser, id, onCallbackFn]);
 
   return (
     <IonPage className="rfq-page">

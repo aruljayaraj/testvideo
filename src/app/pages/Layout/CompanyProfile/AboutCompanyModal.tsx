@@ -34,7 +34,7 @@ type FormInputs = {
 }
 
 interface Props {
-    showAboutCompanyModal: boolean
+    showAboutCompanyModal: boolean,
     setShowAboutCompanyModal: Function
 }
 
@@ -94,7 +94,6 @@ const AboutCompanyModal: React.FC<Props> = ({showAboutCompanyModal, setShowAbout
             </IonHeader>
             <IonContent fullscreen>
             <IonGrid>
-                
                 <IonRow>
                     <IonCol>
                         <IonItem lines="none" class="ion-no-padding">
@@ -173,7 +172,7 @@ const AboutCompanyModal: React.FC<Props> = ({showAboutCompanyModal, setShowAbout
                                 }}
                             />
                             }
-                            <IonNote className="mt-2">Provide a snapshot of your company and its services that will be seen on LocalFirst (maximum 500 words)</IonNote><br />
+                            <IonNote className="mt-2 fs-14">Provide a snapshot of your company and its services that will be seen on LocalFirst (maximum 500 words)</IonNote><br />
                         </IonItem>
                         <ErrorMessage
                             errors={errors}

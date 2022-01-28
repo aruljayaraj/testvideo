@@ -30,17 +30,10 @@ type FormInputs = {
     st_urgent_request: string;
 }
 
-interface Params {
-    rfqType: string
-}
-
 const RFQSettings: React.FC = () => {
   const dispatch = useDispatch();
   const authUser = useSelector( (state:any) => state.auth.data.user ); 
   const repProfile = useSelector( (state:any) => state.rep.repProfile);
-  let { rfqType } = useParams<any>();
-  // let resTypeText = rfqType ? rfqType.charAt(0).toUpperCase() + rfqType.slice(1): '';
-  const resTypeText = rfqType === 'business'? 'B2B': 'Retail';
 
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormInputs>({
       // defaultValues: { ...initialValues },
@@ -74,14 +67,14 @@ const RFQSettings: React.FC = () => {
 
   // Initiate form values from API
   useEffect(() => {
-    if (repProfile) {
-        setValue('st_email_notify', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')?  repProfile.b2b_qq_email_notify : repProfile.consumer_qq_email_notify);
-        setValue('st_email_alternate', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_email_alternate: repProfile.consumer_qq_email_alternate);
-        setValue('st_sms_notify', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_sms_notify: repProfile.consumer_qq_sms_notify);
-        setValue('st_mobile_alternate', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_mobile_alternate: repProfile.consumer_qq_mobile_alternate);
-        setValue('st_tele_notify', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_phone_notify: repProfile.consumer_qq_phone_notify);
-        setValue('st_phone_alternate', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_phone_alternate: repProfile.consumer_qq_phone_alternate);
-        setValue('st_urgent_request', (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_urgent_request : repProfile.consumer_qq_urgent_request);
+    if (repProfile && Object.keys(repProfile).length > 0) {
+        setValue('st_email_notify', repProfile.qq_email_notify);
+        setValue('st_email_alternate', repProfile.qq_email_alternate);
+        setValue('st_sms_notify', repProfile.qq_sms_notify);
+        setValue('st_mobile_alternate', repProfile.qq_mobile_alternate);
+        setValue('st_tele_notify', repProfile.qq_phone_notify);
+        setValue('st_phone_alternate', repProfile.qq_phone_alternate);
+        setValue('st_urgent_request', repProfile.qq_urgent_request);
     }
   }, [repProfile]);
 
@@ -95,22 +88,21 @@ const RFQSettings: React.FC = () => {
   }, [dispatch]);
 
   const onSubmit = (data: any) => { console.log(data);
-    // dispatch(uiActions.setShowLoading({ loading: true }));
+    dispatch(uiActions.setShowLoading({ loading: true }));
     const fd = {
         action: 'qq_settings_update',
-        rfqType: rfqType,
         memID: authUser.ID,
         repID: authUser.repID,
         ...data
     };
-    // CoreService.onPostFn('qq_update', fd, onCallbackFn);
+    CoreService.onPostFn('qq_update', fd, onCallbackFn);
   }
 
   return (
     <IonPage className="rfq-page">
         
         <IonToolbar>
-            <IonTitle className="page-title"> Set Your {resTypeText} RFQ Notification Preferrences</IonTitle>
+            <IonTitle className="page-title"> Set Your RFQ Notification Preferrences</IonTitle>
         </IonToolbar>
         
         <IonContent className="ion-padding">
@@ -131,10 +123,9 @@ const RFQSettings: React.FC = () => {
                                                 if(e.detail.value === 'no'){
                                                     setValue('st_email_alternate', '', { shouldValidate: true });
                                                 }else{
-                                                    setValue(
-                                                        'st_email_alternate', 
-                                                        (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_email_alternate: repProfile.consumer_qq_email_alternate, 
-                                                        { shouldValidate: true });
+                                                    if( repProfile && Object.keys(repProfile).length > 0 ){
+                                                        setValue('st_email_alternate', repProfile.qq_email_alternate, { shouldValidate: true });
+                                                    }
                                                 }
                                                 onChange(e.detail.value);
                                             }}
@@ -213,10 +204,9 @@ const RFQSettings: React.FC = () => {
                                                 if(e.detail.value === 'no'){
                                                     setValue('st_mobile_alternate', '', { shouldValidate: true });
                                                 }else{
-                                                    setValue(
-                                                        'st_mobile_alternate', 
-                                                        (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_mobile_alternate: repProfile.consumer_qq_mobile_alternate, 
-                                                        { shouldValidate: true });
+                                                    if( repProfile && Object.keys(repProfile).length > 0 ){
+                                                        setValue('st_mobile_alternate', repProfile.qq_mobile_alternate, { shouldValidate: true });
+                                                    }
                                                 }
                                                 onChange(e.detail.value);
                                             }}
@@ -299,10 +289,9 @@ const RFQSettings: React.FC = () => {
                                                 if(e.detail.value === 'no'){
                                                     setValue('st_phone_alternate', '', { shouldValidate: true });
                                                 }else{
-                                                    setValue(
-                                                        'st_phone_alternate', 
-                                                        (repProfile && Object.keys(repProfile).length > 0 && rfqType === 'business')? repProfile.b2b_qq_phone_alternate: repProfile.consumer_qq_phone_alternate, 
-                                                        { shouldValidate: true });
+                                                    if( repProfile && Object.keys(repProfile).length > 0 ){
+                                                        setValue( 'st_phone_alternate', repProfile.qq_phone_alternate, { shouldValidate: true });
+                                                    }
                                                 }
                                                 onChange(e.detail.value);
                                             }}
@@ -375,13 +364,15 @@ const RFQSettings: React.FC = () => {
                     <IonRow>
                         <IonCol sizeMd="12" sizeXs="12">
                             <IonItem class="ion-no-padding" lines="none">
-                                <IonLabel position="stacked" className="ion-text-wrap m-0 p-0">If you have selected Yes to tele-notifications do you want to receive reminders for urgent requests submitted <IonText color="danger">*</IonText></IonLabel>
+                                <IonLabel position="stacked" className="ion-text-wrap m-0 p-1">If you have selected Yes to tele-notifications do you want to receive reminders for urgent requests submitted <IonText color="danger">*</IonText></IonLabel>
                                 <Controller 
                                     name="st_urgent_request"
                                     control={control}
                                     render={({ field: {onChange, onBlur, value} }) => {
-                                        return <IonRadioGroup 
-                                            onChange={(val: any) => onChange(val)}
+                                        return <IonRadioGroup
+                                            onIonChange={ (e:any) => {
+                                                onChange(e.detail.value);
+                                            }}
                                             onBlur={onBlur}
                                             value={value}>
                                             <IonRow>

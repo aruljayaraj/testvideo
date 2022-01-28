@@ -21,12 +21,6 @@ const CompanyProfile: React.FC = () => {
   const onGetMemberCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
       dispatch(repActions.setCompanyProfile({ data: res.data.company }));
-      /*if(res.data.b2b){
-        dispatch(repActions.setB2B({ data: res.data.b2b }));
-      }
-      if(res.data.b2c){
-        dispatch(repActions.setB2C({ data: res.data.b2c }));
-      }*/
     }else{
       dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }

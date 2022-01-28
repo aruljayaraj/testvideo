@@ -5,21 +5,21 @@ import {
     IonItem, 
     IonLabel,
     IonInput,
-    IonDatetime,
     IonButton,
     IonGrid,
     IonRow,
     IonCol,
     IonCardTitle,
     IonTextarea,
-    IonText
+    IonText,
+    IonModal
 } from '@ionic/react';
 import React, { useState, useCallback } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import { Editor } from '@tinymce/tinymce-react';
-import { format } from 'date-fns';
+import { format, addYears } from 'date-fns';
 
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
@@ -29,6 +29,8 @@ import CoreService from '../../../../shared/services/CoreService';
 import { lfConfig } from '../../../../../Constants';
 import PRStepInd from './PRStepInd';
 import CommonService from '../../../../shared/services/CommonService';
+import { InitModalValues } from '../../../../shared/defaultValues/InitialValue';
+import DateTimeModal from '../../../../components/Modal/DateTimeModal';
 
 type FormInputs = {
     pr_headline: string;
@@ -44,6 +46,7 @@ const CreatePressRelease: React.FC = () => {
     const pr = useSelector( (state:any) => state.pr.pressRelease);
     const [addPR, setAddPR] = useState({ status: false, memID: '', ID: '' });
     let { id, step } = useParams<any>(); 
+    const [datePickerModal, setDatePickerModal] = useState(InitModalValues);
 
     let initialValues = {
         pr_headline: (pr && Object.keys(pr).length > 0) ? pr.pr_name : '',
@@ -56,7 +59,6 @@ const CreatePressRelease: React.FC = () => {
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
-
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -81,11 +83,17 @@ const CreatePressRelease: React.FC = () => {
         CoreService.onPostFn('pr_update', fd, onCallbackFn);
     }
 
+    const updateDateHandler = (field: any, dateValue: any) => {
+        if(field && dateValue){
+            setValue(field, dateValue, { shouldValidate: true });
+        }
+    }
+
     if( addPR.status  ){
       return <Redirect to={`/layout/add-press-release/${addPR.ID}/${addPR.memID}/2`} />;
     }
 
-    return (
+    return (<>
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <PRStepInd />
         <IonCard className="card-center mt-2 mb-4">
@@ -94,7 +102,6 @@ const CreatePressRelease: React.FC = () => {
             </IonCardHeader>
 
             <IonCardContent>
-            
                 <IonGrid>
                     <IonRow>
                     <IonCol sizeMd="6" sizeXs="12">
@@ -141,12 +148,23 @@ const CreatePressRelease: React.FC = () => {
                                     name="pr_date"
                                     control={control}
                                     render={({ field: {onChange, onBlur, value} }) => {
-                                        return <IonDatetime
-                                            displayFormat="DD-MMM-YYYY" 
-                                            min={format(new Date(), 'yyyy-MM-dd')}
+                                        return <IonInput
+                                            placeholder="YYYY-MM-DD"
+                                            // displayFormat="DD-MMM-YYYY" 
+                                            // min={format(new Date(), 'yyyy-MM-dd')}
                                             onIonChange={(e: any) => onChange(e.target.value)}
                                             onBlur={onBlur}
                                             value={value}
+                                            onClick={() => setDatePickerModal({ 
+                                                ...datePickerModal,
+                                                isOpen: true,
+                                                fieldName: 'pr_date',
+                                                title: 'Actual Press Release Date',
+                                                presentation: 'date',
+                                                dateValue: value,
+                                                min: format(new Date(), 'yyyy-MM-dd'),
+                                                max: format(new Date(addYears(new Date(), 3)), 'yyyy-MM-dd')
+                                            })}
                                         />
                                     }}
                                     rules={{ 
@@ -279,7 +297,14 @@ const CreatePressRelease: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </form>
-    );
+        <IonModal backdropDismiss={false} isOpen={datePickerModal.isOpen} className='view-modal-wrap'>
+            { datePickerModal.isOpen === true &&  <DateTimeModal
+                datePickerModal={datePickerModal}
+                setDatePickerModal={setDatePickerModal}
+                updateDateHandler={updateDateHandler}
+           /> }
+        </IonModal>    
+    </>);
 };
 export default CreatePressRelease;
   

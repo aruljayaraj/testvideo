@@ -58,11 +58,21 @@ var CoreService = (function() {
           callbackFn(result);
         });
     }
+
+    var onPostsFn = function(fnname: string, data: any) {
+      return axios.post(`v2/${fnname}`, data );
+    }
+
+    var onGetFn = function(fnname: string) {
+      return axios.get(`${fnname}`);
+    }
   
     return {
       // server api
       onPostFn: onPostFn,
-      onUploadFn: onUploadFn
+      onUploadFn: onUploadFn,
+      onGetFn: onGetFn,
+      onPostsFn: onPostsFn // without callback
     }
   
   })();

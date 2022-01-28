@@ -8,7 +8,9 @@ import {
     IonRow,
     IonCol,
     IonButton,
-    IonRouterLink
+    IonRouterLink,
+    IonFab,
+    IonFabButton
   } from '@ionic/react';
   
 import React, { useState, useCallback } from 'react';
@@ -113,7 +115,9 @@ const DDMedia: React.FC = () => {
                             <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Upload Supporting Media', 'local_deal')}>
                                 <div className="profile-logo">
                                     <img src={ddImage} alt="Deal Media" />
-                                    <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true"></i>
+                                    <IonFab  vertical="bottom" horizontal="end" slot="fixed">
+                                        <IonFabButton color="greenbg" size="small"><i className="fa fa-pencil fa-lg cursor" aria-hidden="true"></i></IonFabButton>
+                                    </IonFab>
                                 </div>
                             </IonItem>
                         </IonList>
@@ -138,13 +142,13 @@ const DDMedia: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </>}
-        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='view-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} className='view-modal-wrap'>
             { dd && Object.keys(dd).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}
             setShowImageModal={setShowImageModal} 
            /> }
         </IonModal>
-        <IonModal backdropDismiss={false} isOpen={previewModal.isOpen} cssClass='view-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={previewModal.isOpen} className='view-modal-wrap'>
             { dd && Object.keys(dd).length > 0 && previewModal.isOpen === true &&  <PreviewModal
             previewModal={previewModal}
             setPreviewModal={setPreviewModal} 

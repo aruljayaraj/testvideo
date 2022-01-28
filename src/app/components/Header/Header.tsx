@@ -10,7 +10,7 @@ import { IonHeader,
   IonPopover,
   IonList,
   IonItem,
-  IonBadge
+  IonRouterLink
 } from '@ionic/react';
 import {
   search,
@@ -18,10 +18,12 @@ import {
   notificationsOutline
 } from 'ionicons/icons';
 import { useSelector } from 'react-redux';
+import { isPlatform } from '@ionic/react';
 import './Header.scss';
 import LeftMenu from './LeftMenu';
 import RightMenu from './RightMenu';
 import SearchModal from '../Modal/SearchModal/SearchModal';
+import { Redirect } from 'react-router';
 
 const Header: React.FC = (props:any) => { // console.log(props.location.state);
   
@@ -84,12 +86,8 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
           <IonButtons slot="start">
             <IonMenuButton autoHide={false} onClick={(e) => toggleLeftOverlaySidebar(e)}/>
           </IonButtons>
-          {/* <IonButtons slot="secondary">
-            
-            <IonButton>Default</IonButton>
-          </IonButtons> */}
           
-          <IonButtons slot="primary">
+          <IonButtons slot="end">
             <IonButton onClick={() => setSearchModal(true)} className="mr-3">
               <IonIcon slot="icon-only" icon={search}></IonIcon>
             </IonButton>
@@ -98,99 +96,48 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
               <IonBadge color="warning">25</IonBadge>
             </IonButton> */}
           </IonButtons>
-          { (authValues.authenticated && authValues.isVerified &&  authValues.user) &&
-            <IonButtons slot="end">
+             
+          { (isPlatform('desktop')) && (!authValues.authenticated || !authValues.isVerified) &&
+            <IonButtons className="mr-2" slot="primary">
+              <IonRouterLink slot="start" href={`${basename}/login`} > Login</IonRouterLink> 
+              <span className="px-2"> | </span>
+              <IonRouterLink slot="start" href={`${basename}/signup`} > Signup </IonRouterLink>
+          </IonButtons>}
+          <IonButtons slot="end">
+            { (authValues.authenticated && authValues.isVerified &&  authValues.user) &&
               <IonButton onClick={(e) => toggleRightOverlaySidebar(e)}>
-                <IonIcon slot="icon-only" icon={personCircleOutline}></IonIcon>
+                <span className='ion-float-left'>{`Hi ${authValues.user.firstname}`} </span>
+                <IonIcon slot="start" icon={personCircleOutline}></IonIcon>
               </IonButton>  
-            </IonButtons>
-          }
+            }
+          </IonButtons> 
           
           <IonTitle>
             <img 
               src={ (authValues.authenticated && authValues.isVerified)? `${basename}/assets/img/Logo-WH.svg`: `${basename}/assets/img/Logo-BK.svg`} 
               title="Logo" alt="Logo" width="200" height="32"/>
           </IonTitle>
-            
         </IonToolbar>
 
       </IonHeader>
       <div id="overlay" onClick={ (e) => removeOverlay(e) }></div>
-      <div id="left-overlay-sidebar">
-        <LeftMenu removeOverlay={removeOverlay} />
-      </div>
+        <div id="left-overlay-sidebar">
+          <LeftMenu removeOverlay={removeOverlay} />
+        </div>
       <div id="right-overlay-sidebar">
-        
-          <RightMenu removeOverlay={removeOverlay} />
-        
+        <RightMenu removeOverlay={removeOverlay} />
       </div>
 
-      <IonModal backdropDismiss={false} isOpen={searchModal} cssClass='search-modal'>
+      <IonModal backdropDismiss={false} isOpen={searchModal} className='search-modal'>
           { searchModal === true &&  <SearchModal
             searchModal={searchModal}
             setSearchModal={setSearchModal} 
           /> }
       </IonModal>
 
-      {/* <IonModal backdropDismiss={false} isOpen={searchModal} cssClass='search-modal'>
-        <IonContent fullscreen>
-          <IonToolbar>
-            <IonButtons slot="end">
-                <IonButton onClick={() => setSearchModal(false)}>
-                    <IonIcon icon={close} slot="icon-only"></IonIcon>
-                </IonButton>
-            </IonButtons>
-          </IonToolbar>
-          <form className="searchbar" >
-            
-            <div className="inner-form">
-                <div className="basic-search">
-                  <div className="input-field">
-                      <div className="icon-wrap">
-                        <IonIcon icon={searchOutline} slot="icon-only"></IonIcon>
-                      </div>
-                      <input id="search" type="text" placeholder="Search..." />
-                  </div>
-                </div>
-                <div className="advance-search mt-3">
-                  <div>
-                    <IonChip color="primary" className="mr-3 my-3">
-                      <IonIcon icon={checkmarkOutline}></IonIcon>
-                      <IonLabel>Product & Service</IonLabel>
-                    </IonChip>
-                    <IonChip className="mr-3 my-3">
-                      <IonLabel>Business Name</IonLabel>
-                    </IonChip>
-                    <IonChip className="mr-3 my-3">
-                      <IonLabel>Current Deals</IonLabel>
-                    </IonChip>
-                    <IonChip className="mr-3 my-3">
-                      <IonLabel>Events</IonLabel>
-                    </IonChip>
-                    <IonChip className="mr-3 my-3">
-                      <IonLabel>Classifieds</IonLabel>
-                    </IonChip>
-                    <IonChip className="mr-3 my-3">
-                      <IonLabel>Business News</IonLabel>
-                    </IonChip>
-                    <IonChip className="mr-3 my-3">
-                      <IonLabel>Business Resources</IonLabel>
-                    </IonChip>
-
-                  </div>
-                  <IonButton className="ion-margin-top mt-5" expand="block" type="submit">
-                    Search
-                  </IonButton>
-                </div>
-            </div>
-
-          </form>      
-        </IonContent>
-      </IonModal> */}
-
       <IonPopover
         isOpen={showPopover}
-        cssClass='my-custom-class'
+        className='my-custom-class'
         onDidDismiss={e => setShowPopover(false)}
         >
         <div className="arrow" style={{left: '124px'}}></div>  
@@ -198,9 +145,6 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
             {/* <IonListHeader>Ionic</IonListHeader> */}
             <IonItem button>Complete Rep Profile</IonItem>
             <IonItem lines="none" button>Complete Company Profile</IonItem>
-            {/* <IonItem button>Showcase</IonItem>
-            <IonItem button>GitHub Repo</IonItem>
-            <IonItem lines="none" button >Close</IonItem> */}
         </IonList>
       </IonPopover>   
     </> 

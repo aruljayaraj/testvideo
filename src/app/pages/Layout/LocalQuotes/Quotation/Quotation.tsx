@@ -12,17 +12,11 @@ import CreateQuotation from './CreateQuotation';
 import AssignRep from './AssignRep';
 import QQMedia from './QQMedia';
 
-interface Params {
-  id: number
-  mem_id: number,
-  step: number
-}
-
 const Quotation: React.FC = () => {
   const dispatch = useDispatch();
   const authUser = useSelector( (state:any) => state.auth.data.user );
   const qq = useSelector( (state:any) => state.qq.localQuote);
-  let { id, mem_id, quote_id, step, rfqType } = useParams<any>();
+  let { id, mem_id, quote_id, step } = useParams<any>();
 
   // QQ deafult to load callback
   const onCallbackFn = useCallback((res: any) => {
@@ -39,8 +33,7 @@ const Quotation: React.FC = () => {
      if( id ){
       dispatch(uiActions.setShowLoading({ loading: true }));
       CoreService.onPostFn('qq_update', {
-        action: 'get_seller_buyer_qq', 
-        rfqType: rfqType,
+        action: 'get_seller_buyer_qq',
         memID: authUser.ID, // Seller QQ Mem ID
         formID: quote_id, // Seller QQ ID
         repID: authUser.repID,
@@ -48,7 +41,7 @@ const Quotation: React.FC = () => {
         bqID: id, // Buyer QQ ID
       }, onCallbackFn);
     }
-  }, [dispatch, authUser, id, rfqType, onCallbackFn]);
+  }, [dispatch, authUser, id, onCallbackFn]);
   
   return (
     <IonPage className="rfq-page">

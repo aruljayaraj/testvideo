@@ -10,7 +10,7 @@ let state = {
 }
 
 const slice = createSlice({
-    name: "search",
+    name: 'search',
     initialState: state,
     reducers: { 
         setPreResults: (sState, action) => {

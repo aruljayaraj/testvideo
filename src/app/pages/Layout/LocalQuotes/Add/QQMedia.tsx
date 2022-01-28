@@ -63,11 +63,10 @@ const QQMedia: React.FC = () => {
     // const [resPreviewModal, setResPreviewModal] = useState(initPreviewValues);
     const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
     const { basename } = lfConfig;
-    let { id, rfqType } = useParams<any>();
+    let { id } = useParams<any>();
     const fileDocInputRef = useRef<HTMLInputElement>(null);
     const fileAudInputRef = useRef<HTMLInputElement>(null);
     const fileVidInputRef = useRef<HTMLInputElement>(null);
-    const resTypeText = rfqType ? rfqType.charAt(0).toUpperCase() + rfqType.slice(1): '';
 
     // For Server Side file delete
     const onRemoveCbFn = useCallback((res: any) => {
@@ -83,7 +82,6 @@ const QQMedia: React.FC = () => {
             action: 'qq_upload_delete',
             memID: authUser.ID,
             repID: authUser.repID,
-            rfqType: rfqType,
             qqType: 'buyer',
             resType: mSelected? mSelected: '',
             formID: id,
@@ -187,7 +185,6 @@ const QQMedia: React.FC = () => {
                         fd.append('repID', authUser.repID);
                         fd.append('formID', id? id: '');
                         fd.append('action', 'qq_upload' );
-                        fd.append('rfqType', rfqType? rfqType: '' );
                         fd.append('qqType', 'buyer' );
                         fd.append('resType', qqResType? qqResType: '' );
                         fd.append('dataFile', file); // console.log(file);
@@ -303,7 +300,7 @@ const QQMedia: React.FC = () => {
     };
 
     // if( addQQ.status  ){
-    //     return <Redirect to={`/layout/add-localquote/${rfqType}/${id}/${authUser.ID}/4`} />;
+    //     return <Redirect to={`/layout/add-localquote/${id}/${authUser.ID}/4`} />;
     // }
    
     return (<>
@@ -315,7 +312,7 @@ const QQMedia: React.FC = () => {
                     <IonCard className="card-center mb-2">
                         <IonCardContent>
                             <IonCardTitle className="text-center mb-3 card-custom-title">
-                                <span>Upload {resTypeText} Documents</span>
+                                <span>Upload Documents</span>
                             </IonCardTitle>
                             <IonCardSubtitle className="text-center">
                                 <IonText>Only {lfConfig.acceptedDocTypes} these types are allowed.</IonText>
@@ -374,7 +371,7 @@ const QQMedia: React.FC = () => {
                     <IonCard className="card-center mb-2">
                         <IonCardContent>
                             <IonCardTitle className="text-center mb-3 card-custom-title">
-                                <span>Upload {resTypeText} Audios</span>
+                                <span>Upload Audios</span>
                             </IonCardTitle>
                             <IonCardSubtitle className="text-center">
                                 <IonText>Only {lfConfig.acceptedAudTypes} these types are allowed.</IonText>
@@ -431,7 +428,7 @@ const QQMedia: React.FC = () => {
                     <IonCard className="card-center mb-2">
                         <IonCardContent>
                             <IonCardTitle className="text-center mb-3 card-custom-title">
-                                <span>Upload {resTypeText} Videos</span>
+                                <span>Upload Videos</span>
                             </IonCardTitle>
                             <IonCardSubtitle className="text-center">
                                 <IonText>Only {lfConfig.acceptedVidTypes} these types are allowed.</IonText>
@@ -489,7 +486,7 @@ const QQMedia: React.FC = () => {
             <IonRow>
                 <IonCol>
                 { fileProgress && toArray(fileProgress).length === 0 && <IonButton color="greenbg"
-                    routerLink={`${basename}/layout/add-localquote/${rfqType}/${id}/${authUser.ID}/4`}
+                    routerLink={`${basename}/layout/add-localquote/${id}/${authUser.ID}/4`}
                     className="ion-margin-top mt-4 mb-3 float-right">
                     Next
                 </IonButton>}
@@ -499,7 +496,6 @@ const QQMedia: React.FC = () => {
         <IonActionSheet
             isOpen={showDocActSheet}
             onDidDismiss={() => setShowDocActSheet(false)}
-            cssClass=''
             buttons={[{
                 text: 'Take Photo',
                 icon: cameraOutline,
@@ -513,7 +509,9 @@ const QQMedia: React.FC = () => {
                 handler: () => {
                     // console.log('Browse clicked');
                     // onClick={ () => fileDocInputRef.current!.click() }
-                    fileDocInputRef.current!.click();
+                    if(fileDocInputRef && fileDocInputRef.current){
+                        fileDocInputRef.current.click();
+                    }
                 }
             }, {
                 text: 'Cancel',
@@ -528,7 +526,6 @@ const QQMedia: React.FC = () => {
         <IonActionSheet
             isOpen={showAudActSheet}
             onDidDismiss={() => setShowAudActSheet(false)}
-            cssClass=''
             buttons={[/*{
                 text: 'Record Audio',
                 icon: cameraOutline,
@@ -542,7 +539,9 @@ const QQMedia: React.FC = () => {
                 handler: () => {
                     console.log('Browse Audio clicked');
                     // onClick={ () => fileDocInputRef.current!.click() }
-                    fileAudInputRef.current!.click();
+                    if(fileAudInputRef && fileAudInputRef.current){
+                        fileAudInputRef.current.click();
+                    }
                 }
             }, {
                 text: 'Cancel',
@@ -557,7 +556,6 @@ const QQMedia: React.FC = () => {
         <IonActionSheet
             isOpen={showVidActSheet}
             onDidDismiss={() => setShowVidActSheet(false)}
-            cssClass=''
             buttons={[/*{
                 text: 'Record Video',
                 icon: cameraOutline,
@@ -571,7 +569,9 @@ const QQMedia: React.FC = () => {
                 handler: () => {
                     console.log('Browse Video clicked');
                     // onClick={ () => fileDocInputRef.current!.click() }
-                    fileVidInputRef.current!.click();
+                    if(fileVidInputRef && fileVidInputRef.current){
+                        fileVidInputRef.current.click();
+                    }
                 }
             }, {
                 text: 'Cancel',

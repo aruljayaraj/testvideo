@@ -20,6 +20,7 @@ import {
 } from 'ionicons/icons';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { isPlatform } from '@ionic/react';
 import './Header.scss';
 interface Props{
     removeOverlay: Function 
@@ -43,7 +44,7 @@ const LeftMenu: React.FC<Props> = ({removeOverlay}) => {
             <IonLabel>Email Verify</IonLabel>
           </IonItem>
         }
-        { (!authValues.authenticated || !authValues.isVerified) && 
+        { !(isPlatform('desktop')) && (!authValues.authenticated || !authValues.isVerified) && 
           (<>
             <IonItem button color={location.pathname === '/login'? 'menuhlbg': 'blackbg'} routerLink={`${basename}/login`} onClick={ (e) => removeOverlay(e) }>
               <IonIcon slot="start" icon={logIn}></IonIcon>

@@ -18,7 +18,6 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
     const {qt, setShowActionSheet, setShowPopover } = props;
     let qq:any = {};
     let repImage = '';
-    let { rfqType } = useParams<any>();
     const { apiBaseURL } = lfConfig;
 
     if( qt.localquote && Object.keys(qt.localquote).length > 0  ){
@@ -28,7 +27,7 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
     return (<IonCard className="card-center mt-3 mb-1">
         <IonCardHeader color="titlebg">
             <IonCardTitle class="card-title">
-                <IonRouterLink color="greenbg" href={`${basename}/layout/view-quotation/${rfqType}/${qt.id}/${qt.mem_id}/${qt.localquote.id}/${qt.localquote.mem_id}/seller`}>
+                <IonRouterLink color="greenbg" href={`${basename}/layout/view-quotation/${qt.id}/${qt.mem_id}/${qt.localquote.id}/${qt.localquote.mem_id}/seller`}>
                     {qt.s_title}
                 </IonRouterLink>
                 { setShowActionSheet && <IonRouterLink color="greenbg" onClick={() => setShowActionSheet({status: true, qt: qt})} className="float-right router-link-anchor-vertical">
@@ -53,7 +52,7 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
                                         <h2>{qq.p_title}</h2>
                                         { qq.firstname && setShowPopover && <h3 className="cursor anchor-link" onClick={() => setShowPopover({status: true, qq: qq})}>{`${qq.firstname} ${qq.lastname}`}</h3> }
                                         { +(qq.is_deleted) === 0 && <p>
-                                            <IonRouterLink href={`${basename}/layout/view-localquote/${rfqType}/${qq.id}/${qq.mem_id}/seller`}>
+                                            <IonRouterLink href={`${basename}/layout/view-localquote/${qq.id}/${qq.mem_id}/seller`}>
                                                 View Original RFQ
                                             </IonRouterLink>
                                         </p>}

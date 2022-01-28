@@ -8,7 +8,7 @@ interface PropsInterface{
 }
 
 const PatnerAds: React.FC<PropsInterface> = ({limit}) => {
-    let adResults = useSelector( (state:any) => state.formdata.ads); 
+    let adResults = useSelector( (state:any) => state.formdata.ads);
     adResults = shuffle(adResults);
     if(limit && limit > 0){
         adResults = adResults.slice(0,limit);

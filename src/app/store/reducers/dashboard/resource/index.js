@@ -5,7 +5,7 @@ let state = {
 }
 
 const slice = createSlice({
-    name: "res",
+    name: 'res',
     initialState: state,
     reducers: { 
         setResource: (resState, action) => {

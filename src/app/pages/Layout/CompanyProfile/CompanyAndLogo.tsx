@@ -6,7 +6,9 @@ import {
     IonCardContent,
     IonList,
     IonRow,
-    IonCol
+    IonCol,
+    IonFab,
+    IonFabButton
   } from '@ionic/react';
   
 import React, { useState } from 'react';
@@ -54,7 +56,11 @@ const CompanyAndLogo: React.FC = () => {
                             <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Edit Logo', 'company_logo')}>
                                 <div className="profile-logo">
                                     <img src={logoImage} alt="Company Logo" />
-                                    <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true"></i>
+                                    <IonFab vertical="bottom" horizontal="end" slot="fixed">
+                                        <IonFabButton color="greenbg" size="small">
+                                            <i className="fa fa-pencil fa-lg cursor" aria-hidden="true"></i>
+                                        </IonFabButton>
+                                    </IonFab>
                                 </div>
                             </IonItem>
                         </IonList>
@@ -77,7 +83,7 @@ const CompanyAndLogo: React.FC = () => {
                 
             </IonCardContent>
         </IonCard>}
-        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='image-crop-modal-container'>
+        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} className='image-crop-modal-container'>
             { Object.keys(comProfile).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}
             setShowImageModal={setShowImageModal} 

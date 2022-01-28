@@ -62,11 +62,10 @@ const QQMedia: React.FC = () => {
     const [resPreviewModal, setResPreviewModal] = useState(initPreviewValues);
     const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
     const { basename } = lfConfig;
-    let { id, mem_id, rfqType, quote_id } = useParams<any>();
+    let { id, mem_id, quote_id } = useParams<any>();
     const fileDocInputRef = useRef<HTMLInputElement>(null);
     const fileAudInputRef = useRef<HTMLInputElement>(null);
     const fileVidInputRef = useRef<HTMLInputElement>(null);
-    const resTypeText = rfqType ? rfqType.charAt(0).toUpperCase() + rfqType.slice(1): '';
 
     // For Server Side file delete
     const onRemoveCbFn = useCallback((res: any) => {
@@ -82,7 +81,6 @@ const QQMedia: React.FC = () => {
             action: 'qq_upload_delete',
             memID: authUser.ID,
             repID: authUser.repID,
-            rfqType: rfqType,
             qqType: 'seller',
             resType: mSelected? mSelected: '',
             formID: id,
@@ -187,7 +185,6 @@ const QQMedia: React.FC = () => {
                         fd.append('repID', authUser.repID);
                         fd.append('formID', id);
                         fd.append('action', 'qq_upload' );
-                        fd.append('rfqType', rfqType? rfqType: '' );
                         fd.append('qqType', 'seller' );
                         fd.append('resType', qqResType? qqResType: '' );
                         fd.append('dataFile', file); // console.log(file);
@@ -265,7 +262,7 @@ const QQMedia: React.FC = () => {
     }    
 
     // if( addQQ.status  ){
-    //     return <Redirect to={`/layout/quotation/${rfqType}/${id}/${mem_id}/${quote_id}/3`} />;
+    //     return <Redirect to={`/layout/quotation/${id}/${mem_id}/${quote_id}/3`} />;
     // }
     
     return (<>
@@ -277,7 +274,7 @@ const QQMedia: React.FC = () => {
                     <IonCard className="card-center mb-2">
                         <IonCardContent>
                             <IonCardTitle className="text-center mb-3 card-custom-title">
-                                <span>Upload {resTypeText} Documents</span>
+                                <span>Upload Documents</span>
                             </IonCardTitle>
                             <IonCardSubtitle className="text-center">
                                 <IonText>Only {lfConfig.acceptedDocTypes} these types are allowed.</IonText>
@@ -335,7 +332,7 @@ const QQMedia: React.FC = () => {
                     <IonCard className="card-center mb-2">
                         <IonCardContent>
                             <IonCardTitle className="text-center mb-3 card-custom-title">
-                                <span>Upload {resTypeText} Audios</span>
+                                <span>Upload Audios</span>
                             </IonCardTitle>
                             <IonCardSubtitle className="text-center">
                                 <IonText>Only {lfConfig.acceptedAudTypes} these types are allowed.</IonText>
@@ -393,7 +390,7 @@ const QQMedia: React.FC = () => {
                     <IonCard className="card-center mb-2">
                         <IonCardContent>
                             <IonCardTitle className="text-center mb-3 card-custom-title">
-                                <span>Upload {resTypeText} Videos</span>
+                                <span>Upload Videos</span>
                             </IonCardTitle>
                             <IonCardSubtitle className="text-center">
                                 <IonText>Only {lfConfig.acceptedVidTypes} these types are allowed.</IonText>
@@ -452,7 +449,7 @@ const QQMedia: React.FC = () => {
             <IonRow>
                 <IonCol>
                 { fileProgress && toArray(fileProgress).length === 0 && <IonButton color="greenbg"
-                    routerLink={`${basename}/layout/quotation/${rfqType}/${id}/${mem_id}/${quote_id}/3`}
+                    routerLink={`${basename}/layout/quotation/${id}/${mem_id}/${quote_id}/3`}
                     className="ion-margin-top mt-4 mb-3 float-right">
                     Next
                 </IonButton>}
@@ -476,7 +473,9 @@ const QQMedia: React.FC = () => {
                 handler: () => {
                     console.log('Browse clicked');
                     // onClick={ () => fileDocInputRef.current!.click() }
-                    fileDocInputRef.current!.click();
+                    if( fileDocInputRef && fileDocInputRef.current ){
+                        fileDocInputRef.current.click();
+                    }
                 }
             }, {
                 text: 'Cancel',
@@ -505,7 +504,9 @@ const QQMedia: React.FC = () => {
                 handler: () => {
                     console.log('Browse Audio clicked');
                     // onClick={ () => fileDocInputRef.current!.click() }
-                    fileAudInputRef.current!.click();
+                    if( fileAudInputRef && fileAudInputRef.current ){
+                        fileAudInputRef.current.click();
+                    }
                 }
             }, {
                 text: 'Cancel',
@@ -534,7 +535,9 @@ const QQMedia: React.FC = () => {
                 handler: () => {
                     console.log('Browse Video clicked');
                     // onClick={ () => fileDocInputRef.current!.click() }
-                    fileVidInputRef.current!.click();
+                    if( fileVidInputRef && fileVidInputRef.current ){
+                        fileVidInputRef.current.click();
+                    }
                 }
             }, {
                 text: 'Cancel',

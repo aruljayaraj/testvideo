@@ -50,7 +50,7 @@ const CreateQuotation: React.FC = () => {
     const qq = useSelector( (state:any) => state.qq.localQuote);
     const quote = useSelector( (state:any) => state.qq.quotation); 
     const [addQuote, setAddQuote] = useState({ status: false, memID: '', ID: '' });
-    let { id, quote_id, step, rfqType } = useParams<any>();
+    let { id, quote_id, step } = useParams<any>();
 
     let initialValues = {
         s_title: (quote && Object.keys(quote).length > 0 && quote.s_title) ? quote.s_title : '',
@@ -79,7 +79,6 @@ const CreateQuotation: React.FC = () => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         const fd = {
             action: (id && step)? 'quotation_update': 'quotation_add',
-            rfqType: rfqType,
             memID: authUser.ID, // Seller QQ Mem ID
             repID: authUser.repID,
             bqMemID: qq.mem_id, // Buyer QQ Mem ID
@@ -93,7 +92,7 @@ const CreateQuotation: React.FC = () => {
     }
 
     if( addQuote.status  ){
-      return <Redirect to={`/layout/quotation/${rfqType}/${qq.id}/${qq.mem_id}/${addQuote.ID}/2`} />;
+      return <Redirect to={`/layout/quotation/${qq.id}/${qq.mem_id}/${addQuote.ID}/2`} />;
     } 
 
     return (
@@ -158,7 +157,7 @@ const CreateQuotation: React.FC = () => {
 
                             { qq.p_quantity && <p className="mt-3"><span className="fw-bold">Quantity Required  : </span>{qq.p_quantity}</p>}
                             <IonItem class="ion-no-padding">
-                                <IonLabel position="stacked">The expected percentage over or under run will be <IonText color="danger">*</IonText></IonLabel>
+                                <IonLabel className="ion-text-wrap" position="stacked">The expected percentage over or under run will be <IonText color="danger">*</IonText></IonLabel>
                                 <Controller 
                                     name="s_percentage"
                                     control={control}
@@ -220,7 +219,7 @@ const CreateQuotation: React.FC = () => {
                         </IonCol>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem lines="none" class="ion-no-padding">
-                                <IonLabel className="mb-3" position="stacked">Supplier Product or Services Details (Maximum of 500 Words) <IonText color="danger">*</IonText></IonLabel>
+                                <IonLabel className="mb-3 ew-100 ion-text-wrap" position="stacked">Supplier Product or Services Details (Maximum of 500 Words) <IonText color="danger">*</IonText></IonLabel>
                                 <Controller 
                                     name="s_sup_products"
                                     control={control}
@@ -258,7 +257,7 @@ const CreateQuotation: React.FC = () => {
                         </IonCol>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
-                                <IonLabel position="stacked">Enter Supplier notes about order frequency if requested (Maximum of 500 Words)</IonLabel>
+                                <IonLabel className="ion-text-wrap" position="stacked">Enter Supplier notes about order frequency if requested (Maximum of 500 Words)</IonLabel>
                                 {/* <Controller
                                     as={<IonTextarea rows={5} cols={20} />}
                                     control={control}
@@ -315,7 +314,7 @@ const CreateQuotation: React.FC = () => {
                     <IonRow>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
-                                <IonLabel position="stacked">Price on ongoing orders is valid until: </IonLabel>
+                                <IonLabel className="ion-text-wrap" position="stacked">Price on ongoing orders is valid until: </IonLabel>
                                 {/* <Controller
                                     as={<IonDatetime displayFormat="DD-MMM-YYYY" min={qq.delivery_date} max={format(new Date(addYears(new Date(), 1)), 'yyyy')}></IonDatetime>}
                                     control={control}
@@ -334,9 +333,10 @@ const CreateQuotation: React.FC = () => {
                                     control={control}
                                     render={({ field: {onChange, onBlur, value} }) => {
                                         return <IonDatetime 
-                                            displayFormat="DD-MMM-YYYY" 
-                                            min={qq.delivery_date} 
-                                            max={format(new Date(addYears(new Date(), 1)), 'yyyy')} 
+                                            // displayFormat="DD-MMM-YYYY" 
+                                            // min={format(new Date(qq.delivery_date), 'yyyy-MM-dd')} 
+                                            min={format(new Date(), 'yyyy-MM-dd')}
+                                            max={format(new Date(addYears(new Date(), 3)), 'yyyy')} 
                                             onIonChange={(e: any) => onChange(e.target.value)}
                                             onBlur={onBlur}
                                             value={value}
@@ -344,7 +344,7 @@ const CreateQuotation: React.FC = () => {
                                     }}
                                     rules={{ 
                                         required: {
-                                            value: true,
+                                            value: qq.order_frequency !== 'One Time'? true: false,
                                             message: "Ongoing orders valid date is required"
                                         }
                                     }}
@@ -360,7 +360,7 @@ const CreateQuotation: React.FC = () => {
                         </IonCol>
                         <IonCol sizeMd="6" sizeXs="12">
                         <IonItem class="ion-no-padding">
-                                <IonLabel position="stacked">If the Requested Delivery or Special Event Date can not be met, explain here (Maximum of 500 Words)</IonLabel>
+                                <IonLabel className="ion-text-wrap" position="stacked">If the Requested Delivery or Special Event Date can not be met, explain here (Maximum of 500 Words)</IonLabel>
                                 <Controller 
                                     name="s_spev_date_notes"
                                     control={control}

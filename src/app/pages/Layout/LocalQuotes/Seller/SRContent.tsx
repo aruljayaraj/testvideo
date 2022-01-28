@@ -14,7 +14,6 @@ interface Props {
 
 const SRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover}) => {
     const { basename } = lfConfig;
-    let { rfqType } = useParams<any>();
     const { apiBaseURL } = lfConfig;
     const repImage = (Object.keys(qq).length > 0 && qq.profile_image) ? `${apiBaseURL}uploads/member/${qq.mem_id}/${qq.rep_id}/${qq.profile_image}` : `${basename}/assets/img/avatar.svg`;
     
@@ -57,7 +56,7 @@ const SRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover}) =>
                 </IonCol>
                 <IonCol>
                     <IonButtons>
-                    <IonRouterLink slot="start" color="greenbg" href={`${basename}/layout/view-localquote/${rfqType}/${qq.id}/${qq.mem_id}/sellers`}>
+                    <IonRouterLink slot="start" color="greenbg" href={`${basename}/layout/view-localquote/${qq.id}/${qq.mem_id}/sellers`}>
                         View RFQ</IonRouterLink>
                     </IonButtons>
                 </IonCol>

@@ -114,7 +114,7 @@ const OtherInfo: React.FC = () => {
         </IonCard>
         }
         
-        <IonModal backdropDismiss={false} isOpen={showOtherModal} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showOtherModal} className='my-custom-class'>
           { Object.keys(comProfile).length > 0 && <OtherInfoModal
             showOtherModal={showOtherModal}
             setShowOtherModal={setShowOtherModal} /> }

@@ -21,8 +21,7 @@ const MyQuotations: React.FC = () => {
   const qts = useSelector( (state:any) => state.qq.quotations);
   const [showActionSheet, setShowActionSheet] = useState<any>({status: false, qt: null});
   const [showPopover, setShowPopover] = useState<any>({status: false, qq: null});
-  const [showDeleteModal, setShowDeleteModal] = useState({isOpen: false, id: null, mem_id: null, rfqType: '', qqType: ''});
-  let { rfqType } = useParams<any>();
+  const [showDeleteModal, setShowDeleteModal] = useState({isOpen: false, id: null, mem_id: null, qqType: ''});
   let actionsheetButtons: any = [];
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -37,12 +36,12 @@ const MyQuotations: React.FC = () => {
       // dispatch(uiActions.setShowLoading({ loading: true }));
       const data = {
         action: 'get_seller_quotations',
-        rfqType: rfqType,
-        memID: authUser.ID
+        memID: authUser.ID,
+        repID: authUser.repID
       };
       CoreService.onPostFn('qq_update', data, onCallbackFn);
     }
-  }, [dispatch, onCallbackFn, authUser, rfqType]); 
+  }, [dispatch, onCallbackFn, authUser]); 
 
   const onCommonCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -57,8 +56,8 @@ const MyQuotations: React.FC = () => {
     dispatch(uiActions.setShowSkeleton({ skeleton: true }));
     const fd = {
         action: 'quotation_move_archive',
-        rfqType: rfqType,
         memID: mem_id,
+        repID: authUser.repID,
         formID: id
     };
     CoreService.onPostFn('qq_update', fd, onCommonCb);
@@ -68,8 +67,8 @@ const MyQuotations: React.FC = () => {
     dispatch(uiActions.setShowSkeleton({ skeleton: true }));
     const fd = {
         action: 'qq_delete',
-        rfqType: rfqType,
         memID: mem_id,
+        repID: authUser.repID,
         formID: id,
         qqType: 'seller'
     };
@@ -89,14 +88,14 @@ const MyQuotations: React.FC = () => {
       icon: pencilOutline,
       handler: () => {
         console.log('Edit clicked');
-        history.push(`/layout/quotation/${rfqType}/${showActionSheet.qt.localquote.id}/${showActionSheet.qt.localquote.mem_id}/${showActionSheet.qt.id}/1`);
+        history.push(`/layout/quotation/${showActionSheet.qt.localquote.id}/${showActionSheet.qt.localquote.mem_id}/${showActionSheet.qt.id}/1`);
       }
     }, {
       text: 'Withdraw',
       role: 'destructive',
       icon: removeCircleOutline,
       handler: () => {
-        setShowDeleteModal({isOpen: true, id: showActionSheet.qt.id, mem_id: showActionSheet.qt.mem_id, rfqType: rfqType, qqType: 'seller'});
+        setShowDeleteModal({isOpen: true, id: showActionSheet.qt.id, mem_id: showActionSheet.qt.mem_id, qqType: 'seller'});
       }
     });
   }
@@ -153,7 +152,7 @@ const MyQuotations: React.FC = () => {
         </IonActionSheet>
         <IonPopover
             isOpen={showPopover.status}
-            cssClass='my-custom-class'
+            className='my-custom-class'
             onDidDismiss={e => setShowPopover({status: false, qq: null})}
           >
             <IonContent className="ion-padding">
@@ -197,7 +196,7 @@ const MyQuotations: React.FC = () => {
           
       </IonContent>) : ( <ListSkeleton /> )}
 
-      <IonModal backdropDismiss={false} isOpen={showDeleteModal.isOpen} cssClass='my-custom-class'>
+      <IonModal backdropDismiss={false} isOpen={showDeleteModal.isOpen} className='my-custom-class'>
           { qts && Object.keys(qts).length > 0 && showDeleteModal.isOpen === true &&  <DeleteModal
             title="Withdraw Quotation"
             showDeleteModal={showDeleteModal}

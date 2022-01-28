@@ -8,6 +8,8 @@
     "build-dev": "env-cmd -e dev react-scripts build && npx cap sync",
     "start-devbeta": "env-cmd -e devbeta react-scripts start",
     "build-devbeta": "env-cmd -e devbeta react-scripts build && npx cap sync",
+    "start-devlive": "env-cmd -e devlive react-scripts start",
+    "build-devlive": "env-cmd -e devlive react-scripts build && npx cap sync",
     "start-beta": "env-cmd -e beta react-scripts start",
     "build-beta": "env-cmd -e beta react-scripts build && npx cap sync",
     "start-prod": "env-cmd -e prod react-scripts start",
@@ -21,17 +23,18 @@
   },
   "dependencies": {
     "@capacitor-community/react-hooks": "0.0.11",
-    "@capacitor/android": "^2.0.1",
+    "@capacitor/android": "^3.4.0",
     "@capacitor/camera": "^1.0.1",
-    "@capacitor/core": "^3.0.1",
+    "@capacitor/core": "^3.4.0",
     "@capacitor/ios": "^2.0.1",
     "@hookform/error-message": "^2.0.0",
     "@ionic-native/core": "^5.30.0",
     "@ionic-native/geolocation": "^5.28.0",
+    "@ionic-native/media-capture": "^5.36.0",
     "@ionic/pwa-elements": "^1.5.2",
-    "@ionic/react": "^5.6.9",
+    "@ionic/react": "^6.0.4",
     "@ionic/react-hooks": "^0.0.8",
-    "@ionic/react-router": "^5.6.9",
+    "@ionic/react-router": "^6.0.4",
     "@react-google-maps/api": "^1.9.7",
     "@reduxjs/toolkit": "^1.4.0",
     "@stripe/react-stripe-js": "^1.4.1",
@@ -48,13 +51,12 @@
     "immer": "^8.0.1",
     "ionicons": "^5.5.1",
     "jodit-react": "^1.0.66",
-    "node-sass": "^4.14.1",
     "php-serialize": "^4.0.2",
     "precise-ui": "^1.5.1",
     "react": "^17.0.2",
     "react-audio-player": "^0.13.0",
     "react-cropper": "^2.1.7",
-    "react-dom": "^16.13.1",
+    "react-dom": "^17.0.2",
     "react-hook-form": "^7.3.0",
     "react-image-crop": "^8.6.4",
     "react-pdf": "^5.3.2",
@@ -67,10 +69,11 @@
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.1.3",
     "rxjs": "^6.5.5",
+    "sass": "^1.49.0",
     "video.js": "^7.8.4"
   },
   "devDependencies": {
-    "@capacitor/cli": "^2.4.6",
+    "@capacitor/cli": "^3.4.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^8.0.3",
@@ -87,7 +90,22 @@
     "typescript": "^4.2.4"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app"
+    ],
+    "rules": {
+      "no-unused-vars": "warn"
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/*.ts?(x)"
+        ],
+        "rules": {
+          "max-len": "warn"
+        }
+      }
+    ]
   },
   "browserslist": {
     "production": [

@@ -10,7 +10,7 @@ let state = {
 }
 
 const slice = createSlice({
-    name: "qq",
+    name: 'qq',
     initialState: state,
     reducers: { 
         setQQ: (qqState, action) => {

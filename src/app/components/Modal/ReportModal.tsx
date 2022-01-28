@@ -97,7 +97,7 @@ const ReportModal: React.FC<Props> = ({ showReportModal, setShowReportModal}) =>
                     <IonRow>
                         <IonCol>
                         <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">Full Name <IonText color="danger">*</IonText></IonLabel>
+                            <IonLabel position="stacked">Reporter Full Name <IonText color="danger">*</IonText></IonLabel>
                             <Controller 
                                 name="name"
                                 control={control}
@@ -127,10 +127,17 @@ const ReportModal: React.FC<Props> = ({ showReportModal, setShowReportModal}) =>
                         />
                         </IonCol>
                     </IonRow>
+                    {/* <IonRow>
+                        <IonCol>
+                            <p>Report about: </p>
+                            <p>Reporter Company Name : </p>
+                            <p>Reporter Name : </p>
+                        </IonCol>
+                    </IonRow> */}
                     <IonRow>
                         <IonCol>
                             <IonItem class="ion-no-padding">
-                                <IonLabel position="stacked">Email <IonText color="danger">*</IonText></IonLabel>
+                                <IonLabel position="stacked">Reporter Email <IonText color="danger">*</IonText></IonLabel>
                                 <Controller 
                                     name="email"
                                     control={control}
@@ -163,7 +170,7 @@ const ReportModal: React.FC<Props> = ({ showReportModal, setShowReportModal}) =>
                     <IonRow>    
                         <IonCol>
                             <IonItem class="ion-no-padding">
-                                <IonLabel position="stacked">Reason <IonText color="danger">*</IonText></IonLabel>
+                                <IonLabel position="stacked" className="ion-text-wrap">Describe what information is incorrect (less than 250 characters) <IonText color="danger">*</IonText></IonLabel>
                                 <Controller 
                                     name="reason"
                                     control={control}
@@ -185,11 +192,11 @@ const ReportModal: React.FC<Props> = ({ showReportModal, setShowReportModal}) =>
                                     }}
                                 />
                             </IonItem>
-                            <p className="font-weight-light text-13">
+                            {/* <p className="font-weight-light text-13">
                                 <IonText color="medium">
                                     Reason must be less than 250 characters. 
                                 </IonText>
-                            </p>
+                            </p> */}
                             <ErrorMessage
                                 errors={errors}
                                 name="reason"

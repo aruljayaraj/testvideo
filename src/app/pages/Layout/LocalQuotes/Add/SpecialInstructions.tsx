@@ -10,16 +10,16 @@ import {
     IonCol,
     IonCardTitle,
     IonText,
-    IonDatetime,
+    IonInput,
     IonTextarea,
     IonCheckbox,
     IonModal
 } from '@ionic/react';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import { format, addYears } from 'date-fns';
+import { format, addYears, parseISO } from 'date-fns';
 
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../../../store/reducers/ui';
@@ -29,6 +29,8 @@ import CoreService from '../../../../shared/services/CoreService';
 import QQStepInd from './QQStepInd';
 import Modal from '../../../../components/Modal/Modal';
 import { lfConfig } from '../../../../../Constants';
+import { InitModalValues } from '../../../../shared/defaultValues/InitialValue';
+import DateTimeModal from '../../../../components/Modal/DateTimeModal';
 
 type FormInputs = {
     qq_req_date: string;
@@ -46,9 +48,10 @@ const SpecialInstructions: React.FC = () => {
     const qq = useSelector( (state:any) => state.qq.localQuote);
     const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
     const [showModal, setShowModal] = useState({status: false, title: ''});
-    let { id, rfqType } = useParams<any>(); 
-    const [quoDate, setQuoDate] = useState<string>();
-    const [delDate, setDelDate] = useState<string>();
+    const [datePickerModal, setDatePickerModal] = useState(InitModalValues);
+    let { id } = useParams<any>(); 
+    const [quoDate, setQuoDate] = useState<any>();
+    const [delDate, setDelDate] = useState<any>();
 
     async function closeModal() {
         await setShowModal({status: false, title: ''});
@@ -61,14 +64,27 @@ const SpecialInstructions: React.FC = () => {
         qq_sdate: (qq && Object.keys(qq).length > 0 && qq.special_event_date) ? qq.special_event_date : "",
         qq_shipping_ins: (qq && Object.keys(qq).length > 0 && qq.shipping_ins) ? qq.shipping_ins : ""
     };
-    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
+    const { control, handleSubmit, getValues, setValue, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
 
+    useEffect(()=>{
+        if(qq.quotation_req_date){
+            const QuoDateChange = format(new Date(qq.quotation_req_date), 'yyyy-MM-dd');
+            setQuoDate(QuoDateChange);
+        }
+        if(qq.delivery_date){
+            const delDateChange = format(new Date(qq.delivery_date), 'yyyy-MM-dd');
+            setDelDate(delDateChange);
+        }
+    },[qq.quotation_req_date, qq.delivery_date]);
+
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
-            setAddQQ({ status: true, memID: res.data.mem_id, ID: res.data.id  });
+            if( res.redirect === true ){
+                setAddQQ({ status: true, memID: res.data.mem_id, ID: res.data.id  });
+            }
             dispatch(qqActions.setQQ({ data: res.data }));
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
@@ -79,17 +95,36 @@ const SpecialInstructions: React.FC = () => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         const fd = {
             action: 'qq_update_special_ins',
-            rfqType: rfqType,
             memID: authUser.ID,
             repID: authUser.repID,
             formID: id,
+            isDraft: false,
+            ...data
+        };
+        CoreService.onPostFn('qq_update', fd, onCallbackFn);
+    }
+    const onSave = () => {
+        const data = getValues();
+        dispatch(uiActions.setShowLoading({ loading: true }));
+        const fd = {
+            action: 'qq_update_special_ins',
+            memID: authUser.ID,
+            repID: authUser.repID,
+            formID: id,
+            isDraft: true,
             ...data
         };
         CoreService.onPostFn('qq_update', fd, onCallbackFn);
     }
 
+    const updateDateHandler = (field: any, dateValue: any) => {
+        if(field && dateValue){
+            setValue(field, dateValue, { shouldValidate: true });
+        }
+    }
+
     if( addQQ.status  ){
-      return <Redirect to={`/layout/buyer-request-center/${rfqType}`} />;
+      return <Redirect to={`/layout/buyer-request-center`} />;
     }
     return (<>
         { qq && Object.keys(qq).length > 0 &&
@@ -110,16 +145,26 @@ const SpecialInstructions: React.FC = () => {
                                 <Controller 
                                     name="qq_req_date"
                                     control={control}
-                                    render={({ field: {onChange, onBlur, value} }) => { // console.log(quoDate);
-                                        return <IonDatetime 
-                                            placeholder="DD-MMM-YYYY"
-                                            displayFormat="DD-MMM-YYYY" 
-                                            min={format(new Date(), 'yyyy-MM-dd')}
-                                            max={format(new Date(addYears(new Date(), 2)), 'yyyy')}
+                                    render={({ field: {onChange, onBlur, value} }) => {
+                                        return <IonInput 
+                                            placeholder="YYYY-MM-DD HH:mm:ss"
+                                            // displayFormat="DD-MMM-YYYY" 
+                                            // min={format(new Date(), 'yyyy-MM-dd')}
+                                            // max={format(new Date(addYears(new Date(), 3)), 'yyyy')}
                                             onIonChange={(e: any) => onChange(e.target.value)}
                                             onBlur={onBlur}
                                             value={value}
-                                        ></IonDatetime>
+                                            onClick={() => setDatePickerModal({ 
+                                                ...datePickerModal,
+                                                isOpen: true,
+                                                fieldName: 'qq_req_date',
+                                                title: 'Date of Request ',
+                                                presentation: 'time-date',
+                                                dateValue: value,
+                                                min: format(new Date(), 'yyyy-MM-dd'),
+                                                max: format(new Date(addYears(new Date(), 3)), 'yyyy-MM-dd')
+                                            })}
+                                        ></IonInput>
                                     }}
                                     rules={{ 
                                         required: {
@@ -140,14 +185,16 @@ const SpecialInstructions: React.FC = () => {
                                     name="qq_qdate"
                                     control={control}
                                     render={({ field: {onChange, onBlur, value} }) => {
-                                        return <IonDatetime 
-                                            placeholder="DD-MMM-YYYY h:mm A"
-                                            displayFormat="DD-MMM-YYYY h:mm A" 
+                                        return <IonInput
+                                            placeholder="YYYY-MM-DD HH:mm:ss"
+                                            // displayFormat="DD-MMM-YYYY h:mm A" 
                                             min={format(new Date(), 'yyyy-MM-dd')} 
-                                            max={format(new Date(addYears(new Date(), 2)), 'yyyy')}
+                                            max={format(new Date(addYears(new Date(), 3)), 'yyyy')}
                                             onIonChange={(selected: any) => { // console.log(selected.target.value);
-                                                // setQuoDate(selected.target.value);
+                                                console.log("Welcome");
+                                                setQuoDate(selected.target.value);
                                                 if(selected.target.value){
+                                                    console.log("Meow");
                                                     const QuoDateChange = format(new Date(selected.target.value), 'yyyy-MM-dd');
                                                     //console.log(QuoDateChange);
                                                     onChange(selected.target.value);
@@ -157,7 +204,17 @@ const SpecialInstructions: React.FC = () => {
                                             }}
                                             onBlur={onBlur}
                                             value={value}
-                                        ></IonDatetime>
+                                            onClick={() => setDatePickerModal({ 
+                                                ...datePickerModal,
+                                                isOpen: true,
+                                                fieldName: 'qq_qdate',
+                                                title: 'Quotation is Required by',
+                                                presentation: 'time-date',
+                                                dateValue: value,
+                                                min: format(new Date(), 'yyyy-MM-dd'),
+                                                max: format(new Date(addYears(new Date(), 3)), 'yyyy-MM-dd')
+                                            })}
+                                        ></IonInput>
                                     }}
                                     rules={{ 
                                         required: {
@@ -174,32 +231,15 @@ const SpecialInstructions: React.FC = () => {
                             />
                             <IonItem class="ion-no-padding">
                                 <IonLabel position="stacked">Requested Delivery Date <IonText color="danger">*</IonText></IonLabel>
-                                {/* <Controller
-                                    as={
-                                        <IonDatetime displayFormat="DD-MMM-YYYY" min={quoDate} max={format(new Date(addYears(new Date(), 1)), 'yyyy')}></IonDatetime>
-                                    }
-                                    control={control}
-                                    onChangeName="onIonChange"
-                                    onChange={([selected]) => {
-                                        setDelDate(selected.detail.value);
-                                        return selected.detail.value;
-                                    }}
-                                    name="qq_ddate"
-                                    rules={{
-                                        required: true
-                                    }}
-                                /> */}
                                 <Controller 
                                     name="qq_ddate"
                                     control={control}
-                                    render={({ field: {onChange, onBlur, value} }) => { // console.log(quoDate);
-                                        return <IonDatetime 
-                                            placeholder="DD-MMM-YYYY"
-                                            displayFormat="DD-MMM-YYYY" 
-                                            min={quoDate} 
-                                            max={format(new Date(addYears(new Date(), 1)), 'yyyy')}
-                                            onIonChange={(selected: any) =>{ 
-                                                // setDelDate(selected.target.value!);
+                                    render={({ field: {onChange, onBlur, value} }) => {
+                                        return <IonInput 
+                                            placeholder="YYYY-MM-DD"
+                                            // min={quoDate} 
+                                            // max={format(new Date(addYears(new Date(), 3)), 'yyyy')}
+                                            onIonChange={(selected: any) =>{
                                                 if(selected.target.value){
                                                     const delDateChange = format(new Date(selected.target.value), 'yyyy-MM-dd');
                                                     //console.log(QuoDateChange);
@@ -208,11 +248,20 @@ const SpecialInstructions: React.FC = () => {
                                                 }
                                                 // setDelDate(selected.target.value!);
                                                 // onChange(selected.target.value);
-                                                
                                             }}
                                             onBlur={onBlur}
                                             value={value}
-                                        ></IonDatetime>
+                                            onClick={() => setDatePickerModal({ 
+                                                ...datePickerModal,
+                                                isOpen: true,
+                                                fieldName: 'qq_ddate',
+                                                title: 'Requested Delivery Date',
+                                                presentation: 'date',
+                                                dateValue: value,
+                                                min: quoDate? quoDate: format(new Date(), 'yyyy-MM-dd'),
+                                                max: format(new Date(addYears(new Date(), 3)), 'yyyy-MM-dd')
+                                            })}
+                                        ></IonInput>
                                     }}
                                     rules={{ 
                                         required: {
@@ -233,15 +282,25 @@ const SpecialInstructions: React.FC = () => {
                                     name="qq_sdate"
                                     control={control}
                                     render={({ field: {onChange, onBlur, value} }) => {
-                                        return <IonDatetime
-                                            placeholder="DD-MMM-YYYY"
-                                            displayFormat="DD-MMM-YYYY" 
-                                            min={delDate} 
-                                            max={format(new Date(addYears(new Date(), 2)), 'yyyy')}
+                                        return <IonInput
+                                            placeholder="YYYY-MM-DD"
+                                            // displayFormat="DD-MMM-YYYY" 
+                                            // max={format(new Date(addYears(new Date(), 2)), 'yyyy')}
+                                            // min={delDate? delDate: format(new Date(), 'yyyy-MM-dd')} 
                                             onIonChange={(e: any) => onChange(e.target.value)}
                                             onBlur={onBlur}
                                             value={value}
-                                        ></IonDatetime>
+                                            onClick={() => setDatePickerModal({ 
+                                                ...datePickerModal,
+                                                isOpen: true,
+                                                fieldName: 'qq_sdate',
+                                                title: 'Special Event Date',
+                                                presentation: 'date',
+                                                dateValue: value,
+                                                min: delDate? delDate: format(new Date(), 'yyyy-MM-dd'),
+                                                max: format(new Date(addYears(new Date(), 3)), 'yyyy-MM-dd')
+                                            })}
+                                        ></IonInput>
                                     }}
                                 />
                             </IonItem>
@@ -291,7 +350,7 @@ const SpecialInstructions: React.FC = () => {
                             />
                         </IonCol>
                     </IonRow>
-                    <IonRow className="ion-justify-content-start">    
+                    { (qq && +(qq.is_active) === 0) && <IonRow className="ion-justify-content-start">    
                         <IonCol size="1" sizeMd="0.5">
                             <div className="mt-2">
                                 <Controller 
@@ -326,18 +385,29 @@ const SpecialInstructions: React.FC = () => {
                                 render={({ message }) => <div className="invalid-feedback">{message}</div>}
                             />
                         </IonCol>
-                    </IonRow>
+                    </IonRow> }
                 </IonGrid>
                 
-                <IonButton color="greenbg" className="ion-margin-top mt-4 float-right mb-3" type="submit">
+                
+                <IonButton slot="end" color="greenbg" className="ion-margin-top mt-4 float-right mb-3" type="submit">
                     Submit
                 </IonButton> 
+                { (qq && +(qq.is_active) === 0) && <IonButton slot="start" color="primary" className="ion-margin-top mt-4 mr-4 float-right mb-3" type="button" onClick={onSave}>
+                    Save as Draft
+                </IonButton> }
                 
             </IonCardContent>
         </IonCard>
         </form>}
-        <IonModal backdropDismiss={false} isOpen={showModal.status} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showModal.status} className='my-custom-class'>
             <Modal title = {showModal.title} closeAction={closeModal} />
+        </IonModal>
+        <IonModal backdropDismiss={false} isOpen={datePickerModal.isOpen} className='view-modal-wrap'>
+            { datePickerModal.isOpen === true &&  <DateTimeModal
+                datePickerModal={datePickerModal}
+                setDatePickerModal={setDatePickerModal}
+                updateDateHandler={updateDateHandler}
+           /> }
         </IonModal>
     </>);
 };

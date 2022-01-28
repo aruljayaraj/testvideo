@@ -9,7 +9,7 @@ let state = {
 }
 
 const slice = createSlice({
-    name: "formdata",
+    name: 'formdata',
     initialState: state,
     reducers: { 
         setFormData: (fdataState, action) => {

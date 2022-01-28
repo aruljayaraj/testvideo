@@ -46,9 +46,10 @@ type LocationType = {
 
 interface Props {
     showLocationModal: boolean,
-    setShowLocationModal: Function
+    setShowLocationModal: Function,
+    updateLocationHandler: Function
 }
-const LocationModal: React.FC<Props> = ({ showLocationModal, setShowLocationModal}) => {
+const LocationModal: React.FC<Props> = ({ showLocationModal, setShowLocationModal, updateLocationHandler}) => {
 
     let listCountry: LocationType[] = [];
     let listState: LocationType[] = [];
@@ -100,8 +101,8 @@ const LocationModal: React.FC<Props> = ({ showLocationModal, setShowLocationModa
     const onCountryChangeCb = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
             // setValue([{state: {value: '', label: ''}}, {city: {value: '', label: ''}}]);
-            setValue("state", {value: '', label: ''});
-            setValue("city", {value: '', label: ''});
+            setValue("state", {value: '', label: ''}, { shouldValidate: true });
+            setValue("city", {value: '', label: ''}, { shouldValidate: true });
             // [ { name: 'subCategory', value: 'data' } ].forEach(({ name, value }) => setValue(name, value))
             setStates([]);
             setStates(res.data);
@@ -162,20 +163,6 @@ const LocationModal: React.FC<Props> = ({ showLocationModal, setShowLocationModa
         }
     }, [dispatch, onCountryCb, showLocationModal]);
 
-    const onCallbackFn = useCallback((res: any) => {
-        if(res.status === 'SUCCESS'){
-            setShowLocationModal(false);
-            dispatch(authActions.setLocation({ location: res.data })); 
-            /* setTimeout(()=>{
-                setShowLocationModal(false);
-            },1000); */
-        }
-        // setTimeout(()=>{
-            dispatch(uiActions.setShowLoading({ loading: false }));
-            dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
-        // },2000);
-        
-    }, [dispatch, setShowLocationModal]);
     const onSubmit = (data: any) => { 
         if(data.country.value && data.state.value && data.city.value){
             dispatch(uiActions.setShowLoading({ loading: true }));
@@ -185,7 +172,18 @@ const LocationModal: React.FC<Props> = ({ showLocationModal, setShowLocationModa
                 state_code: data.state.value,
                 city: data.city.value
             };
-            CoreService.onPostFn('get_location', user, onCallbackFn);
+            CoreService.onPostsFn('get_location', user).then((res) => { // console.log(res);
+                dispatch(uiActions.setShowLoading({ loading: true }));
+                if( res.status === 200 && res.statusText === 'OK' && res.data.status === 'SUCCESS' ){
+                    setShowLocationModal(false);
+                    updateLocationHandler(res.data.data); 
+                }
+                dispatch(uiActions.setShowLoading({ loading: false }));
+                dispatch(uiActions.setShowToast({ isShow: true, status: res.data.status, message: res.data.message }));
+            }).catch((error) => {
+                dispatch(uiActions.setShowLoading({ loading: false }));
+                dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: error.message }));
+            });
         }else{
             dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: "Country/State/City should not be empty!" }));
         }

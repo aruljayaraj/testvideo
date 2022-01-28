@@ -8,7 +8,7 @@ let state = {
 }
 
 const slice = createSlice({
-    name: "deals",
+    name: 'deals',
     initialState: state,
     reducers: {
         

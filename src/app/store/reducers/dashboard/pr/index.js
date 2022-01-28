@@ -5,7 +5,7 @@ let state = {
 }
 
 const slice = createSlice({
-    name: "pr",
+    name: 'pr',
     initialState: state,
     reducers: {
         

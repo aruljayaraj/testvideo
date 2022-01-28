@@ -13,6 +13,8 @@ declare global {
         paypal:any;
     }
 }
+// let paypal: any;
+// const PayPalButton = paypal.Buttons.driver("react", { React, ReactDOM });
 const PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
 export default function Paypal() {
     const dispatch = useDispatch();

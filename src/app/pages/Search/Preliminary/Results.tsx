@@ -1,6 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'; 
 import React, {useCallback, useEffect} from 'react';
-import { Redirect } from "react-router-dom";
+import { Redirect } from 'react-router-dom';
 import CoreService from '../../../shared/services/CoreService';
 import '../Search.scss';
 import { useDispatch, useSelector } from 'react-redux';

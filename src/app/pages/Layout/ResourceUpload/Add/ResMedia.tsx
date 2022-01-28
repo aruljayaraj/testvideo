@@ -268,7 +268,11 @@ const ResMedia: React.FC = () => {
                                     accept={acceptedTypes}
                                     ref={fileInputRef}
                                     onChange={handleFileChange} />
-                                <IonButton  color="warning" size="large" className="ion-margin-top mt-4 mb-3 mx-auto" type="button" onClick={ () => fileInputRef.current!.click() } >
+                                <IonButton  color="warning" size="large" className="ion-margin-top mt-4 mb-3 mx-auto" type="button" onClick={ () => {
+                                    if(fileInputRef && fileInputRef.current){
+                                        fileInputRef.current.click();
+                                    }
+                                }} >
                                     Add {resTypeText}
                                 </IonButton>
                             </IonItem>}
@@ -308,7 +312,7 @@ const ResMedia: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </>}
-        <IonModal backdropDismiss={false} isOpen={resPreviewModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={resPreviewModal.isOpen} className='my-custom-class'>
             { resource && Object.keys(resource).length > 0 && resPreviewModal.isOpen === true &&  <ResPreviewModal
             resPreviewModal={resPreviewModal}
             setResPreviewModal={setResPreviewModal}

@@ -12,7 +12,9 @@ import {
     IonButtons,
     IonIcon,
     IonContent,
-    IonHeader
+    IonHeader,
+    IonTextarea,
+    IonNote
   } from '@ionic/react';
   import { close } from 'ionicons/icons';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -31,6 +33,7 @@ import { DropDown } from '../../../interfaces/Common';
 
 type FormInputs = {
     company_name: string;
+    short_desc: string;
     email: string;
     firstname: string;
     lastname: string;
@@ -94,6 +97,7 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
     const [ city, setCity ] = useState([]);
     let initialValues = {
         company_name: (Object.keys(comProfile).length > 0)? comProfile.company_name: '',
+        short_desc: (Object.keys(comProfile).length > 0)? comProfile.short_desc: '',
         email: (Object.keys(comProfile).length > 0)? comProfile.email: '',
         firstname: (Object.keys(comProfile).length > 0)? comProfile.firstname: '',
         lastname: (Object.keys(comProfile).length > 0)? comProfile.lastname: '',
@@ -325,34 +329,73 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
                         name="company_name"
                         render={({ message }) => <div className="invalid-feedback">{message}</div>}
                     />
+
+                    <IonItem class="ion-no-padding">
+                        <IonLabel position="stacked">Website</IonLabel>
+                        <Controller 
+                            name="website"
+                            control={control}
+                            render={({ field }) => {
+                                return <IonInput 
+                                    {...field}
+                                    type="text"
+                                    onIonChange={(e: any) => field.onChange(e.target.value)}
+                                />
+                            }}
+                            rules={{
+                                pattern: {
+                                    value: /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/g,
+                                    // value: /^(http://)?(www\.)?[A-Za-z0-9]+\.[a-z]{2,3}/g,
+                                    message: "Invalid Website"
+                                }
+                            }}
+                        />
+                    </IonItem>
+                    <ErrorMessage
+                        errors={errors}
+                        name="website"
+                        render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    />
                   </IonCol>
                   <IonCol sizeMd="6" sizeXs="12">
-                        <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">Website</IonLabel>
-                            <Controller 
-                                name="website"
-                                control={control}
-                                render={({ field }) => {
-                                    return <IonInput 
-                                        {...field}
-                                        type="text"
-                                        onIonChange={(e: any) => field.onChange(e.target.value)}
-                                    />
-                                }}
-                                rules={{
-                                    pattern: {
-                                        value: /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/g,
-                                        // value: /^(http://)?(www\.)?[A-Za-z0-9]+\.[a-z]{2,3}/g,
-                                        message: "Invalid Website"
-                                    }
-                                }}
-                            />
-                        </IonItem>
-                        <ErrorMessage
-                            errors={errors}
-                            name="website"
-                            render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    <IonItem class="ion-no-padding">
+                        <IonLabel position="stacked">Short Description</IonLabel>
+                        <Controller 
+                            name="short_desc"
+                            control={control}
+                            render={({ field }) => {
+                                return <IonTextarea
+                                    {...field}
+                                    onKeyUp={(e: any) => {
+                                        var str = e.target.value;
+                                        if( str.split(/\s+/).length > 20 ){
+                                            e.target.value = str.split(/\s+/).slice(0, 20).join(" ");
+                                        }
+                                    }}
+                                    onIonChange={(e: any) => field.onChange(e.target.value)}
+                                />
+                            }}
+                            rules={{
+                                required: {
+                                    value: true,
+                                    message: "Short Description is required"
+                                },
+                                pattern: {
+                                    value: /^\W*(\w+(\W+|$)){1,20}$/i,
+                                    message: "Short Description shoud be lessthan 20 words"
+                                }
+                            }}
                         />
+                        
+                    </IonItem>
+                    <IonNote className="mt-2 fs-14">Provide a short description of you company that will be seen in search results (maximum 20 words)</IonNote><br />
+                    <ErrorMessage
+                        errors={errors}
+                        name="short_desc"
+                        render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                    />
+
+                        
                     </IonCol>
                 </IonRow>
 

@@ -20,7 +20,7 @@ const ViewLQ: React.FC = () => {
   const loadingState = useSelector( (state:any) => state.ui.loading);
   const qq = useSelector( (state:any) => state.qq.localQuote);
   const { basename } = lfConfig;
-  let { id, rfqType, mem_id, vfrom } = useParams<any>();
+  let { id, mem_id, vfrom } = useParams<any>();
 
   // QQ deafult to load callback
   const onCallbackFn = useCallback((res: any) => {
@@ -37,7 +37,6 @@ const ViewLQ: React.FC = () => {
       dispatch(uiActions.setShowLoading({ loading: true }));
         CoreService.onPostFn('qq_update', {
             action: 'get_buyer_qq',
-            rfqType: rfqType, 
             memID: mem_id,
             repID: authUser.repID,
             formID: id
@@ -56,16 +55,16 @@ const ViewLQ: React.FC = () => {
             <IonRow>
               <IonCol className="d-flex align-items-center" sizeMd="6" sizeXs="12">
                 <IonButton fill="clear" 
-                    routerLink={`${basename}/layout/${ vfrom === 'buyer'? 'buyer-request-center': 'seller-request-center' }/${rfqType}`}
+                    routerLink={`${basename}/layout/${ vfrom === 'buyer'? 'buyer-request-center': 'seller-request-center' }`}
                     className="ion-margin-top mt-3 mb-3">
                     {`<< Back`}
                 </IonButton>
-                <div className="page-title">View LocalQuote</div>
+                <div className="page-title">View Local Quote</div>
               </IonCol>
               { [1,2].includes(+(qq.is_active)) && vfrom === 'sellers' &&<IonCol sizeMd="6" sizeXs="12" className={ isPlatform('desktop')? '': 'ion-text-center' }>
                 
                   <IonButton color="greenbg" 
-                    routerLink={`${basename}/layout/quotation/${rfqType}/${qq.id}/${qq.mem_id}`}
+                    routerLink={`${basename}/layout/quotation/${qq.id}/${qq.mem_id}`}
                     className={`ion-margin-top mt-3 mb-2 ${ isPlatform('desktop')? 'float-right': '' }`}>
                     Complete Quotation Now
                   </IonButton>
@@ -98,7 +97,7 @@ const ViewLQ: React.FC = () => {
                 <IonCardContent className="pt-3">
                   <p className="card-custom-title">Dates and Other Special Instructions</p>
                   {/* { qq.p_short_desc && <p><strong>Location of Member : </strong> {qq.p_short_desc}</p>} */}
-                  { qq.quotation_date && <p><span className="fw-bold">Date of Quotation  : </span> {CommonService.dateFormat(qq.quotation_date)}</p>}
+                  { qq.quotation_date && <p><span className="fw-bold">Date of Request  : </span> {CommonService.dateFormat(qq.quotation_date)}</p>}
                   { qq.quotation_req_date && <p><span className="fw-bold">Quotation is Required by  : </span> {CommonService.dateFormat(qq.quotation_req_date)}</p>}
                   { qq.delivery_date && <p><span className="fw-bold">Requested Delivery Date : </span> {CommonService.dateFormat(qq.delivery_date)}</p>}
                   { qq.special_event_date  && <p><span className="fw-bold">Special Event Date : </span> {CommonService.dateFormat(qq.special_event_date)}</p>}
@@ -158,7 +157,7 @@ const ViewLQ: React.FC = () => {
           </IonRow>
           { [1,2].includes(+(qq.is_active)) && vfrom === 'sellers' && <div className="d-flex align-items-center justify-content-center">
             <IonButton color="greenbg" 
-                routerLink={`${basename}/layout/quotation/${rfqType}/${qq.id}/${qq.mem_id}`}
+                routerLink={`${basename}/layout/quotation/${qq.id}/${qq.mem_id}`}
                 className="ion-margin-top mt-4 mb-3">
                 Complete Quotation Now
             </IonButton> 

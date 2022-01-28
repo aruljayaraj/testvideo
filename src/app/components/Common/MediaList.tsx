@@ -70,7 +70,7 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
                 <IonText color="warning">No attachments found.</IonText>
             </p>
         }
-        <IonModal backdropDismiss={false} isOpen={showViewerModal.isOpen} cssClass={ `${['document','article'].includes(showViewerModal.mediaType)? 'view-modal-wrap': ''}` }>
+        <IonModal backdropDismiss={false} isOpen={showViewerModal.isOpen} className={ `${['document','article'].includes(showViewerModal.mediaType)? 'view-modal-wrap': ''}` }>
           { props.attachments && Object.keys(props.attachments).length > 0 && showViewerModal.isOpen === true && <ViewerModal
             showViewerModal={showViewerModal}
             setShowViewerModal={setShowViewerModal}

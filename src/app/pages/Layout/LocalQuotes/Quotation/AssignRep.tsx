@@ -13,7 +13,8 @@ import {
     IonSelect,
     IonSelectOption,
     IonTextarea,
-    IonCheckbox
+    IonCheckbox,
+    IonModal
 } from '@ionic/react';
 import React, { useState, useCallback, useEffect } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
@@ -25,7 +26,9 @@ import * as qqActions from '../../../../store/reducers/dashboard/qq';
 import '../LocalQuotes.scss';
 import CoreService from '../../../../shared/services/CoreService';
 import QuotationStepInd from './QuotationStepInd';
+import Modal from '../../../../components/Modal/Modal';
 import HtmlText from '../../../../components/Common/HtmlText';
+import { lfConfig } from '../../../../../Constants';
 
 type FormInputs = {
     quotation_provideby: string;
@@ -37,19 +40,24 @@ type FormInputs = {
 const AssignRep: React.FC = () => {
     let listReps: any = [];
     const dispatch = useDispatch();
+    const { WPPAGES } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const qq = useSelector( (state:any) => state.qq.localQuote);
     const quote = useSelector( (state:any) => state.qq.quotation);
     const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
-    let { rfqType} = useParams<any>(); 
     const [ reps, setReps ] = useState([]);
+    const [showModal, setShowModal] = useState({status: false, title: ''});
+
+    async function closeModal() {
+        await setShowModal({status: false, title: ''});
+    }
 
     let initialValues = {
         quotation_provideby: (quote && Object.keys(quote).length > 0 && quote.quotation_provided_by  !== '0') ? quote.quotation_provided_by : "",
         upload_notes: (quote && Object.keys(quote).length > 0 && quote.s_upload_notes) ? quote.s_upload_notes : "",
         supplier_shipping_notes: (quote && Object.keys(quote).length > 0 && quote.s_shipping_notes ) ? quote.s_shipping_notes  : "",
     };
-    const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
+    const { control, handleSubmit, getValues, formState: { errors } } = useForm<FormInputs>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
@@ -71,7 +79,9 @@ const AssignRep: React.FC = () => {
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
-            setAddQQ({ status: true, memID: res.data.mem_id, ID: res.data.id  });
+            if( res.redirect === true ){
+                setAddQQ({ status: true, memID: res.data.mem_id, ID: res.data.id  });
+            }
             dispatch(qqActions.setSQ({ data: res.data }));
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
@@ -82,12 +92,27 @@ const AssignRep: React.FC = () => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         const fd = {
             action: 'quotation_update_rep',
-            rfqType: rfqType,
             memID: authUser.ID, // Seller QQ Mem ID
             repID: authUser.repID,
             formID: quote.id, // Seller QQ ID
             bqMemID: qq.mem_id, // Buyer QQ Mem ID
             bqID: qq.id, // Buyer QQ ID
+            ...data
+        };
+        CoreService.onPostFn('qq_update', fd, onCallbackFn);
+    }
+
+    const onSave = () => {
+        const data = getValues();
+        dispatch(uiActions.setShowLoading({ loading: true }));
+        const fd = {
+            action: 'quotation_update_rep',
+            memID: authUser.ID, // Seller QQ Mem ID
+            repID: authUser.repID,
+            formID: quote.id, // Seller QQ ID
+            bqMemID: qq.mem_id, // Buyer QQ Mem ID
+            bqID: qq.id, // Buyer QQ ID
+            isDraft: true,
             ...data
         };
         CoreService.onPostFn('qq_update', fd, onCallbackFn);
@@ -99,7 +124,7 @@ const AssignRep: React.FC = () => {
         );
     }
     if( addQQ.status  ){
-      return <Redirect to={`/layout/seller-request-center/${rfqType}`} />;
+      return <Redirect to={`/layout/seller-request-center`} />;
     }
     return (<>
         { quote && Object.keys(quote).length > 0 &&
@@ -216,10 +241,9 @@ const AssignRep: React.FC = () => {
                             />
                         </IonCol>
                     </IonRow>
-                    <IonRow>    
-                        <IonCol>
-                            <IonItem lines="none">
-                                <IonLabel className="fs-13">I Agree to the terms and conditions <IonText color="danger">*</IonText></IonLabel>
+                    { (quote && +(quote.is_active) === 0) && <IonRow className="ion-justify-content-start">    
+                        <IonCol size="1" sizeMd="0.5">
+                            <div className="mt-2">
                                 <Controller 
                                     name="qq_terms"
                                     control={control}
@@ -239,23 +263,34 @@ const AssignRep: React.FC = () => {
                                         }
                                     }}
                                 />
-                            </IonItem>
+                            </div>
+                        </IonCol>
+                        <IonCol>
+                            <p className="mt-2 ml-2 cursor fs-16" onClick={() => setShowModal({status: true, title: WPPAGES.LQ_TC})}>
+                                <IonText className="fs-13" color="primary">I Agree to the terms and conditions <i className="fa fa-question-circle-o" aria-hidden="true"></i></IonText>
+                            </p>    
                             <ErrorMessage
                                 errors={errors}
                                 name="qq_terms"
                                 render={({ message }) => <div className="invalid-feedback">{message}</div>}
                             />
                         </IonCol>
-                    </IonRow>
+                    </IonRow> }
                 </IonGrid>
                 
-                <IonButton color="greenbg" className="ion-margin-top mt-4 float-right mb-3" type="submit">
+                <IonButton slot="end" color="greenbg" className="ion-margin-top mt-4 float-right mb-3" type="submit">
                     Submit
-                </IonButton> 
+                </IonButton>
+                { (quote && +(quote.is_active) === 0) && <IonButton slot="start" color="primary" className="ion-margin-top mt-4 mr-4 float-right mb-3" type="button" onClick={onSave}>
+                    Save as Draft
+                </IonButton> }
                 
             </IonCardContent>
         </IonCard>
         </form>}
+        <IonModal backdropDismiss={false} isOpen={showModal.status} className='my-custom-class'>
+            <Modal title = {showModal.title} closeAction={closeModal} />
+        </IonModal>
     </>);
 };
  

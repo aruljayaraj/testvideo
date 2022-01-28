@@ -14,11 +14,10 @@ import { useSelector } from 'react-redux';
 
 const Buscats: React.FC = () => {
     const repProfile = useSelector( (state:any) => state.rep.repProfile);
-    const b2bCategory = useSelector( (state:any) => state.rep.b2b);
-    const b2cCategory = useSelector( (state:any) => state.rep.b2c);
+    const busCategory = useSelector( (state:any) => state.rep.buscats);
 
     return (<>
-        { Object.keys(repProfile).length > 0 && ( (b2bCategory && b2bCategory.length > 0) || (b2cCategory && b2cCategory.length > 0)) && 
+        { Object.keys(repProfile).length > 0 && ( (busCategory && busCategory.length > 0)) && 
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="card-custom-title">
@@ -27,23 +26,11 @@ const Buscats: React.FC = () => {
             </IonCardHeader>
               
             <IonCardContent>
-                { b2bCategory && b2bCategory.length > 0 && <IonList className="buscat-section-content">
+                { busCategory && busCategory.length > 0 && <IonList className="buscat-section-content">
                     <IonListHeader>
-                        <IonLabel className="fs-16">B2B Category</IonLabel>
+                        <IonLabel className="fs-16">Categories</IonLabel>
                     </IonListHeader>
-                    { b2bCategory.map((item: any)=> {
-                        return (<div className="pl-3" key={item.id}>
-                            <IonText>
-                                {item.catname} {`->`} {item.sub_catname}
-                            </IonText>
-                        </div>)
-                    })}
-                </IonList>}
-                { b2cCategory && b2cCategory.length > 0 && <IonList className="buscat-section-content">
-                    <IonListHeader>
-                        <IonLabel className="fs-16">B2C Category</IonLabel>
-                    </IonListHeader>
-                    { b2cCategory.map((item: any)=> {
+                    { busCategory.map((item: any)=> {
                         return (<div className="pl-3" key={item.id}>
                             <IonText>
                                 {item.catname} {`->`} {item.sub_catname}

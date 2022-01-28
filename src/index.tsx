@@ -39,24 +39,24 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 // console.log(process.env);
 
 axios.interceptors.request.use(
-    request => {
+    (request:any) => {
       if (!request.headers.Authorization) {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem('token');
         if (token) {
             request.headers.Authorization = `Bearer ${token}`;
         }
       }
       return request;
     },
-    error => Promise.reject(error)
+    (error:any) => Promise.reject(error)
 );
 
 
-axios.interceptors.response.use(response => {
+axios.interceptors.response.use((response: any) => {
     //console.log(response);
     // Edit response config
     return response;
-}, error => {
+}, (error: any) => {
     //console.log(error);
     return Promise.reject(error);
 });

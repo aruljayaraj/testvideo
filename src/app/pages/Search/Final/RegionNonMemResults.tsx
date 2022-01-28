@@ -8,33 +8,25 @@ import { lfConfig } from '../../../../Constants';
 import NoData from '../../../components/Common/NoData';
 import ReportModal from '../../../components/Modal/ReportModal';
 interface Props{
-  region: string
+  title: string,
+  results: any
 }
 
-const RegionNonMemResults: React.FC<Props> = ({ region }) => {
-  const nonMemResults = useSelector( (state:any) => state.search.finalResults[region]); console.log(nonMemResults);
-  const { apiBaseURL, basename } = lfConfig;
+const RegionNonMemResults: React.FC<Props> = ({ title, results }) => {
+  // const nonMemResults = useSelector( (state:any) => state.search.finalResults[region]);
   const [isLocalOpen, setIsLocalOpen] = useState(true);
   const [showReportModal, setShowReportModal] = useState({isOpen: false, memID: '', formID: '', type: 'nonMember' });
-  /*const onListSelect = (item: any) => { console.log(item);
-    if( currentKeyword.length > 2 ){
-      setRedirectData({ ...redirectData, status: true, data: { ...searchFilter, keyword: currentKeyword, display: item.display, type: item.type } });
-      setTimeout(() => {
-        props.setSearchModal(false);
-      }, 1000)
-      
-    }
-  }*/
+  
   return (<>
-    { nonMemResults && nonMemResults.length > 0 && <IonCard className="card-center my-4">
+    { results && results.length > 0 && <IonCard className="card-center my-4">
     <IonCardHeader color="titlebg">
-        <IonCardTitle className="card-custom-title ion-text-capitalize">{`${region === 'localNonMem'? 'Your Local-First Business Listing':'Your Regional Supplier' }(s)`} 
+        <IonCardTitle className="card-custom-title ion-text-capitalize">{title} 
           <i className={`ion-float-right gray cursor fa ${isLocalOpen? 'fa-chevron-down': 'fa-chevron-up'}`} aria-hidden="true" onClick={e => setIsLocalOpen(!isLocalOpen)}></i>
         </IonCardTitle>
     </IonCardHeader>
 
     { isLocalOpen && <IonCardContent className="px-0 px-sm-2 nm-container-wrap">
-      { nonMemResults.map((item: any) => {  
+      { results.map((item: any) => {  
           return (
           <IonCard className="nm-item mt-3" key={nanoid()}>
             <IonCardContent className="px-0 px-sm-2">
@@ -52,11 +44,11 @@ const RegionNonMemResults: React.FC<Props> = ({ region }) => {
             </IonCardContent>
           </IonCard>)}
         )}
-        <NoData dataArr={nonMemResults} htmlText="No results found." />
+        <NoData dataArr={results} htmlText="No results found." />
       </IonCardContent>} 
     </IonCard>}
-    <IonModal backdropDismiss={false} isOpen={showReportModal.isOpen} cssClass='my-custom-class'>
-        { Object.keys(nonMemResults).length > 0 && <ReportModal
+    <IonModal backdropDismiss={false} isOpen={showReportModal.isOpen} className='my-custom-class'>
+        { Object.keys(results).length > 0 && <ReportModal
           showReportModal={showReportModal}
           setShowReportModal={setShowReportModal} />}
       </IonModal>

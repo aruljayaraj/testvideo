@@ -22,8 +22,7 @@ const BuyerRequestCenter: React.FC = () => {
   const qqs = useSelector( (state:any) => state.qq.localQuotes);
   const [showActionSheet, setShowActionSheet] = useState<any>({status: false, qq: null});
   const [showPopover, setShowPopover] = useState<any>({status: false, qq: null});
-  const [showDeleteModal, setShowDeleteModal] = useState({isOpen: false, id: null, mem_id: null, rfqType: '', qqType: ''});
-  let { rfqType } = useParams<any>();
+  const [showDeleteModal, setShowDeleteModal] = useState({isOpen: false, id: null, mem_id: null, qqType: ''});
   let actionsheetButtons: any = [];
 
   const onCallbackFn = useCallback((res: any) => {
@@ -39,12 +38,11 @@ const BuyerRequestCenter: React.FC = () => {
       // dispatch(uiActions.setShowLoading({ loading: true }));
       const data = {
         action: 'get_buyer_request_center',
-        rfqType: rfqType,
         memID: authUser.ID
       };
       CoreService.onPostFn('qq_update', data, onCallbackFn);
     }
-  }, [dispatch, onCallbackFn, authUser, rfqType]); 
+  }, [dispatch, onCallbackFn, authUser]); 
 
   const onCommonCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -59,7 +57,6 @@ const BuyerRequestCenter: React.FC = () => {
     dispatch(uiActions.setShowSkeleton({ skeleton: true }));
     const fd = {
         action: 'qq_move_archive',
-        rfqType: rfqType,
         memID: mem_id,
         formID: id
     };
@@ -70,7 +67,6 @@ const BuyerRequestCenter: React.FC = () => {
     dispatch(uiActions.setShowSkeleton({ skeleton: true }));
     const fd = {
         action: 'quotation_awarded',
-        rfqType: rfqType,
         memID: mem_id, // Seller QQ Mem ID
         formID: id, // Seller QQ ID
         bqMemID: qq_mem_id, // Buyer QQ Mem ID
@@ -84,14 +80,14 @@ const BuyerRequestCenter: React.FC = () => {
       icon: pencilOutline,
       handler: () => {
         console.log('Edit clicked');
-        history.push(`/layout/add-localquote/${rfqType}/${showActionSheet.qq.id}/${showActionSheet.qq.mem_id}/1`);
+        history.push(`/layout/add-localquote/${showActionSheet.qq.id}/${showActionSheet.qq.mem_id}/1`);
       }
     }, {
       text: 'Delete',
       role: 'destructive',
       icon: trashOutline,
       handler: () => {
-        setShowDeleteModal({isOpen: true, id: showActionSheet.qq.id, mem_id: showActionSheet.qq.mem_id, rfqType: rfqType, qqType:'buyer'});
+        setShowDeleteModal({isOpen: true, id: showActionSheet.qq.id, mem_id: showActionSheet.qq.mem_id, qqType:'buyer'});
       }
     });
   }else if(showActionSheet.qq && Object.keys(showActionSheet.qq).length > 0 && [3,4,5,6].includes(parseInt(showActionSheet.qq.is_active))){
@@ -138,7 +134,7 @@ const BuyerRequestCenter: React.FC = () => {
         </IonActionSheet>
         <IonPopover
             isOpen={showPopover.status}
-            cssClass='my-custom-class'
+            className='my-custom-class'
             onDidDismiss={e => setShowPopover({status: false, qq: null})}
           >
             <IonContent className="ion-padding">
@@ -182,7 +178,7 @@ const BuyerRequestCenter: React.FC = () => {
           
       </IonContent>) : ( <ListSkeleton /> )}
 
-      <IonModal backdropDismiss={false} isOpen={showDeleteModal.isOpen} cssClass='my-custom-class'>
+      <IonModal backdropDismiss={false} isOpen={showDeleteModal.isOpen} className='my-custom-class'>
           { qqs && Object.keys(qqs).length > 0 && showDeleteModal.isOpen === true &&  <DeleteModal
           title="Delete LocalQuote"
           showDeleteModal={showDeleteModal}

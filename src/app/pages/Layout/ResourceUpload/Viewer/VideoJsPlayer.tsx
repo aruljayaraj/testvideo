@@ -9,8 +9,8 @@ interface VideoPlayerPropsInferface {
 }
 
 export default class VideoPlayer extends React.Component {
-  private player?: videojs.Player;
-  private videoNode?: HTMLVideoElement;
+  player: videojs.Player;
+  videoNode: HTMLVideoElement;
 
   constructor(props: VideoPlayerPropsInferface) {
     super(props);
@@ -22,9 +22,11 @@ export default class VideoPlayer extends React.Component {
 
     // instantiate video.js
     // this.player = videojs(this.videoNode, this.props).ready(function() {
-    this.player = videojs(this.videoNode!).ready(function() {
-      // console.log('onPlayerReady', this);
-    });
+    if(this.videoNode){
+      this.player = videojs(this.videoNode).ready(function() {
+        // console.log('onPlayerReady', this);
+      });
+    }
   }
 
   // destroy player on unmount

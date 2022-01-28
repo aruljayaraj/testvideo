@@ -107,6 +107,7 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
         }
       };
     },[keyword,location, searchFilter.filterBy]);
+
     const onHandleChange = (e: any) => {
       const currentKeyword = (e.currentTarget.value).toLowerCase();
       setKeyword(currentKeyword);
@@ -183,9 +184,8 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
         if(['Rep','Non'].includes(item.type)){ 
           //itemLink = `/preliminary-results`;
           //itemData = { ...searchFilter, keyword: state.keyword, display: item.display, type: item.type };
-          const bcat_type = item.filterBy === 'b2c'? 1: 0;
           itemLink = `/search-results`;
-          itemData = { ...searchFilter, keyword: keyword, category: item.display, type: bcat_type };
+          itemData = { ...searchFilter, keyword: keyword, category: item.display };
         }else if(item.type === 'Res'){
           itemLink = `/resource/${item.form_type}/${item.form_id}`;
         }else if(item.type === 'Deal'){
@@ -193,8 +193,9 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
         }else if(item.type === 'News'){ 
           itemLink = `/press-release/${item.form_id}`; 
         }else if(item.type === 'Comp'){
+          let display = item.display.split(',');
           itemLink = `/company-results`;
-          itemData = { ...searchFilter, company_name: item.display };
+          itemData = { ...searchFilter, company_name: display[0]? display[0]: display };
         }
         return <Redirect to={{ pathname: itemLink, state: itemData }} />;
       }
@@ -211,17 +212,13 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
           </IonButtons>
         </IonToolbar>
         <form className="searchbar"> {/* onSubmit={handleSubmit(onSubmitFn)} */}
-        {loading}
+          {loading}
           <div className="inner-form">
               <div className="advance-search">
                 <div className="filterbox">
                   <IonChip color={searchFilter.filterBy === 'b2b'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'b2b'}) }>
                     { searchFilter.filterBy === 'b2b' && <IonIcon icon={checkmarkOutline}></IonIcon> }
-                    <IonLabel>B2B Products & Services</IonLabel>
-                  </IonChip>
-                  <IonChip color={searchFilter.filterBy === 'b2c'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'b2c'}) }>
-                    { searchFilter.filterBy === 'b2c' && <IonIcon icon={checkmarkOutline}></IonIcon> }
-                    <IonLabel>Consumer Products & Services</IonLabel>
+                    <IonLabel>Products & Services</IonLabel>
                   </IonChip>
                   <IonChip color={searchFilter.filterBy === 'br'? 'primary' : ''} className="mr-3 mt-3" onClick={ () => setSearchFilter({...searchFilter, filterBy: 'br'}) }>
                     { searchFilter.filterBy === 'br' && <IonIcon icon={checkmarkOutline}></IonIcon> }
@@ -282,14 +279,7 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
                             //     message: "Keyword should be valid"
                             // }
                         }}
-                    /> 
-                    
-                    {/* <input id="search" type="text" placeholder="Search..." 
-                      onChange={onHandleChange}
-                      onKeyDown={onKeyDown}
-                      autoComplete="off"
-                      value={state.keyword}
-                    /> */}
+                    />
                     <div className="spinner-wrap">
                       {loading && <IonSpinner name="dots" /> }
                       {keyword && keyword.length > 0 && !loading && <IonIcon icon={close} slot="icon-only" onClick={clearSearch}></IonIcon>}

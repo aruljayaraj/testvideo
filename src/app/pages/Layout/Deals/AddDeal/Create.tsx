@@ -5,7 +5,7 @@ import {
     IonItem, 
     IonLabel,
     IonInput,
-    IonDatetime,
+    IonModal,
     IonButton,
     IonGrid,
     IonRow,
@@ -29,6 +29,8 @@ import CoreService from '../../../../shared/services/CoreService';
 import CommonService from '../../../../shared/services/CommonService';
 import { lfConfig } from '../../../../../Constants';
 import StepInd from './StepInd';
+import { InitModalValues } from '../../../../shared/defaultValues/InitialValue';
+import DateTimeModal from '../../../../components/Modal/DateTimeModal';
 
 type FormInputs = {
     dd_name: string;
@@ -45,6 +47,7 @@ const CreateDeals: React.FC = () => {
     const dd = useSelector( (state:any) => state.deals.localDeal);
     const [addDeal, setAddDeal] = useState({ status: false, memID: '', id: '' });
     const [startDate, setStartDate] = useState<string>(dd.sdate);
+    const [datePickerModal, setDatePickerModal] = useState(InitModalValues);
     let { id, step } = useParams<any>(); 
     const { basename } = lfConfig;
     let initialValues = {
@@ -58,18 +61,19 @@ const CreateDeals: React.FC = () => {
         defaultValues: { ...initialValues },
         mode: "onChange"
     });
-    const maxDaysAllowed = (dd && Object.keys(dd).length > 0 && dd.days_allowed > 0) ? dd.days_allowed : +(memOpts.localdeals!.no_days_allowed!);
-    let calEnddate = addDays(new Date(), maxDaysAllowed);
+    const maxDaysAllowed = (dd && Object.keys(dd).length > 0 && dd.days_allowed > 0) ? dd.days_allowed : +(memOpts.localdeals.no_days_allowed);
+    let calEnddate = addDays(new Date(), maxDaysAllowed); console.log(calEnddate, maxDaysAllowed);
     if( startDate && memOpts.localdeals && maxDaysAllowed ){
         // convert mysql date to javascript 
         const convStartDate = CommonService.mysqlToJsDateFormat(startDate);
         if( convStartDate ){
-            calEnddate = addDays(convStartDate, maxDaysAllowed);
+            calEnddate = addDays(convStartDate, maxDaysAllowed); console.log(calEnddate);
         }
     }
+    console.log(format(calEnddate, 'yyyy-MM-dd'));
     
     useEffect(() => { // Only for Premium End date autoupdate.
-        if( startDate && calEnddate && dd.days_allowed > 0){ console.log("Meow");
+        if( startDate && calEnddate && dd.days_allowed > 0){
             const newCalEndDate: any = format(new Date(calEnddate), 'yyyy-MM-dd'); 
             setValue("dd_end_date", newCalEndDate, { shouldValidate: true });
         }
@@ -99,11 +103,17 @@ const CreateDeals: React.FC = () => {
         CoreService.onPostFn('deal_update', fd, onCallbackFn);
     }
 
+    const updateDateHandler = (field: any, dateValue: any) => {
+        if(field && dateValue){
+            setValue(field, dateValue, { shouldValidate: true });
+        }
+    }
+
     if( addDeal.status  ){
       return <Redirect to={`/layout/deals/add-deal/${addDeal.id}/${addDeal.memID}/2`} />;
     }
 
-    return (
+    return (<>
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <StepInd />
         <IonCard className="card-center mt-2 mb-4">
@@ -197,11 +207,19 @@ const CreateDeals: React.FC = () => {
                                     name="dd_start_date"
                                     control={control}
                                     render={({ field: {onChange, onBlur, value} }) => {
-                                        return <IonDatetime
-                                            placeholder="DD-MMM-YYYY" 
-                                            displayFormat="DD-MMM-YYYY" 
-                                            min={format(new Date(), 'yyyy-MM-dd')}
-                                            max={format(new Date(addYears(new Date(), 2)), 'yyyy')}
+                                        return <IonInput
+                                            placeholder="YYYY-MM-DD" 
+                                            // displayFormat="DD-MMM-YYYY"
+                                            onClick={() => setDatePickerModal({ 
+                                                ...datePickerModal,
+                                                isOpen: true,
+                                                fieldName: 'dd_start_date',
+                                                title: 'Deal Start Date',
+                                                presentation: 'date',
+                                                dateValue: value,
+                                                min: format(new Date(), 'yyyy-MM-dd'),
+                                                max: format(new Date(addYears(new Date(), 3)), 'yyyy-MM-dd')
+                                            })}
                                             onIonChange={(selected: any) => {
                                                 if(selected.target.value){
                                                     const sDateChange = format(new Date(selected.target.value), 'yyyy-MM-dd');
@@ -239,11 +257,21 @@ const CreateDeals: React.FC = () => {
                                     name="dd_end_date"
                                     control={control}
                                     render={({ field: {onChange, onBlur, value} }) => {
-                                        return <IonDatetime
-                                            placeholder="DD-MMM-YYYY"
-                                            displayFormat="DD-MMM-YYYY" 
-                                            min={startDate? startDate : format(new Date(), 'yyyy-MM-dd')} 
-                                            max={format(calEnddate, 'yyyy-MM-dd')}
+                                        return <IonInput
+                                            placeholder="YYYY-MM-DD"
+                                            // displayFormat="DD-MMM-YYYY"
+                                            onClick={() => setDatePickerModal({ 
+                                                ...datePickerModal,
+                                                isOpen: true,
+                                                fieldName: 'dd_end_date',
+                                                title: 'Deal End Date',
+                                                presentation: 'date',
+                                                dateValue: value,
+                                                min: startDate? startDate : format(new Date(), 'yyyy-MM-dd'),
+                                                max: format(calEnddate, 'yyyy-MM-dd')
+                                            })} 
+                                            // min={startDate? startDate : format(new Date(), 'yyyy-MM-dd')} 
+                                            // max={format(calEnddate, 'yyyy-MM-dd')}
                                             // max={format(new Date(addYears(new Date(), 60)), 'mm')}
                                             onIonChange={(e: any) => onChange(e.target.value)}
                                             onBlur={onBlur}
@@ -311,7 +339,14 @@ const CreateDeals: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </form>
-    );
+        <IonModal backdropDismiss={false} isOpen={datePickerModal.isOpen} className='view-modal-wrap'>
+            { datePickerModal.isOpen === true &&  <DateTimeModal
+                datePickerModal={datePickerModal}
+                setDatePickerModal={setDatePickerModal}
+                updateDateHandler={updateDateHandler}
+        /> }
+        </IonModal>
+    </>);
 };
 export default CreateDeals;
   

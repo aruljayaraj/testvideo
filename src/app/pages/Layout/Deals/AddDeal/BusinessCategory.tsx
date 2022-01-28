@@ -65,11 +65,11 @@ const BusinessCategory: React.FC = () => {
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="card-custom-title">
-                    <span>B2B Category</span>
+                    <span>Categories</span>
                     <IonRouterLink color="greenbg" href={`${basename}/layout/deals/local-deals`} className="float-right router-link-anchor" title="Deal Listing">
                         <i className="fa fa-list green cursor" aria-hidden="true"></i>
                     </IonRouterLink>
-                    <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')} className="float-right router-link-anchor mr-2">
+                    <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Category', 'new')} className="float-right router-link-anchor mr-2">
                         <i className="fa fa-plus green cursor" aria-hidden="true"></i>
                     </IonRouterLink>
                     
@@ -108,7 +108,7 @@ const BusinessCategory: React.FC = () => {
                                     <h3>{item.sub_catname}</h3>
                                     <p><strong>Keywords:</strong> {item.keywords}</p>
                                 </IonLabel>
-                                <IonAvatar className="anchor-white" slot="end" color="greenbg" onClick={() => categoryModalFn('Edit B2B Category', 'edit', item)}>
+                                <IonAvatar className="anchor-white" slot="end" color="greenbg" onClick={() => categoryModalFn('Edit Category', 'edit', item)}>
                                     <i className="fa fa-pencil green cursor" aria-hidden="true"></i>
                                 </IonAvatar>
                             </IonItem>
@@ -120,7 +120,7 @@ const BusinessCategory: React.FC = () => {
                             <IonText className="fs-13 mr-3" color="warning">
                                 No categories added.   
                             </IonText>
-                            <IonButton color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')}>Add</IonButton>
+                            <IonButton color="greenbg" onClick={() => categoryModalFn('Add Category', 'new')}>Add</IonButton>
                         </IonItem>
                     }
                     {/* <p>{JSON.stringify(dd.buscats)}</p> */}
@@ -134,7 +134,7 @@ const BusinessCategory: React.FC = () => {
                 }
             </IonCardContent>
         </IonCard>
-        <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} className='category-modal-wrap'>
           { dd && Object.keys(dd).length > 0 && showCategoryModal.isOpen === true && <CategoryModal
             showCategoryModal={showCategoryModal}
             setShowCategoryModal={setShowCategoryModal}

@@ -4,6 +4,7 @@ import {
     IonCardContent,
     IonItem, 
     IonLabel,
+    IonNote,
     IonButton,
     IonRadioGroup,
     IonRadio,
@@ -71,9 +72,9 @@ const ProfileSetup: React.FC = () => {
 
             <IonCardContent>
                 <p className="mt-4 mb-3">
-                    <IonText>In order for customer to find you please answer the following questions.</IonText>
+                    <IonText>In order for customers to find you, please answer the following question.</IonText>
                 </p>
-                <p><IonText><strong>What best describes your business type.</strong></IonText></p>
+                <p><IonText><strong>What best describes your business type?</strong></IonText></p>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <IonList lines="none">
                         <Controller 
@@ -87,35 +88,25 @@ const ProfileSetup: React.FC = () => {
                                 { (user && Object.keys(user).length > 0 && user.business_type === 'Seller') &&
                                 <>
                                     <IonItem>
-                                        <IonLabel color="medium">I serve the general public</IonLabel>
-                                        <IonRadio slot="start" value="5" />
-                                    </IonItem>
-                                    <IonItem>
-                                        <IonLabel color="medium">I primarily serve business</IonLabel>
+                                        <IonLabel className="ion-text-wrap" color="medium">As a business, we serve the general public or business</IonLabel>
                                         <IonRadio slot="start" value="1" />
                                     </IonItem>
+                                    <IonNote className="pl-3" color="medium">If you only serve business clients you will be able to indicate that in your profile.</IonNote>
                                     <IonItem>
-                                        <IonLabel color="medium">I serve both the general public and business</IonLabel>
-                                        <IonRadio slot="start" value="3" />
-                                    </IonItem>
-                                    <IonItem>
-                                        <IonLabel color="medium">Our organization serves business only</IonLabel>
+                                        <IonLabel className="ion-text-wrap" color="medium">As a member organization, we serve the general public or business</IonLabel>
                                         <IonRadio slot="start" value="2" />
                                     </IonItem>
-                                    <IonItem>
-                                        <IonLabel color="medium">Our organization serves the general public</IonLabel>
-                                        <IonRadio slot="start" value="4" />
-                                    </IonItem>
+                                    <IonNote className="pl-3" color="medium">An Organization is an association or network of business people designed to promote and protect the interests of its members (e.g. Chamber of Commerce, Builders Associations, etc.). If you only serve business clients you will be able to indicate that in your profile.</IonNote>
                                 </>}
                                 { (user && Object.keys(user).length > 0 && user.business_type === 'Buyer')  &&
                                 <>
                                     <IonItem>
                                         <IonLabel color="medium">I want to buy local products and services for personal use</IonLabel>
-                                        <IonRadio slot="start" value="7" />
+                                        <IonRadio slot="start" value="4" />
                                     </IonItem>
                                     <IonItem>
                                         <IonLabel color="medium">I want to procure products for a corporation</IonLabel>
-                                        <IonRadio slot="start" value="6" />
+                                        <IonRadio slot="start" value="3" />
                                     </IonItem>
                                 </>}
                             </IonRadioGroup>

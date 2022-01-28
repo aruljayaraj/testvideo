@@ -7,7 +7,7 @@ const state = {
 }
 
 const slice = createSlice({
-    name: "ui",
+    name: 'ui',
     initialState: state,
     reducers: {
         setShowLoading: (uiState, action) => {

@@ -9,8 +9,7 @@ import * as uiActions from '../../../store/reducers/ui';
 import ProfileInfo from './ProfileInfo';
 import ContactInfo from './ContactInfo';
 import AboutProfile from './AboutProfile';
-import B2B from './B2B';
-import B2C from './B2C';
+import Buscats from './Buscats';
 import ProfileAndLogo from './ProfileAndLogo';
 import RepActions from './RepActions';
 
@@ -23,11 +22,8 @@ const RepProfile: React.FC = () => {
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
       dispatch(repActions.setMemberProfile({ data: res.data.user }));
-      if(res.data.b2b){
-        dispatch(repActions.setB2B({ data: res.data.b2b }));
-      }
-      if(res.data.b2c){
-        dispatch(repActions.setB2C({ data: res.data.b2c }));
+      if(res.data.buscats){
+        dispatch(repActions.setBuscats({ data: res.data.buscats }));
       }
     }else{
       dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
@@ -58,8 +54,7 @@ const RepProfile: React.FC = () => {
           <ProfileAndLogo />
           <ProfileInfo />
           <ContactInfo />
-          { memOpts && ([1,3].includes(parseInt(memOpts.buscat_type))) === true  && <B2B /> }
-          { memOpts && ([2,3].includes(parseInt(memOpts.buscat_type))) === true  && <B2C /> }
+          { memOpts && ([1,2].includes(parseInt(memOpts.buscat_type))) === true  && <Buscats /> }
           <AboutProfile />
           <RepActions />
         </IonContent> 

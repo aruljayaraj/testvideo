@@ -162,7 +162,8 @@ const Home: React.FC = () => {
             setDisableInfiniteScroll(true);
         }
         if($event){
-          ($event.target as HTMLIonInfiniteScrollElement).complete();
+          // ($event.target as HTMLIonInfiniteScrollElement).complete();
+          ($event.target).complete();
         }
       })
       .catch( (error: any) => { // console.log(error);

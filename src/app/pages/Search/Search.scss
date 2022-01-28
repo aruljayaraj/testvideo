@@ -20,7 +20,7 @@ ion-content ion-toolbar {
     }
   }
   .res-item{
-    ion-col{
+    .border{
       border-right: 1px solid #ccc;
       &:last-child{
         border-right: none !important;

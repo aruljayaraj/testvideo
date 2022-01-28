@@ -7,7 +7,9 @@ import {
     IonList,
     IonRow,
     IonCol,
-    IonButton
+    IonButton,
+    IonFab,
+    IonFabButton
   } from '@ionic/react';
   
 import React, { useState, useCallback } from 'react';
@@ -105,10 +107,14 @@ const PRMedia: React.FC = () => {
                             <span>Upload Supporting Media</span>
                         </IonCardTitle>
                         <IonList>
-                            <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Upload Supporting Media', 'press_release')}>
+                            <IonItem className="profile-logo-wrap p-0" lines="none" >
                                 <div className="profile-logo">
                                     <img src={prImage} alt="Press Release Media"/>
-                                    <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true"></i>
+                                    <IonFab vertical="bottom" horizontal="end" slot="fixed" onClick={() => imageModalFn('Upload Supporting Media', 'press_release')}>
+                                        <IonFabButton color="greenbg" size="small">
+                                            <i className="fa fa-pencil fa-lg cursor" aria-hidden="true"></i>
+                                        </IonFabButton>
+                                    </IonFab>
                                 </div>
                             </IonItem>
                         </IonList>
@@ -131,13 +137,13 @@ const PRMedia: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </>}
-        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} cssClass='view-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} className='view-modal-wrap'>
             { pr && Object.keys(pr).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}
             setShowImageModal={setShowImageModal} 
            /> }
         </IonModal>
-        <IonModal backdropDismiss={false} isOpen={prPreviewModal.isOpen} cssClass='view-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={prPreviewModal.isOpen} className='view-modal-wrap'>
             { pr && Object.keys(pr).length > 0 && prPreviewModal.isOpen === true &&  <PRPreviewModal
             prPreviewModal={prPreviewModal}
             setPrPreviewModal={setPrPreviewModal} 

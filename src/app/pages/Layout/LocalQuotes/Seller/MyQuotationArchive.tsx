@@ -21,8 +21,7 @@ const MyQuotationArchive: React.FC = () => {
   const qts = useSelector( (state:any) => state.qq.quotations);
   const [showActionSheet, setShowActionSheet] = useState<any>({status: false, qq: null});
   const [showPopover, setShowPopover] = useState<any>({status: false, qq: null});
-  const [showDeleteModal, setShowDeleteModal] = useState({isOpen: false, id: null, mem_id: null, rfqType: ''});
-  let { rfqType } = useParams<any>();
+  const [showDeleteModal, setShowDeleteModal] = useState({isOpen: false, id: null, mem_id: null});
   let actionsheetButtons: any = [];
 
   const onCallbackFn = useCallback((res: any) => {
@@ -38,12 +37,12 @@ const MyQuotationArchive: React.FC = () => {
       // dispatch(uiActions.setShowLoading({ loading: true }));
       const data = {
         action: 'get_seller_quotations_archive',
-        rfqType: rfqType,
-        memID: authUser.ID
+        memID: authUser.ID,
+        repID: authUser.repID
       };
       CoreService.onPostFn('qq_update', data, onCallbackFn);
     }
-  }, [dispatch, onCallbackFn, authUser, rfqType]); 
+  }, [dispatch, onCallbackFn, authUser]); 
 
   const onCommonCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -58,8 +57,8 @@ const MyQuotationArchive: React.FC = () => {
     dispatch(uiActions.setShowSkeleton({ skeleton: true }));
     const fd = {
         action: 'quotation_move_archive',
-        rfqType: rfqType,
         memID: mem_id,
+        repID: authUser.repID,
         formID: id
     };
     CoreService.onPostFn('qq_update', fd, onCommonCb);
@@ -69,7 +68,6 @@ const MyQuotationArchive: React.FC = () => {
     dispatch(uiActions.setShowSkeleton({ skeleton: true }));
     const fd = {
         action: 'quotation_awarded',
-        rfqType: rfqType,
         memID: mem_id, // Seller QQ Mem ID
         formID: id, // Seller QQ ID
         bqMemID: qq_mem_id, // Buyer QQ Mem ID
@@ -83,14 +81,14 @@ const MyQuotationArchive: React.FC = () => {
       icon: pencilOutline,
       handler: () => {
         console.log('Edit clicked');
-        history.push(`/layout/add-localquote/${rfqType}/${showActionSheet.qq.id}/${showActionSheet.qq.mem_id}/1`);
+        history.push(`/layout/add-localquote/${showActionSheet.qq.id}/${showActionSheet.qq.mem_id}/1`);
       }
     }, {
       text: 'Delete',
       role: 'destructive',
       icon: trashOutline,
       handler: () => {
-        setShowDeleteModal({isOpen: true, id: showActionSheet.qq.id, mem_id: showActionSheet.qq.mem_id, rfqType: rfqType});
+        setShowDeleteModal({isOpen: true, id: showActionSheet.qq.id, mem_id: showActionSheet.qq.mem_id });
       }
     });
   }else if(showActionSheet.qq && Object.keys(showActionSheet.qq).length > 0 && [3,4,5,6].includes(parseInt(showActionSheet.qq.is_active))){
@@ -137,7 +135,7 @@ const MyQuotationArchive: React.FC = () => {
         </IonActionSheet>
         <IonPopover
             isOpen={showPopover.status}
-            cssClass='my-custom-class'
+            className='my-custom-class'
             onDidDismiss={e => setShowPopover({status: false, qq: null})}
           >
             <IonContent className="ion-padding">

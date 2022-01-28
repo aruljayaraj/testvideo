@@ -24,6 +24,7 @@ import CompanyProfile from  './app/pages/Layout/CompanyProfile/CompanyProfile';
 import RepProfile from './app/pages/Layout/RepProfile/RepProfile';
 import NewRep from './app/pages/Layout/RepProfile/AddRep/NewRep';
 import Dashboard from './app/pages/Layout/Dashboard/Dashboard';
+import PreviewProfile from './app/pages/Layout/Dashboard/PreviewProfile/PreviewProfile';
 import HomePR from './app/pages/PressReleases/PR';
 import PressRelease from './app/pages/Layout/PressRelease/PressRelease';
 import PressReleases from './app/pages/Layout/PressRelease/PressReleases';
@@ -114,6 +115,7 @@ const Routes: React.FC = () => {
                     /> */}
                 {/* <Route path="/layout" component={Layout} exact={true} /> */}
                 <PrivateRoute path="/layout/dashboard" component={Dashboard} exact={true} />
+                <PrivateRoute path="/layout/profile/:memid/:repid" component={PreviewProfile} exact={true} />
                 <PrivateRoute path="/layout/company-profile" component={CompanyProfile} exact={true} />
                 <PrivateRoute path="/layout/rep-profile/:memid/:repid" component={RepProfile} exact={true} />
                 <PrivateRoute path="/layout/add-newrep" component={NewRep} exact={true} />
@@ -132,17 +134,17 @@ const Routes: React.FC = () => {
                 <PrivateRoute path="/layout/deals/buy-deal/:id?" component={BuyDeal} exact={true} />
                 <PrivateRoute path="/layout/deals/deal-payment/:id" component={DealPayment} exact={true} />
 
-                <PrivateRoute path="/layout/add-localquote/:rfqType/:id?/:mem_id?/:step?" component={AddLQ} exact={true} />
-                <PrivateRoute path="/layout/view-localquote/:rfqType/:id/:mem_id/:vfrom?" component={ViewLQ} exact={true} />
-                <PrivateRoute path="/layout/quotation/:rfqType/:id?/:mem_id?/:quote_id?/:step?" component={Quotation} exact={true} />
-                <PrivateRoute path="/layout/view-quotation/:rfqType/:id?/:mem_id?/:qq_id?/:qq_mem_id?/:vfrom?" component={ViewQuotation} exact={true} />
+                <PrivateRoute path="/layout/add-localquote/:id?/:mem_id?/:step?" component={AddLQ} exact={true} />
+                <PrivateRoute path="/layout/view-localquote/:id/:mem_id/:vfrom?" component={ViewLQ} exact={true} />
+                <PrivateRoute path="/layout/quotation/:id?/:mem_id?/:quote_id?/:step?" component={Quotation} exact={true} />
+                <PrivateRoute path="/layout/view-quotation/:id?/:mem_id?/:qq_id?/:qq_mem_id?/:vfrom?" component={ViewQuotation} exact={true} />
 
-                <PrivateRoute path="/layout/buyer-request-center/:rfqType/" component={BuyerRequestCenter} exact={true} /> 
-                <PrivateRoute path="/layout/my-localquotes-archive/:rfqType/" component={MyLQArchive} exact={true} />
-                <PrivateRoute path="/layout/notification-settings/:rfqType" component={RFQSettings} exact={true} />
-                <PrivateRoute path="/layout/seller-request-center/:rfqType/" component={SellerRequestCenter} exact={true} />
-                <PrivateRoute path="/layout/my-quotations/:rfqType/" component={MyQuotations} exact={true} />
-                <PrivateRoute path="/layout/my-quotations-archive/:rfqType/" component={MyQuotationArchive} exact={true} />
+                <PrivateRoute path="/layout/buyer-request-center" component={BuyerRequestCenter} exact={true} /> 
+                <PrivateRoute path="/layout/my-localquotes-archive" component={MyLQArchive} exact={true} />
+                <PrivateRoute path="/layout/notification-settings" component={RFQSettings} exact={true} />
+                <PrivateRoute path="/layout/seller-request-center" component={SellerRequestCenter} exact={true} />
+                <PrivateRoute path="/layout/my-quotations" component={MyQuotations} exact={true} />
+                <PrivateRoute path="/layout/my-quotations-archive" component={MyQuotationArchive} exact={true} />
                 {/* <Route path="/layout/add-qq/:rfqType/:id?/:mem_id?/:step?" component={AddQQ} exact={true} /> */}
                 
                 

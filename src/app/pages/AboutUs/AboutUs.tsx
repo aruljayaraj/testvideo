@@ -4,13 +4,20 @@ import {
   IonCard, 
   IonCardHeader, 
   IonCardTitle, 
-  IonCardContent
+  IonCardContent,
+  IonButton
 } from '@ionic/react';
 import React, { useState, useEffect, useCallback} from 'react';
 import CoreService from '../../shared/services/CoreService';
 import './AboutUs.scss';
 import { useDispatch } from 'react-redux';
 import * as uiActions from '../../store/reducers/ui';
+
+import {
+  MediaCapture,
+  MediaFile,
+  CaptureVideoOptions,
+} from "@ionic-native/media-capture";
 
 type PageProps = {
   title: string,
@@ -39,9 +46,15 @@ const AboutUs: React.FC = () => {
     CoreService.onPostFn('getpage', data, onGetPageCb);
   }, [dispatch, onGetPageCb]); // Pass empty array, tell to hooks there is no state changes.
 
+  // const doMediaCapture = async () => { console.log('Meow');
+  //   let options: CaptureVideoOptions = { limit: 1, duration: 30 };
+  //   let capture:any = await MediaCapture.captureVideo(options);
+  //   console.log((capture[0] as MediaFile).fullPath)
+  // };
 
   return (
     <IonPage className="aboutus-page">
+      {/* <IonButton onClick={doMediaCapture} >Record</IonButton> */}
       { page.title &&
       <IonContent className="ion-padding">
         <IonCard className="card-center mt-2 mb-4">

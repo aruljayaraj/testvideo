@@ -22,7 +22,7 @@ const PreProducts: React.FC<Props> = ({ filters }) => {
 
   if( redirectData.status  ){
     if(redirectData.data && Object.keys(redirectData.data).length > 0){
-        return <Redirect to={{ pathname: `/search-results`, state: redirectData.data }} />;
+        return <Redirect to={{ pathname: '/search-results', state: redirectData.data }} />;
     }
   }
 

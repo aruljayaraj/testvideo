@@ -13,13 +13,13 @@ export function useCameraPhoto() {
           resultType: CameraResultType.Uri,
           source: CameraSource.Camera
         })
-        if( cameraPhoto ){
-          const base64Image = await base64FromPath(cameraPhoto.webPath!);
+        if( cameraPhoto && cameraPhoto.webPath ){
+          const base64Image = await base64FromPath(cameraPhoto.webPath);
           var u8Image  = CommonService.b64ToUint8Array(base64Image);
           return callbackFn(u8Image);
         }
       } catch (e) {
-        console.log('No hoto');
+        console.log('No photo');
       }
     };
   

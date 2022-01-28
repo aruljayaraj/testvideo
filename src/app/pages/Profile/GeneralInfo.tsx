@@ -180,7 +180,7 @@ const RepOverview: React.FC = () => {
             </IonCardContent>
         </IonCard>}
 
-        <IonModal backdropDismiss={false} isOpen={showReportModal.isOpen} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showReportModal.isOpen} className='my-custom-class'>
           { Object.keys(repProfile).length > 0 && <ReportModal
             showReportModal={showReportModal}
             setShowReportModal={setShowReportModal} />}

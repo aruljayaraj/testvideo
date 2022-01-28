@@ -67,7 +67,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
     const [showConsumerQQ, setShowConsumerQQ] = useState(false);
     // const [showConsumerSellerQQ, setShowConsumerSellerQQ] = useState(false);
 
-    // const tt = menuItems?.menuOpts?.some((value: any) => value.menu_key === 'b2b_buyer_tools');
+    // const tt = menuItems?.menuOpts?.some((value: any) => value.menu_key === 'get_quotes');
 
     function logout(e: any){
         removeOverlay(e);
@@ -128,14 +128,14 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                         <IonIcon className="mr-2 fs-20" slot="start" icon={personAddOutline}></IonIcon>
                         <IonLabel>Add Rep Profile</IonLabel>
                     </IonItem>}
-                    {  menuItems!.reps.map((item: any, index: number) => {
+                    {  menuItems && menuItems.reps && menuItems.reps.map((item: any, index: number) => {
                         return <IonItem className="cursor custom-list-item" key={index} button color="menu-sub-item" routerLink={`${basename}/layout/rep-profile/${item.mem_id}/${item.rep_id}`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={personOutline}></IonIcon>
                         {/* {!item.is_updated  && 
                           <IonIcon slot="end" color="warning" icon={alertCircleOutline}></IonIcon>
                         } */}
                         <IonLabel>{item.firstname}</IonLabel>
-                    </IonItem>
+                      </IonItem>
                     })}
                   </IonItemGroup>}
                 </IonMenuToggle>} 
@@ -200,12 +200,12 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </IonItem>
                   { menuItems && showLocalDeal  &&
                   <IonItemGroup className="custom-list-sidemenu"> 
-                    { (+(memOpts.localdeals!.total!) < +(memOpts.localdeals!.no_free_deals!)) && 
+                    { (+(memOpts.localdeals.total) < +(memOpts.localdeals.no_free_deals)) && 
                     <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/deals/add-deal/`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={addOutline}></IonIcon>
                         <IonLabel>Add Deal</IonLabel>
                     </IonItem> }
-                    { (+(memOpts.localdeals!.total!) >= +(memOpts.localdeals!.no_free_deals!)) && 
+                    { (+(memOpts.localdeals.total) >= +(memOpts.localdeals.no_free_deals)) && 
                       <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/deals/buy-deal/`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={addOutline}></IonIcon>
                         <IonLabel>Purchase a Deal</IonLabel>
@@ -217,107 +217,55 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </IonItemGroup>}
                 </IonMenuToggle>}
 
-                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'b2b_buyer_tools' && value.menu_value === 'yes')) &&
+                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'get_quotes' && value.menu_value === 'yes')) &&
                 <IonMenuToggle auto-hide="false" >
-                  <IonItem className="cursor" button color={['/layout/add-localquote/business/', '/layout/buyer-request-center/business/', '/layout/my-localquotes-archive/business'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowBusinessQQ(!showBusinessQQ) }>
+                  <IonItem className="cursor" button color={['/layout/add-localquote/', '/layout/buyer-request-center', '/layout/my-localquotes-archive'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowBusinessQQ(!showBusinessQQ) }>
                       <IonIcon className="mr-3" slot="start" icon={fileTrayFullOutline}></IonIcon>
                       <IonIcon className="hidden-xs hidden-sm" slot="end" icon={showBusinessQQ ? chevronUpOutline : chevronDownOutline}></IonIcon>
-                      <IonLabel>B2B Quotes</IonLabel>
+                      <IonLabel>Quotes</IonLabel>
                   </IonItem>
                   { (menuItems && showBusinessQQ) && <>
                   <IonItemGroup className="custom-list-sidemenu">
                     <IonListHeader className="custom-list-header">
-                      Buyer
+                      Get Quotes
                     </IonListHeader>
-                    <IonItem className="cursor custom-list-item" color="menu-sub-item" button routerLink={`${basename}/layout/add-localquote/business/`} onClick={ (e) => removeOverlay(e) }>
+                    <IonItem className="cursor custom-list-item" color="menu-sub-item" button routerLink={`${basename}/layout/add-localquote/`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={addOutline}></IonIcon>
                         <IonLabel>Submit RFQ</IonLabel>
                     </IonItem>
-                    <IonItem className="cursor custom-list-item" color="menu-sub-item" button routerLink={`${basename}/layout/buyer-request-center/business/`} onClick={ (e) => removeOverlay(e) }>
+                    <IonItem className="cursor custom-list-item" color="menu-sub-item" button routerLink={`${basename}/layout/buyer-request-center`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={listOutline}></IonIcon>
                         <IonLabel>My RFQ's</IonLabel>
                     </IonItem>
-                    <IonItem className="cursor custom-list-item" color="menu-sub-item" button routerLink={`${basename}/layout/my-localquotes-archive/business`} onClick={ (e) => removeOverlay(e) }>
+                    <IonItem className="cursor custom-list-item" color="menu-sub-item" button routerLink={`${basename}/layout/my-localquotes-archive`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={archiveOutline}></IonIcon>
                         <IonLabel>My Archive</IonLabel>
                     </IonItem>
                   </IonItemGroup>  
-                  { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'b2b_seller_tools' && value.menu_value === 'yes')) &&
+                  { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'submit_quotes' && value.menu_value === 'yes')) &&
                   <IonItemGroup className="custom-list-sidemenu">  
                     <IonListHeader className="custom-list-header">
-                      Seller
+                      Submit Quotes
                     </IonListHeader>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/seller-request-center/business/`} onClick={ (e) => removeOverlay(e) }>
+                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/seller-request-center`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={listOutline}></IonIcon>
                         <IonLabel>View Requests</IonLabel>
                     </IonItem>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/my-quotations/business/`} onClick={ (e) => removeOverlay(e) }>
+                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/my-quotations`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={listCircleOutline}></IonIcon>
                         <IonLabel>Quotes Sent</IonLabel>
                     </IonItem>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/my-quotations-archive/business/`} onClick={ (e) => removeOverlay(e) }>
+                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/my-quotations-archive`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={archiveOutline}></IonIcon>
                         <IonLabel>Quotes Archive</IonLabel>
                     </IonItem>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/notification-settings/business/`} onClick={ (e) => removeOverlay(e) }>
+                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/notification-settings`} onClick={ (e) => removeOverlay(e) }>
                         <IonIcon className="mr-2 fs-20" slot="start" icon={notificationsCircleOutline}></IonIcon>
                         <IonLabel>Notify Settings</IonLabel>
                     </IonItem>
                   </IonItemGroup>}
                   </>}
                   
-                </IonMenuToggle>}
-
-                
-
-                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'retail_buyer_tools' && value.menu_value === 'yes')) &&
-                <IonMenuToggle auto-hide="false" >
-                  <IonItem className="cursor" button color={['/layout/add-localquote/retail/', '/layout/buyer-request-center/retail/', '/layout/my-localquotes-archive/retail'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowConsumerQQ(!showConsumerQQ) }>
-                      <IonIcon className="mr-3" slot="start" icon={fileTrayFullOutline}></IonIcon>
-                      <IonIcon className="hidden-xs hidden-sm" slot="end" icon={showConsumerQQ ? chevronUpOutline : chevronDownOutline}></IonIcon>
-                      <IonLabel>Retail Quotes</IonLabel>
-                  </IonItem>
-                  { (menuItems && showConsumerQQ) && <>
-                  <IonItemGroup className="custom-list-sidemenu">
-                    <IonListHeader className="custom-list-header">
-                      Buyer
-                    </IonListHeader>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/add-localquote/retail/`} onClick={ (e) => removeOverlay(e) }>
-                        <IonIcon className="mr-2 fs-20" slot="start" icon={addOutline}></IonIcon>
-                        <IonLabel>Submit RFQ</IonLabel>
-                    </IonItem>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/buyer-request-center/retail/`} onClick={ (e) => removeOverlay(e) }>
-                        <IonIcon className="mr-2 fs-20" slot="start" icon={listOutline}></IonIcon>
-                        <IonLabel>My RFQ's</IonLabel>
-                    </IonItem>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/my-localquotes-archive/retail`} onClick={ (e) => removeOverlay(e) }>
-                        <IonIcon className="mr-2 fs-20" slot="start" icon={archiveOutline}></IonIcon>
-                        <IonLabel>My Archive</IonLabel>
-                    </IonItem>
-                  </IonItemGroup>
-                  { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'retail_seller_tools' && value.menu_value === 'yes')) &&
-                  <IonItemGroup className="custom-list-sidemenu">
-                    <IonListHeader className="custom-list-header">
-                      Seller
-                    </IonListHeader>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/seller-request-center/retail/`} onClick={ (e) => removeOverlay(e) }>
-                        <IonIcon className="mr-2 fs-20" slot="start" icon={listOutline}></IonIcon>
-                        <IonLabel>View Requests</IonLabel>
-                    </IonItem>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/my-quotations/retail/`} onClick={ (e) => removeOverlay(e) }>
-                        <IonIcon className="mr-2 fs-20" slot="start" icon={listCircleOutline}></IonIcon>
-                        <IonLabel>Quotes Sent</IonLabel>
-                    </IonItem>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/my-quotations-archive/retail/`} onClick={ (e) => removeOverlay(e) }>
-                        <IonIcon className="mr-2 fs-20" slot="start" icon={archiveOutline}></IonIcon>
-                        <IonLabel>Quotes Archive</IonLabel>
-                    </IonItem>
-                    <IonItem className="cursor custom-list-item" button color="menu-sub-item" routerLink={`${basename}/layout/notification-settings/retail/`} onClick={ (e) => removeOverlay(e) }>
-                        <IonIcon className="mr-2 fs-20" slot="start" icon={notificationsCircleOutline}></IonIcon>
-                        <IonLabel>Notify Settings</IonLabel>
-                    </IonItem>
-                  </IonItemGroup>}
-                  </>}
                 </IonMenuToggle>}
 
                 

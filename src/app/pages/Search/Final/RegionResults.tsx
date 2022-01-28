@@ -9,11 +9,10 @@ import CommonService from '../../../shared/services/CommonService';
 import NoData from '../../../components/Common/NoData';
 import ViewRepresentatives from "./ViewRepresentatives";
 interface Props{
-  btype: number,
   region: string
 }
 
-const RegionResults: React.FC<Props> = ({ btype, region }) => { 
+const RegionResults: React.FC<Props> = ({ region }) => { 
   const localResults = useSelector( (state:any) => state.search.finalResults[region]);
   const { apiBaseURL, basename } = lfConfig;
   const [isLocalOpen, setIsLocalOpen] = useState(true);
@@ -29,7 +28,7 @@ const RegionResults: React.FC<Props> = ({ btype, region }) => {
   return (<>
     { localResults && localResults.length > 0 && <IonCard className="card-center my-4">
     <IonCardHeader color="titlebg">
-        <IonCardTitle className="card-custom-title ion-text-capitalize">{`Your ${region} ${btype === 1 ? 'B2B Supplier': 'Consumer Supplier'}(s)`} 
+        <IonCardTitle className="card-custom-title ion-text-capitalize">{`Your ${region} Supplier(s)`} 
           <i className={`ion-float-right gray cursor fa ${isLocalOpen? 'fa-chevron-down': 'fa-chevron-up'}`} aria-hidden="true" onClick={e => setIsLocalOpen(!isLocalOpen)}></i>
         </IonCardTitle>
     </IonCardHeader>
@@ -43,7 +42,7 @@ const RegionResults: React.FC<Props> = ({ btype, region }) => {
             <IonCardContent className="px-0 px-sm-2">
               <IonGrid className="mb-3 p-0">
                 <IonRow className="res-item">
-                  <IonCol sizeSm="3" >
+                  <IonCol sizeSm="3" className="border">
                     <div className="profile-logo mr-3 pb-2 pl-2">
                       <img src={logoImage} alt="Company Logo"/>
                     </div>
@@ -51,20 +50,28 @@ const RegionResults: React.FC<Props> = ({ btype, region }) => {
                       < ViewRepresentatives reps={item.reps} />
                     </>}
                   </IonCol>
-                  <IonCol sizeMd="5" sizeXl="5" className="px-3">
-                    <p><strong>{item.company_name}</strong></p>
-                    { item.address1 && <p><i className="fa fa-address-card-o fa-lg green" aria-hidden="true"></i> {item.address1},</p> }
-                    { item.address2 && <p>{item.address2},</p> }
-                    { item.city && <p>{`${item.city}, ${item.state},`}</p> }
-                    { item.country && <p>{`${item.country} - ${item.postal}`}</p> }
-                    { item.phone && <p> 
-                      <i className="fa fa-phone fa-lg green" aria-hidden="true"></i> 
-                      <a className="gray-medium" href={`tel:${item.phone_code}${item.phone}`}> {`${item.phone_code} ${item.phone}`}</a>
-                      </p>}
-                    { item.fax && <p className="gray-medium"><i className="fa fa-fax fa-lg green" aria-hidden="true"></i> {`${item.fax}`}</p> }
+                  <IonCol sizeMd="5" sizeXl="5" className="border px-3">
+                    <IonRow class="ion-justify-content-center">
+                      <IonCol sizeMd="6">
+                        <p><strong>{item.company_name}</strong></p>
+                        { item.address1 && <p><i className="fa fa-address-card-o fa-lg green" aria-hidden="true"></i> {item.address1},</p> }
+                        { item.address2 && <p>{item.address2},</p> }
+                        { item.city && <p>{`${item.city}, ${item.state},`}</p> }
+                        { item.country && <p>{`${item.country} - ${item.postal}`}</p> }
+                        { item.phone && <p> 
+                          <i className="fa fa-phone fa-lg green" aria-hidden="true"></i> 
+                          <a className="gray-medium" href={`tel:${item.phone_code}${item.phone}`}> {`${item.phone_code} ${item.phone}`}</a>
+                          </p>}
+                        { item.fax && <p className="gray-medium"><i className="fa fa-fax fa-lg green" aria-hidden="true"></i> {`${item.fax}`}</p> }
+                      </IonCol>
+                        <IonCol sizeMd="6">
+                          <p className='fw-bold'>Overview</p>
+                          <div>{item.short_desc}</div>
+                        </IonCol>
+                      </IonRow>
                   </IonCol>
                   
-                  { isPlatform('desktop') && <IonCol sizeSm="4" className="pl-3">
+                  { isPlatform('desktop') && <IonCol sizeSm="4" className="border pl-3">
                     < ViewRepresentatives reps={item.reps} />
                   </IonCol> }
                 </IonRow>

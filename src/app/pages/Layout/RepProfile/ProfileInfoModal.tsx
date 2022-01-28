@@ -30,7 +30,7 @@ import * as uiActions from '../../../store/reducers/ui';
 import { DropDown } from '../../../interfaces/Common';
 
 type FormInputs = {
-    company_name: string;
+    rep_title: string;
     email: string;
     firstname: string;
     lastname: string;
@@ -81,7 +81,7 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
     const [ state, setState ] = useState([]);
     const [ city, setCity ] = useState([]);
     let initialValues = {
-        company_name: Object.keys(repProfile).length > 0? repProfile.company_name: '',
+        rep_title: Object.keys(repProfile).length > 0? repProfile.rep_title: '',
         email: Object.keys(repProfile).length > 0? repProfile.email: '',
         firstname: Object.keys(repProfile).length > 0? repProfile.firstname: '',
         lastname: Object.keys(repProfile).length > 0? repProfile.lastname: '',
@@ -255,9 +255,9 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
                 <IonRow>
                   <IonCol sizeMd="6" sizeXs="12">
                     <IonItem class="ion-no-padding">
-                        <IonLabel position="stacked">Company Name <IonText color="danger">*</IonText></IonLabel>   
+                        <IonLabel position="stacked">Rep Title <IonText color="danger">*</IonText></IonLabel>   
                         <Controller 
-                            name="company_name"
+                            name="rep_title"
                             control={control}
                             render={({ field }) => {
                                 return <IonInput 
@@ -269,18 +269,18 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
                             rules={{
                                 required: {
                                     value: true,
-                                    message: "Company Name is required"
+                                    message: "Rep Title is required"
                                 },
                                 pattern: {
                                     value: /^[A-Z0-9!@#$&-_() ]{2,100}$/i,
-                                    message: "Invalid Company Name"
+                                    message: "Invalid Rep Title"
                                 }
                             }}
                         />
                     </IonItem>
                     <ErrorMessage
                         errors={errors}
-                        name="company_name"
+                        name="rep_title"
                         render={({ message }) => <div className="invalid-feedback">{message}</div>}
                     />
                   </IonCol>

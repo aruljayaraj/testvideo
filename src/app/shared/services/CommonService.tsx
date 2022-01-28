@@ -2,13 +2,13 @@ import { format } from 'date-fns';
 const CommonService = (function() {
     // 
     const getBase64Image = function (img: any) {
-        var canvas: any = document.createElement("canvas");
+        var canvas: any = document.createElement('canvas');
         canvas.width = img.width;
         canvas.height = img.height;
-        var ctx = canvas.getContext("2d");
+        var ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
-        var dataURL = canvas.toDataURL("image/png");
-        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+        var dataURL = canvas.toDataURL('image/png');
+        return dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
     }
 
     const getBase64FromUrl = async (url: string) => {
@@ -38,28 +38,28 @@ const CommonService = (function() {
     // date format MMM dd, yyyy
     const dateFormat = function (cdate: any) {
         if(cdate){ // For safari need to do like this
-            return format(new Date(cdate.replace(/-/g, "/")), 'MMM dd, yyyy')
+            return format(new Date(cdate.replace(/-/g, '/')), 'MMM dd, yyyy')
         }
         return;
     }
     // Date readable format dd/MM/yyyy
     const dateReadFormat = function (cdate: any) {
         if(cdate){ // For safari need to do like this
-            return format(new Date(cdate.replace(/-/g, "/")), 'dd/MM/yyyy')
+            return format(new Date(cdate.replace(/-/g, '/')), 'dd/MM/yyyy')
         }
         return;
     }
     // Mysql date format to normal javascript format
     const mysqlToJsDateFormat = function (cdate: any) {
         if(cdate){ // For safari need to do like this
-            return new Date(Date.parse(cdate!.replace(/-/g, '/')))
+            return new Date(Date.parse(cdate.replace(/-/g, '/')))
         }
         return;
     }
 
     const getThumbImg = function(imgName: string){
         if(imgName){
-            const img = imgName.split(".");
+            const img = imgName.split('.');
             return `${img[0]}-thumb.${img[1]}`;
         }
         return;
@@ -88,7 +88,7 @@ const CommonService = (function() {
                     let content = editor.contentDocument.body.innerText;
                     // console.log(content.split(/[\w\u2019\'-]+/).length);
                     if(content.split(/[\w\u2019\'-]+/).length > maxLength){
-                        editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, maxLength).join(" ");
+                        editor.contentDocument.body.innerText = content.split(/\s+/).slice(0, maxLength).join(' ');
                     }
                 });
             },

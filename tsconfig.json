@@ -1,4 +1,5 @@
 {
+
   "compilerOptions": {
     "target": "es5",
     "lib": [
@@ -10,7 +11,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -27,5 +28,11 @@
     "./@types/react-view-pdf.d.ts",
     "./@types/react-audio-player.d.ts",
     "./@types/react-select.d.ts"
-  ]
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "start": "npm-run-all clean --parallel watch:build watch:server --print-label",
+    "watch:build": "tsc --watch",
+    "watch:server": "nodemon './dist/index.js' --watch './dist'"
+  }
 }

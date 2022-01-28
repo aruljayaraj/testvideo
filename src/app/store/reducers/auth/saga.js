@@ -1,4 +1,4 @@
-import { put, call, takeEvery, delay } from "redux-saga/effects";
+import { put, call, takeEvery, delay } from 'redux-saga/effects';
 import * as api from '../../api';
 // import * as actions from "./actions";
 import * as authActions from './index';
@@ -21,6 +21,7 @@ function* tokenAction(action) {
             if(res.menu) yield put(authActions.setMenu({menu: res.menu}));
             if( res.memOpts ) yield put(authActions.setMemOptions({ options: res.memOpts}));
             yield put(uiActions.setShowLoading({loading: false}));
+            console.log(res);
             yield put(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
         }else{
             yield put(uiActions.setShowLoading({loading: false}));

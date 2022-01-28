@@ -1,12 +1,37 @@
 .image-crop-modal-container{
-    .scroll-content { 
+    .inner-scroll { 
         padding-bottom: 0 !important; 
      }
-    .modal-wrapper {
-        --width: 90%;
-        --height: 80%;
+    .crop-modal-wrapper {
+    //     --width: 90%;
+    //     --height: 80%;
         // .ion-content-modal{
         //     --offset-bottom: auto !important;
         // }
+        .btn-group{
+            .cus-btn{
+                background-color: #F8F8F8;
+                border-radius: 5px;
+                padding: 10px;
+            }
+            
+        }
+        .img-container, .img-preview {
+            background-color: #f7f7f7;
+            text-align: center;
+            width: 100%;
+        }
+        .img-container {
+            max-height: 497px;
+            width: 686px;
+            min-height: 200px;
+            img {
+                max-width: 100%;
+            }
+        }
+        .cropper-bg {
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC);
+        }
+        
     }
 }

@@ -49,8 +49,7 @@ const CreateQQ: React.FC = () => {
     const qq = useSelector( (state:any) => state.qq.localQuote); // console.log(qq);
     const units_measure = useSelector( (state:any) => state.qq.unit_measure);  // console.log(units_measure);
     const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
-    let { rfqType, id, step } = useParams<any>();
-    const resTypeText = rfqType ? rfqType.charAt(0).toUpperCase() + rfqType.slice(1): '';
+    let { id, step } = useParams<any>();
 
     let initialValues = {
         qq_title: (qq && Object.keys(qq).length > 0 && qq.p_title) ? qq.p_title : '',
@@ -79,12 +78,12 @@ const CreateQQ: React.FC = () => {
         // dispatch(uiActions.setShowLoading({ loading: true }));
             if(units_measure.length <= 0) {
                 CoreService.onPostFn('qq_update', {
-                    action: 'get_units_measure', 
-                    rfqType: rfqType,
-                    memID: authUser.ID
+                    action: 'get_units_measure',
+                    memID: authUser.ID,
+                    repID: authUser.repID
                 }, onUnitsMeasureCBFn);
             }
-    }, [onUnitsMeasureCBFn, units_measure, rfqType, authUser]);
+    }, [onUnitsMeasureCBFn, units_measure, authUser]);
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -99,7 +98,6 @@ const CreateQQ: React.FC = () => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         const fd = {
             action: (id && step)? 'qq_update': 'qq_add',
-            rfqType: rfqType,
             memID: authValues.ID,
             repID: authValues.repID,
             ...data
@@ -117,7 +115,7 @@ const CreateQQ: React.FC = () => {
     }
 
     if( addQQ.status  ){
-      return <Redirect to={`/layout/add-localquote/${rfqType}/${addQQ.ID}/${addQQ.memID}/2`} />;
+      return <Redirect to={`/layout/add-localquote/${addQQ.ID}/${addQQ.memID}/2`} />;
     }
     
     return (
@@ -125,7 +123,7 @@ const CreateQQ: React.FC = () => {
         <QQStepInd />
         <IonCard className="card-center mt-2 mb-4">
             <IonCardHeader color="titlebg">
-                <IonCardTitle className="card-custom-title">Request {resTypeText} Product or Service Quotation</IonCardTitle>
+                <IonCardTitle className="card-custom-title">Request Product or Service Quotation</IonCardTitle>
             </IonCardHeader>
 
             <IonCardContent>
@@ -134,7 +132,7 @@ const CreateQQ: React.FC = () => {
                     <IonRow>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">{resTypeText} Title of the Quotation <IonText color="danger">*</IonText></IonLabel>
+                            <IonLabel position="stacked">Title of the Quotation <IonText color="danger">*</IonText></IonLabel>
                             <Controller 
                                 name="qq_title"
                                 control={control}
@@ -314,7 +312,7 @@ const CreateQQ: React.FC = () => {
                                         render={({ message }) => <div className="invalid-feedback">{message}</div>}
                                     />
                                 </IonCol>
-                                { rfqType === 'business' && <IonCol>
+                                <IonCol>
                                     <IonItem class="ion-no-padding">
                                     <IonLabel position="stacked">Distance From Location and Preferrence Settings<IonText color="danger">*</IonText></IonLabel>
                                     <Controller 
@@ -348,7 +346,7 @@ const CreateQQ: React.FC = () => {
                                         name="qq_location"
                                         render={({ message }) => <div className="invalid-feedback">{message}</div>}
                                     />
-                                </IonCol>}
+                                </IonCol>
                             </IonRow>
                             <IonRow>
                                 <IonCol>

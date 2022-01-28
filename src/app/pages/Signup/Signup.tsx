@@ -21,7 +21,7 @@ import {
 } from '@ionic/react';
 import React, { useState, useRef, memo } from 'react';
 import { Redirect } from 'react-router-dom';
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { useDispatch, useSelector } from 'react-redux';
 import * as authActions from '../../store/reducers/auth';
@@ -40,12 +40,12 @@ type FormInputs = {
 }
 
 let initialValues = {
-  firstname: "",
-  lastname: "",
-  business_name: "",
-  email: "",
-  password: "",
-  confirm_password: "",
+  firstname: '',
+  lastname: '',
+  business_name: '',
+  email: '',
+  password: '',
+  confirm_password: '',
   business_type: 'Seller'
 };
 
@@ -56,10 +56,10 @@ const Signup: React.FC = () => {
   const authValues = useSelector( (state:any) => state.auth.data);
   const { control, handleSubmit, watch, formState: { errors } } = useForm<FormInputs>({
     defaultValues: { ...initialValues },
-    mode: "onChange"
+    mode: 'onChange'
   });
   const password = useRef({});
-  password.current = watch("password", "");
+  password.current = watch('password', '');
   const [showModal, setShowModal] = useState({status: false, title: ''});
 
   async function closeModal() {
@@ -126,11 +126,11 @@ const Signup: React.FC = () => {
                         rules={{
                           required: {
                             value: true,
-                            message: "First Name is required"
+                            message: 'First Name is required'
                           },
                             pattern: {
                                 value: /^[A-Z0-9 ]{2,25}$/i,
-                                message: "Invalid First Name"
+                                message: 'Invalid First Name'
                             }
                         }}
                       />
@@ -157,11 +157,11 @@ const Signup: React.FC = () => {
                         rules={{
                             required: {
                               value: true,
-                              message: "Lastname is required"
+                              message: 'Lastname is required'
                             },
                             pattern: {
                                 value: /^[A-Z0-9 ]{2,25}$/i,
-                                message: "Invalid Last Name"
+                                message: 'Invalid Last Name'
                             }
                         }}
                       />
@@ -189,11 +189,11 @@ const Signup: React.FC = () => {
                         rules={{
                           minLength: {
                             value: 3,
-                            message: "Invalid Business Name"
+                            message: 'Invalid Business Name'
                           },
                           maxLength: {
                             value: 100,
-                            message: "Business Name must consist of at maximum 100 characters"
+                            message: 'Business Name must consist of at maximum 100 characters'
                           }
                         }}
                       />
@@ -221,11 +221,11 @@ const Signup: React.FC = () => {
                         rules={{
                           required: {
                             value: true,
-                            message: "Email is required"
+                            message: 'Email is required'
                           },
                           pattern: {
                             value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                            message: "Invalid Email Address"
+                            message: 'Invalid Email Address'
                           }
                         }}
                       />
@@ -254,15 +254,15 @@ const Signup: React.FC = () => {
                           required: true,
                           minLength: {
                             value: 5,
-                            message: "Password must have at least 5 characters"
+                            message: 'Password must have at least 5 characters'
                           },
                           maxLength: {
                             value: 15,
-                            message: "Password must consist of at maximum 15 characters"
+                            message: 'Password must consist of at maximum 15 characters'
                           },
                           pattern: {
                             value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
-                            message: "Invalid Password"
+                            message: 'Invalid Password'
                           }
                         }}
                       /> */}
@@ -279,19 +279,19 @@ const Signup: React.FC = () => {
                           rules={{
                             required: {
                               value: true,
-                              message: "Password is required"
+                              message: 'Password is required'
                             },
                             minLength: {
                               value: 5,
-                              message: "Password must have at least 5 characters"
+                              message: 'Password must have at least 5 characters'
                             },
                             maxLength: {
                               value: 15,
-                              message: "Password must consist of at maximum 15 characters"
+                              message: 'Password must consist of at maximum 15 characters'
                             },
                             pattern: {
                               value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
-                              message: "Invalid Password"
+                              message: 'Invalid Password'
                             }
                           }}
                       />
@@ -317,21 +317,21 @@ const Signup: React.FC = () => {
                           rules={{
                             required: {
                               value: true,
-                              message: "Confirm Password is required"
+                              message: 'Confirm Password is required'
                             },
                             minLength: {
                               value: 5,
-                              message: "Password must have at least 5 characters"
+                              message: 'Password must have at least 5 characters'
                             },
                             maxLength: {
                               value: 15,
-                              message: "Password must consist of at maximum 15 characters"
+                              message: 'Password must consist of at maximum 15 characters'
                             },
                             pattern: {
                               value: /^[A-Z0-9._%+-@!#$%^&*()]{5,15}$/i,
-                              message: "Invalid Confirm Password"
+                              message: 'Invalid Confirm Password'
                             },
-                            validate: value => ( value === password.current || "The passwords do not match" )
+                            validate: value => ( value === password.current || 'The passwords do not match' )
                           }}
                       />
                     </IonItem>
@@ -405,7 +405,7 @@ const Signup: React.FC = () => {
                     rules={{ 
                       required: {
                         value: true,
-                        message: "Business Type is required"
+                        message: 'Business Type is required'
                       }
                      }}
                 />
@@ -438,7 +438,7 @@ const Signup: React.FC = () => {
         
       </IonContent>
 
-      <IonModal backdropDismiss={false} isOpen={showModal.status} cssClass='my-custom-class'>
+      <IonModal backdropDismiss={false} isOpen={showModal.status} className="my-custom-class">
         <Modal title = {showModal.title} closeAction={closeModal} />
       </IonModal>
  

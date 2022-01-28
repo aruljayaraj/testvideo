@@ -59,7 +59,7 @@ const BuyDeal: React.FC = () => {
         payment_type: 'credit_card'
         
     };
-    const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm<FormInputs>({
+    const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm<any>({
         defaultValues: { ...initialValues },
         mode: "onChange"
     });

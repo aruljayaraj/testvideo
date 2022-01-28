@@ -18,8 +18,8 @@ const FinalResults: React.FC<SearchProps> = (props: any) => {
   const nationalResults = useSelector( (state:any) => state.search.finalResults.national);
   const internationalResults = useSelector( (state:any) => state.search.finalResults.international);
 
-  const mainSearchSettings = { category: '', type: '' };
-  const { category, type } = (props.location && props.location.state)? props.location.state : mainSearchSettings;
+  const mainSearchSettings = { category: '', keyword: '' };
+  const { category, keyword } = (props.location && props.location.state)? props.location.state : mainSearchSettings;
 
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
@@ -36,12 +36,11 @@ const FinalResults: React.FC<SearchProps> = (props: any) => {
       const data = {
         action: 'final_search',
         location,
-        category,
-        type
+        category
       };
       CoreService.onPostFn('search', data, onCallbackFn);
     }
-  }, [dispatch, onCallbackFn, category, type, location]);
+  }, [dispatch, onCallbackFn, category, location]);
 
   // if(!props.location || !props.location.state){
   //   return <Redirect to="/" />;
@@ -50,11 +49,12 @@ const FinalResults: React.FC<SearchProps> = (props: any) => {
   return (
     <IonPage className="search-page">
       <IonContent>
-        { localResults && localResults.length > 0 && <RegionResults btype={type} region="local" /> }
-        { localNonMemResults && localNonMemResults.length > 0 && <RegionNonMemResults region="localNonMem" /> }
-        { regionalResults && regionalResults.length > 0 && <RegionResults btype={type} region="regional" /> }
-        { nationalResults && nationalResults.length > 0 && <RegionResults btype={type} region="national" /> }
-        { internationalResults && internationalResults.length > 0 && <RegionResults btype={type} region="international" /> }
+        <h4 className='ml-4 fs-18'>Search Result : {`${category} `}</h4>
+        { localResults && localResults.length > 0 && <RegionResults region="local" /> }
+        { localNonMemResults && localNonMemResults.length > 0 && <RegionNonMemResults results={localNonMemResults} title="Your Local-First Business Listing" /> }
+        { regionalResults && regionalResults.length > 0 && <RegionResults region="regional" /> }
+        { nationalResults && nationalResults.length > 0 && <RegionResults region="national" /> }
+        { internationalResults && internationalResults.length > 0 && <RegionResults region="international" /> }
       </IonContent>
     </IonPage>
   );

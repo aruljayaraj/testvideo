@@ -85,7 +85,7 @@ const ContactInfo: React.FC = () => {
             </IonCardContent>
         </IonCard>
         }
-        <IonModal backdropDismiss={false} isOpen={showContactModal} cssClass='my-custom-class'>
+        <IonModal backdropDismiss={false} isOpen={showContactModal} className='my-custom-class'>
           { Object.keys(repProfile).length > 0 && <ContactInfoModal
             showContactModal={showContactModal}
             setShowContactModal={setShowContactModal} /> }

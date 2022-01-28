@@ -70,6 +70,9 @@ $wizard-step-font-size: 24px !default;
 .mt-neg-6{
     margin-top: -6px;
 }
+.ew-100, .tox-tinymce{
+    width: 100% !important;
+}
 .cursor{
     cursor: pointer !important;
 }
@@ -113,7 +116,7 @@ a{
     height: 32px;
     /*margin-top: -5px;*/
     i{
-        margin: 8px 0 0 9px;
+        margin: 8px 0 0 9px; // 9
     }
     &:hover{
         background-color: #d7efcc;
@@ -277,7 +280,7 @@ p.textbold{
         height: 1px;
         position: absolute;
         width: 100%;
-        top: $wizard-step-width-height/2;
+        top: calc($wizard-step-width-height/2);
       }
 
       &:after {
@@ -399,4 +402,9 @@ p.textbold{
         background-color: #fff !important;
         opacity: 0.5;
     }
+}
+
+// Popover Positioning
+.profiles-list-popover.sc-ion-popover-md-h {
+    --width: 300px !important;
 }

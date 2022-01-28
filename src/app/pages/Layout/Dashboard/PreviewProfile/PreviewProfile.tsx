@@ -1,26 +1,27 @@
 import { IonCard, IonCardContent, IonCol, IonContent, IonPage, IonRow } from '@ionic/react'; 
 import React, {useCallback, useEffect, useState, useLayoutEffect} from 'react';
 import { useParams } from "react-router-dom";
-import CoreService from '../../shared/services/CoreService';
+import CoreService from '../../../../shared/services/CoreService';
 import { isPlatform } from '@ionic/react';
-import './Profile.scss';
-import { lfConfig } from '../../../Constants';
+import '../../../Profile/Profile.scss';
+import { lfConfig } from '../../../../../Constants';
 import { useDispatch, useSelector } from 'react-redux';
-import * as repActions from '../../store/reducers/dashboard/rep';
-import * as resActions from '../../store/reducers/dashboard/resource';
-import * as dealActions from '../../store/reducers/dashboard/deal';
-import * as prActions from '../../store/reducers/dashboard/pr';
-import * as uiActions from '../../store/reducers/ui';
-import PartnerAds from '../../components/Common/PartnerAds';
+import * as repActions from '../../../../store/reducers/dashboard/rep';
+import * as resActions from '../../../../store/reducers/dashboard/resource';
+import * as dealActions from '../../../../store/reducers/dashboard/deal';
+import * as prActions from '../../../../store/reducers/dashboard/pr';
+import * as uiActions from '../../../../store/reducers/ui';
+import PartnerAds from '../../../../components/Common/PartnerAds';
 
-import Overview from './Overview';
-import RepOverview from './RepOverview';
-import Buscats from './Buscats';
-import Resources from './Resources';
-import ProfileItems from './ProfileItems';
-import GeneralInfo from './GeneralInfo';
+import Overview from '../../../Profile/Overview';
+import RepOverview from '../../../Profile/RepOverview';
+import Buscats from '../../../Profile/Buscats';
+import Resources from '../../../Profile/Resources';
+// import Deals from './Deals';
+import ProfileItems from '../../../Profile/ProfileItems';
+import GeneralInfo from '../../../Profile/GeneralInfo';
 
-const CompanyProfile: React.FC = () => {
+const PreviewProfile: React.FC = () => {
   const dispatch = useDispatch();
   const { ADS } = lfConfig;
   const comProfile = useSelector( (state:any) => state.rep.comProfile);
@@ -105,4 +106,4 @@ const CompanyProfile: React.FC = () => {
   );
 };
 
-export default CompanyProfile;
+export default PreviewProfile;

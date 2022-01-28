@@ -21,7 +21,7 @@ let state = {
 }
 
 const slice = createSlice({
-    name: "auth",
+    name: 'auth',
     initialState: state,
     reducers: {
         getToken: (state, action) =>  {

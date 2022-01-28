@@ -52,7 +52,7 @@ const DeleteModal: React.FC<Props> = ({ title, showDeleteModal, setShowDeleteMod
 
   const onCommonCb = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){
-      setShowDeleteModal({ isOpen: false, id: null, mem_id: null, rfqType: '', qqType: ''});
+      setShowDeleteModal({ isOpen: false, id: null, mem_id: null, qqType: ''});
       if( showDeleteModal.qqType === 'seller' ){
         dispatch(qqActions.setSQs({ data: res.data }));
       }else if( showDeleteModal.qqType === 'buyer' ){
@@ -69,7 +69,6 @@ const DeleteModal: React.FC<Props> = ({ title, showDeleteModal, setShowDeleteMod
     dispatch(uiActions.setShowLoading({ loading: true }));
     const fd = {
         action: (action)? action: 'qq_delete',
-        rfqType: showDeleteModal.rfqType,
         qqType: showDeleteModal.qqType, 
         memID: showDeleteModal.mem_id,
         formID: showDeleteModal.id,
@@ -83,7 +82,7 @@ const DeleteModal: React.FC<Props> = ({ title, showDeleteModal, setShowDeleteMod
       <IonHeader translucent>
         <IonToolbar color="greenbg">
             <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
-                <IonButton onClick={() => setShowDeleteModal({isOpen: false, id: null, mem_id: null, rfqType: ''})}>
+                <IonButton onClick={() => setShowDeleteModal({isOpen: false, id: null, mem_id: null})}>
                     <IonIcon icon={close} slot="icon-only"></IonIcon>
                 </IonButton>
             </IonButtons>

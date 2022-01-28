@@ -42,16 +42,14 @@ const BusinessCategory: React.FC = () => {
     const qq = useSelector( (state:any) => state.qq.localQuote);
     const [showCategoryModal, setShowCategoryModal] = useState(initialValues);
     const [selectedItem, setSelectedItem] = useState({});
-    let { id, rfqType } = useParams<any>(); 
+    let { id } = useParams<any>(); 
     const { basename } = lfConfig;
 
     const categoryModalFn = (title: string, actionType: string, item?: any) => {
         setShowCategoryModal({ 
             ...showCategoryModal, 
             isOpen: true,
-            type: (rfqType === 'retail') ? '1' : '0',
             title: title,
-            // formType: rfqType? rfqType: '',
             formType: 'localquote',
             actionType: actionType,
             repId: (authUser && Object.keys(authUser).length > 0)? authUser.repID: '',
@@ -66,7 +64,7 @@ const BusinessCategory: React.FC = () => {
         <IonCard className="buscat-section-wrap card-center mt-4 mb-4">
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="card-custom-title">
-                    {`${rfqType === 'retail' ? 'Retail' : 'B2B'} Category`}
+                    Category
                     <IonRouterLink color="greenbg" onClick={() => categoryModalFn('Add Business Category', 'new')} className="float-right router-link-anchor">
                         <i className="fa fa-plus green cursor" aria-hidden="true"></i>
                     </IonRouterLink>
@@ -106,7 +104,7 @@ const BusinessCategory: React.FC = () => {
                                     <h3>{item.sub_catname}</h3>
                                     <p><strong>Keywords:</strong> {item.keywords}</p>
                                 </IonLabel>
-                                <IonAvatar className="anchor-white" slot="end" color="greenbg" onClick={() => categoryModalFn('Edit B2B Category', 'edit', item)}>
+                                <IonAvatar className="anchor-white" slot="end" color="greenbg" onClick={() => categoryModalFn('Edit Category', 'edit', item)}>
                                     <i className="fa fa-pencil fa-lg green cursor" aria-hidden="true"></i>
                                 </IonAvatar>
                             </IonItem>
@@ -125,14 +123,14 @@ const BusinessCategory: React.FC = () => {
                 </IonList>
                 { qq && qq.buscats && qq.buscats.length > 0 && 
                 <IonButton color="greenbg" 
-                    routerLink={`${basename}/layout/add-localquote/${rfqType}/${id}/${authUser.ID}/3`}
+                    routerLink={`${basename}/layout/add-localquote/${id}/${authUser.ID}/3`}
                     className="ion-margin-top mt-4 mb-3 float-right">
                     Next
                 </IonButton>
                 }
             </IonCardContent>
         </IonCard>
-        <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} cssClass='category-modal-wrap'>
+        <IonModal backdropDismiss={false} isOpen={showCategoryModal.isOpen} className='category-modal-wrap'>
           { qq && Object.keys(qq).length > 0 && showCategoryModal.isOpen === true && <CategoryModal
             showCategoryModal={showCategoryModal}
             setShowCategoryModal={setShowCategoryModal}

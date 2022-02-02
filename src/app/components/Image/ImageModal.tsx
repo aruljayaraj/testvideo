@@ -50,7 +50,6 @@ let initialValues: any = {
     uploaded: false
 }
 
-
 const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     const dispatch = useDispatch();
     const authUser = useSelector( (state:any) => state.auth.data.user);
@@ -73,12 +72,11 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     // const [image, setImage] = useState('');
     const [cropData, setCropData] = useState("#");
     const [cropper, setCropper] = useState<any>();
-    
     let initialCropValues = {
         unit: "px", 
         width: (actionType && rectTypes.includes(actionType) )? 300: 300, 
-        height: (actionType && rectTypes.includes(actionType) )? 150: 300, 
-        aspect: (actionType && rectTypes.includes(actionType) )? 0: 1, // 16/9
+        height: (actionType && rectTypes.includes(actionType) )? 50: 300, 
+        aspect: (actionType && rectTypes.includes(actionType) )? NaN : 1/1, // 16/9
         // aspect: 1,
         // minContainerWidth: 800, // 548
         // minContainerHeight: 800 // 400
@@ -314,7 +312,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                                 // style={{ minHeight: initialCropValues.minContainerHeight, height: "100%", width: initialCropValues.minContainerWidth }}
                                 // style={{ height: initialCropValues.height, width: initialCropValues.width }}
                                 initialAspectRatio={1}
-                                // aspectRatio={initialCropValues.aspect}
+                                aspectRatio={initialCropValues.aspect}
                                 src={picture.image}
                                 dragMode={dragValue}
                                 // rotatable={true}

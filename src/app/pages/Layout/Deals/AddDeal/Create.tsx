@@ -62,15 +62,14 @@ const CreateDeals: React.FC = () => {
         mode: "onChange"
     });
     const maxDaysAllowed = (dd && Object.keys(dd).length > 0 && dd.days_allowed > 0) ? dd.days_allowed : +(memOpts.localdeals.no_days_allowed);
-    let calEnddate = addDays(new Date(), maxDaysAllowed); console.log(calEnddate, maxDaysAllowed);
+    let calEnddate = addDays(new Date(), maxDaysAllowed); 
     if( startDate && memOpts.localdeals && maxDaysAllowed ){
         // convert mysql date to javascript 
         const convStartDate = CommonService.mysqlToJsDateFormat(startDate);
         if( convStartDate ){
-            calEnddate = addDays(convStartDate, maxDaysAllowed); console.log(calEnddate);
+            calEnddate = addDays(convStartDate, maxDaysAllowed);
         }
     }
-    console.log(format(calEnddate, 'yyyy-MM-dd'));
     
     useEffect(() => { // Only for Premium End date autoupdate.
         if( startDate && calEnddate && dd.days_allowed > 0){

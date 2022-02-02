@@ -138,9 +138,9 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                       </IonItem>
                     })}
                   </IonItemGroup>}
-                </IonMenuToggle>} 
-                
-                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'press_release' && value.menu_value === 'yes')) && 
+                </IonMenuToggle>}
+
+                { authValues.user.accType === 'full' && authValues.user.proComplete && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'press_release' && value.menu_value === 'yes')) && 
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/add-press-release/', '/layout/press-releases/'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowPressRelease(!showPressRelease) }>
                       <IonIcon className="mr-3" slot="start" icon={newspaperOutline}></IonIcon>
@@ -160,7 +160,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </IonItemGroup>}
                 </IonMenuToggle>}
 
-                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'resources' && value.menu_value === 'yes')) &&
+                { authValues.user.accType === 'full' && authValues.user.proComplete && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'resources' && value.menu_value === 'yes')) &&
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/my-uploads/', '/layout/add-resource/document/', '/layout/resources/video/', '/layout/resources/audio/', '/layout/resources/document/'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowResource(!showResource) }>
                       <IonIcon className="mr-3" slot="start" icon={fileTrayFullOutline}></IonIcon>
@@ -191,7 +191,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                     </IonItem>
                   </IonItemGroup>}
                 </IonMenuToggle>}
-                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'local_deals' && value.menu_value === 'yes')) && 
+                { authValues.user.accType === 'full' && authValues.user.proComplete && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'local_deals' && value.menu_value === 'yes')) && 
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/deals/local-deal','/layout/deals/add-deal', '/layout/deals/local-deals'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowLocalDeal(!showLocalDeal) }>
                       <IonIcon className="mr-3" slot="start" icon={newspaperOutline}></IonIcon>
@@ -217,7 +217,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </IonItemGroup>}
                 </IonMenuToggle>}
 
-                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'get_quotes' && value.menu_value === 'yes')) &&
+                { authValues.user.accType === 'full' && authValues.user.proComplete && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'get_quotes' && value.menu_value === 'yes')) &&
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/add-localquote/', '/layout/buyer-request-center', '/layout/my-localquotes-archive'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowBusinessQQ(!showBusinessQQ) }>
                       <IonIcon className="mr-3" slot="start" icon={fileTrayFullOutline}></IonIcon>
@@ -242,7 +242,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                         <IonLabel>My Archive</IonLabel>
                     </IonItem>
                   </IonItemGroup>  
-                  { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'submit_quotes' && value.menu_value === 'yes')) &&
+                  { authValues.user.accType === 'full' && authValues.user.repComplete && ([1,2,3].includes(+(authValues.user.mem_level)) && authValues.user.comComplete)  && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'submit_quotes' && value.menu_value === 'yes')) &&
                   <IonItemGroup className="custom-list-sidemenu">  
                     <IonListHeader className="custom-list-header">
                       Submit Quotes
@@ -267,8 +267,6 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </>}
                   
                 </IonMenuToggle>}
-
-                
 
             </IonList>
           </IonContent> }

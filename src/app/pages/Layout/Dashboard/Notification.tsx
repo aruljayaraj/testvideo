@@ -6,7 +6,6 @@ import {
     IonText,
     IonRouterLink,
     IonPopover,
-    IonButton,
     IonList,
     IonItem
   } from '@ionic/react';
@@ -14,6 +13,7 @@ import React, {useState} from 'react';
 import './Dashboard.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../Constants';
+import { nanoid } from 'nanoid';
 
 const Notification: React.FC = () => {
     const authValues = useSelector( (state:any) => state.auth.data);
@@ -50,7 +50,7 @@ const Notification: React.FC = () => {
                     >
                         {  reps && reps.length > 1 && <IonList className="p-3">
                             { reps.map((item: any, index: number) => {
-                                return <IonItem lines={ reps.length === (index+1)? "none": "full"} button>
+                                return <IonItem key={nanoid()} lines={ reps.length === (index+1)? "none": "full"} button>
                                         <IonRouterLink className="py-3" key={index} routerLink={`${basename}/layout/profile/${item.mem_id}/${item.rep_id}`}>
                                             <i className="fa fa-user fa-lg cursor pr-3" aria-hidden="true"></i>
                                             {`${item.firstname} ${item.lastname}`}
@@ -80,7 +80,7 @@ const Notification: React.FC = () => {
                 { repProfile && (!repProfile.country || !repProfile.phone || !repProfile.profile_description) && 
                     <p><IonRouterLink href={`${basename}/layout/rep-profile/${repProfile.mem_id}/${repProfile.id}`}>Complete your { parseInt(memOpts.profile) === 2? 'Profile': 'Rep Profile'}</IonRouterLink></p>
                 }
-                { comProfile && (!comProfile.country || !comProfile.description) && authValues.user.accType === 'full' &&
+                { comProfile && (!comProfile.country || !comProfile.description) && authValues.user.accType === 'full' && [1,2,3].includes(+(repProfile.mem_level)) &&
                     <p><IonRouterLink href={`${basename}/layout/company-profile`}>Complete your Company Profile</IonRouterLink></p> 
                 }
             </IonCardContent>

@@ -47,6 +47,7 @@ const CompanyInfo: React.FC = () => {
                         </IonAvatar>
                         <IonLabel>
                             { comProfile.company_name && <h2>{comProfile.company_name}</h2> }
+                            { comProfile.short_desc && <p>{comProfile.short_desc}</p> }
                             { comProfile.firstname && <h3>{comProfile.firstname+" "+comProfile.lastname}</h3> }
                             { comProfile.website && 
                                 <p><a 

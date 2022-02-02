@@ -101,9 +101,10 @@ const BuyDeal: React.FC = () => {
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
     }, [setDealLog, dispatch]);
-    const onPremiumDealFeeCalc = (loading:boolean) => { 
-        const data = getValues();
-        if( data.location && data.duration && data.reps && data.reps.length > 0 ){
+    const onPremiumDealFeeCalc = useCallback((loading:boolean) => { 
+        const data = getValues(); console.log(data);
+        console.log(data.location, data.duration, data.reps, data.reps.length);
+        /*if( data.location && data.duration && data.reps && data.reps.length > 0 ){
             if( loading ){
                 dispatch(uiActions.setShowLoading({ loading: true }));
             }
@@ -114,12 +115,12 @@ const BuyDeal: React.FC = () => {
                 ...data
             };
             CoreService.onPostFn('deal_update', fd, onFeeCbFn);
-        }   
-    }
+        } */  
+    },[]);
     useEffect(() => {
         // Delay calling api on input typing
         if( dealLog.duration ){
-            const delayDebounceFn = setTimeout(() => {
+            const delayDebounceFn = setTimeout(() => { console.log('One');
                 onPremiumDealFeeCalc(false);
             }, 3000);
             return () => clearTimeout(delayDebounceFn);
@@ -140,6 +141,7 @@ const BuyDeal: React.FC = () => {
             log: {}
         });
         onPremiumDealFeeCalc(false);
+        console.log('two');
     }
 
     
@@ -204,6 +206,7 @@ const BuyDeal: React.FC = () => {
                                                 return <IonSelect
                                                     placeholder="Select Location Pref."
                                                     onIonChange={(selected: any) =>{
+                                                        console.log('Three');
                                                         onChange(selected.detail.value);
                                                         onPremiumDealFeeCalc(true);
                                                     }}
@@ -242,9 +245,11 @@ const BuyDeal: React.FC = () => {
                                                 render={({ field: {onChange, onBlur, value} }) => {
                                                     return <IonSelect multiple
                                                         placeholder="Select Rep Profile"
-                                                        onIonChange={(selected: any) =>{
-                                                            onChange(selected.detail.value);
-                                                            onPremiumDealFeeCalc(true);
+                                                        onIonChange={(selected: any) => {
+                                                            console.log('Four');
+                                                            console.log(selected.detail.value);
+                                                            // onChange(selected.detail.value);
+                                                            // onPremiumDealFeeCalc(true);
                                                         }}
                                                         onBlur={onBlur}
                                                         value={value}

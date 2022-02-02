@@ -27,7 +27,7 @@ import CoreService from '../../../../shared/services/CoreService';
 import StepInd from './StepInd';
 
 type FormInputs = {
-    reps: string;
+    reps: Array<string>;
 }
 
 const AssignRep: React.FC = () => {
@@ -72,7 +72,7 @@ const AssignRep: React.FC = () => {
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }, [dispatch]);
     
-    const onSubmit = (data: any) => {
+    const onSubmit = (data: FormInputs) => {
         if(data['reps'].length > 0 ){
             dispatch(uiActions.setShowLoading({ loading: true }));
             const fd = {
@@ -124,7 +124,7 @@ const AssignRep: React.FC = () => {
                                             return <IonSelect multiple
                                                 placeholder="Select Rep Profile"
                                                 onIonChange={(selected: any) =>{
-                                                    onChange(selected.detail.value);
+                                                    onChange(selected.target.value);
                                                 }}
                                                 onBlur={onBlur}
                                                 value={value}

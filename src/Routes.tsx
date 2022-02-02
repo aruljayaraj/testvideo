@@ -16,6 +16,7 @@ import ForgetPassword from './app/pages/ForgetPassword/ForgetPassword';
 import AboutUs from './app/pages/AboutUs/AboutUs';
 import PrivacyPolicy from './app/pages/PrivacyPolicy/PrivacyPolicy';
 import ContactUs from './app/pages/ContactUs/ContactUs';
+import Testing from './app/pages/Testing/Testing';
 import Profile from './app/pages/Profile/Profile';
 import PreResults from './app/pages/Search/Preliminary/Results';
 // import MainResults from './app/pages/Search/Main/Results';
@@ -96,6 +97,7 @@ const Routes: React.FC = () => {
                 <Route path="/about-us" component={AboutUs} exact={true} />
                 <Route path="/privacy-policy" component={PrivacyPolicy} exact={true} />
                 <Route path="/contact-us" component={ContactUs} exact={true} />
+                <Route path="/testing" component={Testing} exact={true} />
 
                 <Route path="/profile/:memid/:repid" component={Profile} exact={true} />
                 <Route path="/preliminary-results" component={PreResults} exact={true} />

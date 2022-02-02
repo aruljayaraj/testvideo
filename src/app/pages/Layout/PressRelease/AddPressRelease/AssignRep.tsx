@@ -25,7 +25,7 @@ import CoreService from '../../../../shared/services/CoreService';
 import PRStepInd from './PRStepInd';
 
 type FormInputs = {
-    reps: string;
+    reps: Array<string>;
 }
 
 const AssignRep: React.FC = () => {
@@ -69,7 +69,7 @@ const AssignRep: React.FC = () => {
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }, [dispatch]);
     
-    const onSubmit = (data: any) => {
+    const onSubmit = (data: FormInputs) => {
         if(data['reps'].length > 0 ){
             dispatch(uiActions.setShowLoading({ loading: true }));
             const fd = {
@@ -103,7 +103,6 @@ const AssignRep: React.FC = () => {
             </IonCardHeader>
 
             <IonCardContent>
-            
                 <IonGrid>
                     <IonRow>
                         <IonCol sizeMd="8" sizeLg="8" sizeXl="8" sizeXs="12">
@@ -116,8 +115,8 @@ const AssignRep: React.FC = () => {
                                         render={({ field: {onChange, onBlur, value} }) => {
                                             return <IonSelect multiple
                                                 placeholder="Select Rep Profile"
-                                                onIonChange={(selected: any) =>{
-                                                    onChange(selected.detail.value);
+                                                onIonChange={(event: any) => {
+                                                    onChange(event.target.value);
                                                 }}
                                                 onBlur={onBlur}
                                                 value={value}

@@ -242,7 +242,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                         <IonLabel>My Archive</IonLabel>
                     </IonItem>
                   </IonItemGroup>  
-                  { authValues.user.accType === 'full' && authValues.user.repComplete && ([1,2,3].includes(+(authValues.user.mem_level)) && authValues.user.comComplete)  && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'submit_quotes' && value.menu_value === 'yes')) &&
+                  { authValues.user.accType === 'full' && authValues.user.proComplete&& ([1,2,3].includes(+(authValues.user.mem_level)) )  && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'submit_quotes' && value.menu_value === 'yes')) &&
                   <IonItemGroup className="custom-list-sidemenu">  
                     <IonListHeader className="custom-list-header">
                       Submit Quotes

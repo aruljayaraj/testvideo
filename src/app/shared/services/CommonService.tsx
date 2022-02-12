@@ -74,6 +74,15 @@ const CommonService = (function() {
         return url;
     }
 
+    const formatTime = (timer: any) => {
+        const getSeconds = `0${(timer % 60)}`.slice(-2)
+        const minutes: any = `${Math.floor(timer / 60)}`
+        const getMinutes = `0${minutes % 60}`.slice(-2)
+        const getHours = `0${Math.floor(timer / 3600)}`.slice(-2)
+      
+        return `${getHours} : ${getMinutes} : ${getSeconds}`
+      }
+
     // On get Tinymce Editor config object
     const onEditorConfig = function(maxLength: number = 250){
         return {
@@ -121,6 +130,7 @@ const CommonService = (function() {
         mysqlToJsDateFormat: mysqlToJsDateFormat,
         getThumbImg: getThumbImg,
         onImgErr,
+        formatTime,
         onEditorConfig
     }
 

@@ -9,11 +9,21 @@ import {
     IonGrid,
     IonRow,
     IonCol,
-    IonSelectOption
+    IonSelectOption,
+    IonModal
   } from '@ionic/react';
-  import React, { useCallback } from 'react';
+  import React, { useCallback, useState, useRef } from 'react';
   import { useForm, Controller } from "react-hook-form";
+  import RecordAudio from '../../components/Modal/Record/RecordAudio';
+  import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
 
+  let initialValues = {
+    isOpen: false,
+    title: '',
+    actionType: '', // new or edit
+    memId: '',
+    frmId: ''
+};
   type FormInputs = {
     reps: Array<string>;
     // reps: string;
@@ -28,15 +38,111 @@ import {
       defaultValues: { ...defaultValues },
       mode: "onChange"
     });
+    const [audio, setAudio] = useState<any>({});
+    const audioRef = useRef<any>();
+    const [showRecordAudioModal, setShowRecordAudioModal] = useState(initialValues);
 
     const onSubmit = (data: FormInputs, e: any) => {
         console.log("Meow");
         console.log(data);
     }
+
+    const recordModalFn = (title: string, actionType: string) => {
+        setShowRecordAudioModal({ 
+            ...showRecordAudioModal, 
+            isOpen: true,
+            title: title,
+            actionType: actionType
+            // memId: (authUser && Object.keys(authUser).length > 0)? authUser.ID: '',
+            // frmId: (pr && Object.keys(pr).length > 0)? pr.pr_id: ''
+        });
+    }
+
+    const onRecord = () => { console.log("meow");
+        VoiceRecorder.canDeviceVoiceRecord()
+        .then((result: GenericResponse) => {
+            console.log(result.value);
+
+            VoiceRecorder.hasAudioRecordingPermission()
+            .then((result: GenericResponse) => {
+                console.log(result.value);
+                
+                VoiceRecorder.requestAudioRecordingPermission()
+                .then((result: GenericResponse) => {
+                    console.log(result.value);
+                    // Recording
+                    VoiceRecorder.startRecording()
+                    .then((result: any) => { // GenericResponse
+                        console.log(result.value);
+                        
+                    })
+                    .catch(error => console.log(error))
+                });
+            }).catch((error) =>{
+                console.log(error);
+                VoiceRecorder.requestAudioRecordingPermission()
+                .then((result: GenericResponse) => {
+                    console.log(result.value);
+                    // Recording
+                    VoiceRecorder.startRecording()
+                    .then((result: any) => { // GenericResponse
+                        console.log(result.value);
+                        
+                    })
+                    .catch(error => console.log(error))
+                });
+            });
+        });
+    }
+
+    const onStop = () => { console.log("stop");
+        VoiceRecorder.stopRecording()
+        .then((result: RecordingData) => {
+            // console.log(result.value);
+            const audDetails = {
+                base64Sound: result.value.recordDataBase64,
+                mimeType: result.value.mimeType
+            }
+            setAudio(audDetails);
+        })
+        .catch(error => console.log(error));
+    }
+
+    const onPlay = async() => {
+        console.log(audio);
+        const audioRef = new Audio(`data:${audio.mimeType};base64,${audio.base64Sound}`);
+        // audioRef.play();
+        audioRef.oncanplaythrough = () => audioRef.play()
+        audioRef.load();
+        try {
+            await audioRef.play();
+            console.log("Playing audio");
+          } catch (err) {
+            console.log("Failed to play, error: " + err);
+          }
+        
+       /* if(audioRef.current){
+            audioRef.current.pause();
+            audioRef.current.load();
+            audioRef.current.play();
+        }*/
+    }
   
     return (<>
     <IonPage className="contact-page">
       <IonContent className="ion-padding">
+        { audio.base64Sound && <audio controls ref={audioRef}>
+            <source src={audio.base64Sound} type="audio/ogg" />
+        </audio> }
+        <IonButton color="greenbg" className="ion-margin-top mt-4" expand="block" type="button" onClick={() => recordModalFn('Record Audio', 'press_release')}>
+            Record
+        </IonButton>
+        <IonButton color="greenbg" className="ion-margin-top mt-4" expand="block" type="button" onClick={onStop}>
+            Stop
+        </IonButton>
+        <IonButton color="greenbg" className="ion-margin-top mt-4" expand="block" type="button" onClick={onPlay}>
+            Play
+        </IonButton>
         <form onSubmit={handleSubmit(onSubmit)}>
             <IonGrid>
                 <IonRow>
@@ -122,6 +228,12 @@ import {
                 Submit
             </IonButton>
         </form>
+        <IonModal backdropDismiss={false} isOpen={showRecordAudioModal.isOpen} className='view-modal-wrap'>
+            { showRecordAudioModal.isOpen === true &&  <RecordAudio
+            showRecordAudioModal={showRecordAudioModal}
+            setShowRecordAudioModal={setShowRecordAudioModal} 
+           /> }
+        </IonModal>
         </IonContent>
         </IonPage>
     </>);

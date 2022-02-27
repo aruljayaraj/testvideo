@@ -28,7 +28,6 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
     const [showViewerModal, setShowViewerModal] = useState(initialValues);
 
     const categoryModalFn = (title: string, mem_id: number, rep_id: number, form_id: number, media_type: string, filename: string, converted: number) => {
-        console.log("Meow"+rep_id);
         setShowViewerModal({ 
             ...showViewerModal, 
             isOpen: true,

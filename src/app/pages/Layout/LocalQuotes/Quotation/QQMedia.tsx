@@ -15,12 +15,17 @@ import {
     IonGrid,
     IonActionSheet
 } from '@ionic/react';
-import { cameraOutline, ellipsisHorizontalOutline, close } from 'ionicons/icons';  
+import { cameraOutline, ellipsisHorizontalOutline, close, micOutline } from 'ionicons/icons';  
+import { MediaCapture, MediaFile, CaptureError, CaptureAudioOptions, CaptureVideoOptions } from '@awesome-cordova-plugins/media-capture';
 import React, { useState, useCallback, useRef} from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { toArray } from 'lodash';
+import { isPlatform, getPlatforms } from '@ionic/react';
+import { File, DirectoryEntry } from "@ionic-native/file";
+import { Capacitor } from "@capacitor/core";
+import { nanoid } from 'nanoid';
 import '../LocalQuotes.scss';
 
 import * as uiActions from '../../../../store/reducers/ui';
@@ -29,6 +34,7 @@ import { lfConfig } from '../../../../../Constants';
 import CoreService from '../../../../shared/services/CoreService';
 import QuotationStepInd from './QuotationStepInd';
 import { useCameraPhoto } from '../../../../hooks/useCameraPhoto';
+import RecordAudio from '../../../../components/Modal/Record/RecordAudio';
 
 let cancelToken = axios.CancelToken;
 let source = cancelToken.source();
@@ -37,7 +43,9 @@ let initialValues = {
     isOpen: false,
     title: '',
     actionType: '', // new or edit
+    resType: '',
     memId: '',
+    repId: '',
     frmId: ''
 };
 
@@ -58,6 +66,7 @@ const QQMedia: React.FC = () => {
     const [showDocActSheet, setShowDocActSheet] = useState(false);
     const [showAudActSheet, setShowAudActSheet] = useState(false);
     const [showVidActSheet, setShowVidActSheet] = useState(false);
+    const [showRecordAudioModal, setShowRecordAudioModal] = useState(initialValues);
     const [showImageModal, setShowImageModal] = useState(initialValues);
     const [resPreviewModal, setResPreviewModal] = useState(initPreviewValues);
     const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
@@ -260,6 +269,123 @@ const QQMedia: React.FC = () => {
             CoreService.onUploadFn('file_upload', fd, uploadCameraPhotoCbFn);
         }
     }    
+
+    // Record Audio and Upload
+    const uploadRecoredAudioFn = async(title: string, actionType: string) => {
+        if(!isPlatform("desktop")){ 
+             dispatch(uiActions.setShowLoading({ loading: true }));
+             let options: CaptureAudioOptions = { limit: 1, duration: 30 };
+             const capture:any = await MediaCapture.captureAudio(options);
+             let media: any = (capture[0] as MediaFile);
+             // alert((capture[0] as MediaFile).fullPath);
+             let resolvedPath: DirectoryEntry;
+             let path = media.fullPath.substring(0, media.fullPath.lastIndexOf("/"));
+             if (Capacitor.getPlatform() === "ios") {
+                 resolvedPath = await File.resolveDirectoryUrl("file://" + path);
+             } else {
+                 resolvedPath = await File.resolveDirectoryUrl(path);
+             }
+             console.log(media);
+             // console.log(resolvedPath);
+             return File.readAsArrayBuffer(resolvedPath.nativeURL, media.name).then(
+             // return File.readAsDataURL(directoryPath.trim()+"/", fileName.trim()).then(
+                 (buffer: any) => { // console.log("meow"); console.log(buffer);
+                   // get the buffer and make a blob to be saved
+                   let imgBlob = new Blob([buffer], {
+                     type: media.type,
+                   });
+                   // alert(JSON. stringify(imgBlob));
+                   console.log(imgBlob);
+                   const fd = new FormData();
+                   fd.append("dataFile", imgBlob, nanoid()+".mp3");
+                   fd.append('memId', authUser.ID);
+                   fd.append('repId', authUser.repID);
+                   fd.append('formId', id? id: '');
+                   fd.append('action', 'localquote');
+                   fd.append('resType', 'audio');
+                   CoreService.onUploadFn('record_upload', fd, onCallbackFn);
+                 },
+                 (error: any) => {
+                     dispatch(uiActions.setShowLoading({ loading: false }));
+                     console.log(error);
+                 }
+             )
+         }else{ // For Desktop
+             setShowRecordAudioModal({ 
+                 ...showRecordAudioModal, 
+                 isOpen: true,
+                 title: title,
+                 actionType: actionType,
+                 resType: 'audio',
+                 memId: authUser.ID,
+                 repId: authUser.repID,
+                 frmId: id? id: ''
+            }); // console.log(authUser);
+        }    
+            
+    }
+ 
+     const onCallbackFn = useCallback((res: any) => { // console.log(res);
+         if(res.status === 'SUCCESS'){
+             dispatch(qqActions.setQQ({ data: res.data }));
+         }
+         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
+         dispatch(uiActions.setShowLoading({ loading: false }));
+     }, [dispatch]);
+     // Record Video and Upload
+     const uploadRecoredVideoFn = async (title: string, actionType: string) => { // console.log("Meow 123");
+         if(!isPlatform("desktop")){ // console.log('Meow');
+             dispatch(uiActions.setShowLoading({ loading: true }));
+             let options: CaptureVideoOptions = { limit: 1, duration: 30 };
+             let capture:any = await MediaCapture.captureVideo(options);
+             let media: any = (capture[0] as MediaFile);
+             // alert((capture[0] as MediaFile).fullPath);
+             let resolvedPath: DirectoryEntry;
+             let path = media.fullPath.substring(0, media.fullPath.lastIndexOf("/"));
+             if (Capacitor.getPlatform() === "ios") {
+                 resolvedPath = await File.resolveDirectoryUrl("file://" + path);
+             } else {
+                 resolvedPath = await File.resolveDirectoryUrl(path);
+             }
+             // console.log(resolvedPath);
+             console.log(media);
+             return File.readAsArrayBuffer(resolvedPath.nativeURL, media.name).then(
+                 (buffer: any) => { console.log(buffer);
+                   // get the buffer and make a blob to be saved
+                   let imgBlob = new Blob([buffer], {
+                     type: media.type,
+                   });
+                   // setFileData(imgBlob);
+                   // alert(imgBlob);
+                   console.log(imgBlob);
+                   const fd = new FormData();
+                   fd.append("dataFile", imgBlob, nanoid()+".mp4");
+                   fd.append('memId', authUser.ID);
+                   fd.append('repId', authUser.repID);
+                   fd.append('formId', id? id: '');
+                   fd.append('action', 'localquote');
+                   fd.append('resType', 'video');
+                   CoreService.onUploadFn('record_upload', fd, onCallbackFn);
+                 },
+                 (error: any) => {
+                     dispatch(uiActions.setShowLoading({ loading: false }));
+                     console.log(error);
+                 }
+               )
+             // VideoRecorder.destroy();
+         }else{
+             setShowRecordAudioModal({ 
+                 ...showRecordAudioModal, 
+                 isOpen: true,
+                 title: title,
+                 actionType: actionType,
+                 resType: 'video',
+                 memId: authUser.ID,
+                 repId: authUser.repID,
+                 frmId: id? id: ''
+            }); // console.log(authUser);
+        }
+    };
 
     // if( addQQ.status  ){
     //     return <Redirect to={`/layout/quotation/${id}/${mem_id}/${quote_id}/3`} />;
@@ -491,14 +617,14 @@ const QQMedia: React.FC = () => {
             isOpen={showAudActSheet}
             onDidDismiss={() => setShowAudActSheet(false)}
             cssClass=''
-            buttons={[/*{
+            buttons={[{
+                cssClass: 'cursor',
                 text: 'Record Audio',
-                icon: cameraOutline,
+                icon: micOutline,
                 handler: () => {
-                    console.log('Record Audio clicked');
-                    // uploadRecoredAudioFn();
+                    uploadRecoredAudioFn('Record Audio', 'localquote');
                 }
-            }, */{
+            }, {
                 text: 'Browse',
                 icon: ellipsisHorizontalOutline,
                 handler: () => {
@@ -522,14 +648,13 @@ const QQMedia: React.FC = () => {
             isOpen={showVidActSheet}
             onDidDismiss={() => setShowVidActSheet(false)}
             cssClass=''
-            buttons={[/*{
+            buttons={[{
                 text: 'Record Video',
                 icon: cameraOutline,
                 handler: () => {
-                    console.log('Record Video clicked');
-                    // uploadRecoredVideoFn();
+                    uploadRecoredVideoFn('Record Video', 'localquote');
                 }
-            },*/ {
+            },  {
                 text: 'Browse',
                 icon: ellipsisHorizontalOutline,
                 handler: () => {

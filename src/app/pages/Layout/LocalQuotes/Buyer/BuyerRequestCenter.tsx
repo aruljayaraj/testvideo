@@ -114,15 +114,17 @@ const BuyerRequestCenter: React.FC = () => {
           <IonToolbar>
             <IonTitle className="page-title">My LocalQuote Requests</IonTitle>
           </IonToolbar>
-          { qqs.map((qq: any, index: number) => {
-            return (<BRContent 
-              qq={qq} 
-              key={nanoid()} 
-              setShowActionSheet={setShowActionSheet} 
-              setShowPopover={setShowPopover}
-              setShowDeleteModal={setShowDeleteModal}
-              onAwardedFn={onAwardedFn} />)
-          })} 
+          <div>
+            { qqs.map((qq: any, index: number) => {
+              return (<BRContent 
+                qq={qq} 
+                key={nanoid()} 
+                setShowActionSheet={setShowActionSheet} 
+                setShowPopover={setShowPopover}
+                setShowDeleteModal={setShowDeleteModal}
+                onAwardedFn={onAwardedFn} />)
+            })} 
+          </div>
           <NoData dataArr={qqs} htmlText={`No requests found.`} />
           
           <IonActionSheet
@@ -135,12 +137,12 @@ const BuyerRequestCenter: React.FC = () => {
         <IonPopover
             isOpen={showPopover.status}
             className='my-custom-class'
-            onDidDismiss={e => setShowPopover({status: false, qq: null})}
+            onDidDismiss={e => setShowPopover({...showPopover, status: false, qq: null})}
           >
             <IonContent className="ion-padding">
               <IonToolbar color="greenbg">
                 <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
-                  <IonButton onClick={() => setShowPopover({status: false, qq: null})}>
+                  <IonButton onClick={() => setShowPopover({...showPopover, status: false, qq: null})}>
                     <IonIcon icon={close} slot="icon-only"></IonIcon>
                   </IonButton>
                 </IonButtons> 

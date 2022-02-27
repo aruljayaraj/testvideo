@@ -29,9 +29,9 @@ import CoreService from '../../../shared/services/CoreService';
 import CommonService from '../../../shared/services/CommonService';
 import { lfConfig } from '../../../../Constants';
 import useTimer from '../../../hooks/useTimer';
-// import * as repActions from '../../store/reducers/dashboard/rep';
+import { nanoid } from 'nanoid';
 import * as uiActions from '../../../store/reducers/ui';
-// import * as prActions from '../../store/reducers/dashboard/pr';
+import * as qqActions from '../../../store/reducers/dashboard/qq';
 // import * as dealActions from '../../store/reducers/dashboard/deal';
 // import Timer from './Timer';
 import { isPlatform } from '@ionic/react';
@@ -52,7 +52,8 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
     const dispatch = useDispatch();
     const [basename] = useState(process.env.REACT_APP_BASENAME);
     const { handleSubmit} = useForm();
-    let { title, actionType, memId, frmId } = showRecordAudioModal;
+    let { title, actionType, memId, repId, frmId, resType } = showRecordAudioModal;
+    // const qq = useSelector( (state:any) => state.qq.localQuote);
     const { apiBaseURL } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
 
@@ -155,16 +156,10 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
     }
     const onCallbackFn = useCallback((res: any) => { console.log(res);
         if(res.status === 'SUCCESS'){
-            /*if( actionType === 'company_logo' ){
-                dispatch(repActions.setCompanyProfile({ data: res.data }));
-            }else if( actionType === 'rep_profile' || actionType === 'rep_logo' ){
-                dispatch(repActions.setRepProfile({ data: res.data }));
-            }else if( actionType === 'press_release' ){
-                dispatch(prActions.setPressRelease({ data: res.data }));
-            }else if( actionType === 'local_deal' ){
-                dispatch(dealActions.setDeal({ data: res.data }));
-            } 
-            setShowImageModal({ ...showImageModal, isOpen: false });*/
+            if( actionType === 'localquote' ){
+                dispatch(qqActions.setQQ({ data: res.data }));
+            }
+            setShowRecordAudioModal({ ...showRecordAudioModal, isOpen: false });
         }
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
         setTimeout( () => {
@@ -174,14 +169,16 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
     }, [dispatch]);
     const onSubmit = () => {
         dispatch(uiActions.setShowLoading({ loading: true }));
-        var u8Audio  = CommonService.b64ToUint8Array(audio.base64Sound);
+        var u8Audio  = CommonService.b64ToUint8Array(audio.base64Sound); console.log(audio.mimeType);
         const fd = new FormData();
-        fd.append("dataFile", new Blob([ u8Audio ], {type: audio.mimeType}), '');
+        fd.append("dataFile", new Blob([ u8Audio ], {type: audio.mimeType}), nanoid()+".webm");
         fd.append('memId', memId);
-        fd.append('repId', authUser.repID);
+        fd.append('repId', repId);
         fd.append('formId', frmId);
-        fd.append('action', ''); // actionType
-        CoreService.onUploadFn('file_upload', fd, onCallbackFn);
+        fd.append('action', actionType); // actionType
+        fd.append('resType', resType);
+        // console.log(showRecordAudioModal, title, actionType, memId, repId, frmId);
+        CoreService.onUploadFn('record_upload', fd, onCallbackFn);
     }
 
     return (<>
@@ -196,7 +193,7 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
                         </IonButton>
                     </IonButtons>
-                    { (!isPlatform('desktop')) &&  
+                    { (!isPlatform('desktop') && audio.base64Sound) &&  
                         <IonButtons slot="end">
                             <IonButton color="blackbg" type="submit">
                                 <strong>Save</strong>
@@ -243,7 +240,8 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
                     </IonRow>
                 </IonGrid>
                 <div className="float-right">
-                    { (isPlatform('desktop')) && 
+                    
+                    { (isPlatform('desktop') && audio.base64Sound) && 
                         <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
                             Save
                         </IonButton>

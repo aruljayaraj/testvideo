@@ -10,14 +10,15 @@ import {
     IonButton,
     IonRouterLink,
     IonFab,
-    IonFabButton
+    IonFabButton,
+    IonActionSheet
   } from '@ionic/react';
-  
+import { cameraOutline, ellipsisHorizontalOutline, imageOutline, close } from 'ionicons/icons';  
 import React, { useState, useCallback } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import '../Deals.scss';
-
+import { useCameraPhoto } from '../../../../hooks/useCameraPhoto';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as dealActions from '../../../../store/reducers/dashboard/deal';
 import { lfConfig } from '../../../../../Constants';
@@ -43,8 +44,10 @@ let initPreviewValues ={
 
 const DDMedia: React.FC = () => {
     const dispatch = useDispatch();
+    const { takePhoto } = useCameraPhoto();
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const dd = useSelector( (state:any) => state.deals.localDeal);
+    const [showProfileActSheet, setShowProfileActSheet] = useState(false);
     const [showImageModal, setShowImageModal] = useState(initialValues);
     const [previewModal, setPreviewModal] = useState(initPreviewValues);
     const [addDeal, setAddDeal] = useState({ status: false, memID: '', id: '' });
@@ -92,6 +95,34 @@ const DDMedia: React.FC = () => {
         CoreService.onPostFn('deal_update', fd, onCallbackFn);
     }
 
+    // Upload Camera Picture callback
+    const uploadCameraPhotoCbFn = useCallback((res:any)=> {
+        if(res.status === 'SUCCESS'){ console.log(res.data);
+            dispatch(dealActions.setDeal({ data: res.data }));
+            imageModalFn('Edit Supporting Media', 'local_deal');
+        }else{
+            dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
+        }
+        dispatch(uiActions.setShowLoading({ loading: false }));
+        
+    },[dispatch]);
+    // Upload Camera Picture
+    const uploadCameraPhotoFn = (u8Image: any) => {
+        if(u8Image){
+            dispatch(uiActions.setShowLoading({ loading: true }));
+            const fileName = new Date().getTime() + '.jpg';
+            const fd = new FormData();
+            fd.append("dataFile", new Blob([ u8Image ], {type: "image/jpg"}), fileName);
+            fd.append('memId', authUser.ID);
+            fd.append('repId', authUser.repID);
+            fd.append('formId', id);
+            fd.append('action', 'local_deal' );
+            CoreService.onUploadFn('file_upload', fd, uploadCameraPhotoCbFn);
+        }else{
+            dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: 'Image Capture error!' }));
+        }
+    }
+
     if( addDeal.status  ){
         return <Redirect to={`/layout/deals/local-deals`} />;
     }
@@ -112,7 +143,7 @@ const DDMedia: React.FC = () => {
                             </IonRouterLink>
                         </IonCardTitle>
                         <IonList>
-                            <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => imageModalFn('Upload Supporting Media', 'local_deal')}>
+                            <IonItem className="profile-logo-wrap p-0" lines="none" onClick={() => setShowProfileActSheet(true)}>
                                 <div className="profile-logo">
                                     <img src={ddImage} alt="Deal Media" />
                                     <IonFab  vertical="bottom" horizontal="end" slot="fixed">
@@ -142,6 +173,32 @@ const DDMedia: React.FC = () => {
             </IonCardContent>
         </IonCard>
         </>}
+        <IonActionSheet
+            isOpen={showProfileActSheet}
+            onDidDismiss={() => setShowProfileActSheet(false)}
+            buttons={[{
+                text: 'Take Photo',
+                icon: cameraOutline,
+                handler: () => {
+                    // console.log('Take Photo clicked');
+                    takePhoto(uploadCameraPhotoFn);
+                }
+            }, {
+                text: (dd && Object.keys(dd).length > 0 && dd.image) ? 'Edit Photo': 'Browse',
+                icon: (dd && Object.keys(dd).length > 0 && dd.image) ? imageOutline : ellipsisHorizontalOutline,
+                handler: () => {
+                    imageModalFn('Upload Supporting Media', 'local_deal')
+                }
+            }, {
+                text: 'Cancel',
+                icon: close,
+                role: 'cancel',
+                handler: () => {
+                    // console.log('Cancel clicked');
+                }
+            }]}
+        >
+        </IonActionSheet>
         <IonModal backdropDismiss={false} isOpen={showImageModal.isOpen} className='view-modal-wrap'>
             { dd && Object.keys(dd).length > 0 && showImageModal.isOpen === true &&  <ImageModal
             showImageModal={showImageModal}

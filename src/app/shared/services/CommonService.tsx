@@ -120,6 +120,8 @@ const CommonService = (function() {
         }
     }
 
+    
+
     return {
         // Common Fns
         getBase64Image: getBase64Image,

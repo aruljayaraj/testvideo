@@ -37,7 +37,6 @@ const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, set
             <p className="m-0 pt-1 gray">{CommonService.dateFormat(qq.quotation_date)}</p>
         </IonCardHeader>
         <IonCardContent>
-            
             <IonGrid>
                 { qq.quotations && qq.quotations.length > 0 && qq.quotations.map((qt: any, index: number) => {
                     const repImage = (Object.keys(qt).length > 0 && qt.profile_image) ? `${apiBaseURL}uploads/member/${qt.mem_id}/${qt.rep_id}/${qt.profile_image}` : `${basename}/assets/img/avatar.svg`;
@@ -65,6 +64,7 @@ const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, set
                             </IonItem>
                         </IonCol>
                         <IonCol>
+                            {/* <p>{JSON.stringify(qt)}</p> */}
                             <IonItem lines="none" >
                                 <IonLabel>
                                     <p><span className="fw-bold">Response Deadline : </span>{CommonService.dateFormat(qq.quotation_req_date)}</p>

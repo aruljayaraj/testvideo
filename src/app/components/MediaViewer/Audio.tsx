@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { lfConfig } from '../../../Constants';
 import ReactAudioPlayer from 'react-audio-player';
 import { IonRouterLink, IonText } from '@ionic/react';
+import { NativeAudio } from '@awesome-cordova-plugins/native-audio';
 
 interface PropsInterface{
     memId: number,
@@ -26,6 +27,29 @@ const Audio: React.FC<PropsInterface> = (props: PropsInterface) => {
             resFile = fileName ? `${apiBaseURL}uploads/member/${memId}/${repId}/${fileName}` : ``;
         }
     }
+    console.log(resFile);
+
+    NativeAudio.preloadSimple('uniqueId1', resFile).then(() => {
+        console.log("Meow T");
+    }, (error: any)=> { 
+        console.log(error);
+        console.log("Meow E");
+    });
+    // const onSuccess = () => {
+
+    // }
+
+    useEffect(()=> { console.log("Meow 1");
+        if(resFile){ console.log("Meow 2");
+            NativeAudio.play('uniqueId1').then(() => {
+                console.log("Playing");
+            }, (error: any)=> {
+        
+            });
+            
+        }
+    },[resFile]);
+    
 
     return (<div className="d-flex justify-content-center mb-3">
         { formId && memId && +(converted) === 0 &&
@@ -45,6 +69,7 @@ const Audio: React.FC<PropsInterface> = (props: PropsInterface) => {
         { formId && memId && fileName && +(converted) === 1 && <>        
             { resFile &&  
                 <div className="pt-2">
+                    
                     <audio id="audioFrenata" src={resFile}></audio> <br />
                     <ReactAudioPlayer
                         src={resFile}

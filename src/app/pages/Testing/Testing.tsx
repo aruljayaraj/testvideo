@@ -22,8 +22,9 @@ import {
     title: '',
     actionType: '', // new or edit
     memId: '',
+    repId: '',
     frmId: ''
-};
+  };
   type FormInputs = {
     reps: Array<string>;
     // reps: string;

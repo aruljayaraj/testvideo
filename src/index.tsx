@@ -33,6 +33,7 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader';
 const store = createStore();
 
 axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL; // Beta
+// axios.defaults.baseURL = 'https://www.onagon.com/rest/'; //process.env.REACT_APP_API_BASE_URL; // Beta
 //axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 // axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';

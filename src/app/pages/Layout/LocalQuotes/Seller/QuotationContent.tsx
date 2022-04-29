@@ -1,10 +1,22 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonRouterLink, IonRow, IonCol, IonItem, IonGrid, IonThumbnail, IonLabel, IonText } from '@ionic/react';
-import React from 'react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonRouterLink, IonRow, IonCol, IonItem, IonGrid, IonThumbnail, IonLabel, IonText, IonFabButton, IonIcon, IonFab, IonModal } from '@ionic/react';
+import { chatboxEllipsesOutline } from 'ionicons/icons';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../LocalQuotes.scss';
 import { lfConfig } from '../../../../../Constants';
 import CommonService from '../../../../shared/services/CommonService';
 import RFQStatus from '../../../../components/Common/RFQStatus';
+import Chat from '../../../../components/Modal/Chat/Chat';
+
+let initialValues = {
+    isOpen: false,
+    title: '',
+    qq_type: '',
+    bid: 0,
+    sid: 0,
+    mem_id: 0,
+    receiver_id: 0
+};
 
 interface Props {
     qt: any,
@@ -19,6 +31,22 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
     let qq:any = {};
     let repImage = '';
     const { apiBaseURL } = lfConfig;
+    const [showChatModal, setShowChatModal] = useState(initialValues);
+
+    const handleChatFn = (bid: number, sid: number, mem_id: number,  receiver_id: number) => {
+        // console.log(bid, sid, mem_id, receiver_id);
+        setShowChatModal({ 
+            ...showChatModal, 
+            isOpen: true,
+            title: 'Message Center',
+            qq_type: 'seller',
+            bid, // Buyer QQ ID
+            sid, // Seller QQ ID
+            mem_id, // Mem ID
+            receiver_id, // receiver Mem ID
+            
+        });
+    }
 
     if( qt.localquote && Object.keys(qt.localquote).length > 0  ){
         qq = qt.localquote;
@@ -28,7 +56,7 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
         <IonCardHeader color="titlebg">
             <IonCardTitle class="card-title">
                 <IonRouterLink color="greenbg" href={`${basename}/layout/view-quotation/${qt.id}/${qt.mem_id}/${qt.localquote.id}/${qt.localquote.mem_id}/seller`}>
-                    {qt.s_title}
+                   {qt.s_title}
                 </IonRouterLink>
                 { setShowActionSheet && <IonRouterLink color="greenbg" onClick={() => setShowActionSheet({status: true, qt: qt})} className="float-right router-link-anchor-vertical">
                     <i className="fa fa-ellipsis-v fa-lg green cursor" aria-hidden="true"></i>
@@ -57,6 +85,11 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
                                             </IonRouterLink>
                                         </p>}
                                     </IonLabel>
+                                    <IonFab vertical="bottom" horizontal="end" >
+                                        <IonFabButton color="greenbg" size="small" onClick={()=>handleChatFn(qq.id, qt.id, qt.mem_id, qq.mem_id)}> 
+                                            <IonIcon icon={chatboxEllipsesOutline} size="small" />
+                                        </IonFabButton>
+                                    </IonFab>
                                 </IonItem>
                             </IonCol>
                             <IonCol>
@@ -85,6 +118,12 @@ const QuotationContent: React.FC<Props> = (props) => { // {qt, setShowActionShee
                 </IonCol>
             </IonRow>
         </IonCardHeader>
+        <IonModal backdropDismiss={false} isOpen={showChatModal.isOpen} className='view-modal-wrap'>
+            { showChatModal.isOpen === true &&  <Chat
+                showChatModal={showChatModal}
+                setShowChatModal={setShowChatModal} 
+           /> }
+        </IonModal>
     </IonCard>);
 };
 

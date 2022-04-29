@@ -1,5 +1,6 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonRouterLink, IonRow, IonCol, IonButton, IonItem, IonGrid, IonThumbnail, IonLabel } from '@ionic/react';
-import React from 'react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonRouterLink, IonRow, IonCol, IonButton, IonItem, IonGrid, IonThumbnail, IonLabel, IonFab, IonFabButton, IonIcon, IonModal } from '@ionic/react';
+import { chatboxEllipsesOutline } from 'ionicons/icons';
+import React, {useState} from 'react';
 import { useParams } from 'react-router-dom';
 import { isPlatform } from '@ionic/react';
 import '../LocalQuotes.scss';
@@ -9,6 +10,7 @@ import { lfConfig } from '../../../../../Constants';
 import RFQStatus from '../../../../components/Common/RFQStatus';
 import LocationText from '../../../../components/Common/LocationText';
 import NoData from '../../../../components/Common/NoData';
+import Chat from '../../../../components/Modal/Chat/Chat';
 
 interface Props {
     qq: any,
@@ -18,10 +20,36 @@ interface Props {
     onAwardedFn?: Function
 }
 
+let initialValues = {
+    isOpen: false,
+    title: '',
+    qq_type: '',
+    bid: 0,
+    sid: 0,
+    mem_id: 0,
+    receiver_id: 0
+};
+
 const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, setShowDeleteModal, onAwardedFn}) => {
     const { basename } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const { apiBaseURL } = lfConfig;
+    const [showChatModal, setShowChatModal] = useState(initialValues);
+
+    const handleChatFn = (bid: number, sid: number, mem_id: number,  receiver_id: number) => {
+        // console.log(bid, sid, mem_id, receiver_id);
+        setShowChatModal({ 
+            ...showChatModal, 
+            isOpen: true,
+            title: 'Message Center',
+            qq_type: 'buyer',
+            bid, // Buyer QQ ID
+            sid, // Seller QQ ID
+            mem_id, // Mem ID
+            receiver_id, // Receiver Mem ID
+            
+        });
+    }
     
     return (<IonCard className="card-center mt-3 mb-1">
         { qq && Object.keys(qq).length > 0 && <>
@@ -42,10 +70,10 @@ const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, set
                     const repImage = (Object.keys(qt).length > 0 && qt.profile_image) ? `${apiBaseURL}uploads/member/${qt.mem_id}/${qt.rep_id}/${qt.profile_image}` : `${basename}/assets/img/avatar.svg`;
                     return (
                         <IonItem key={index} lines={ (index+1) < qq.quotations.length?  "full" : "none"}>
-                        <IonGrid>   
+                        <IonGrid className='no-padding'>   
                         <IonRow>
                             <IonCol>
-                            <IonItem lines="none" >
+                            <IonItem lines="none" className='no-padding'>
                                 <IonThumbnail slot="start" color="greenbg">
                                 {/* <IonRouterLink href={`${basename}/member/${item.pr_mem_id}/${item.pr_id}`}> */}
                                     <img src={repImage} alt="Rep Profile" onError={() => CommonService.onImgErr('profile')} />
@@ -61,6 +89,11 @@ const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, set
                                         </IonRouterLink>
                                     </p>
                                 </IonLabel>
+                                { qq.quotations && qq.quotations.length > 0 && <IonFab vertical="bottom" horizontal="end" >
+                                    <IonFabButton color="greenbg" size="small" onClick={()=>handleChatFn(qq.id, qt.id, qq.mem_id, qt.mem_id)}> 
+                                        <IonIcon icon={chatboxEllipsesOutline} size="small" />
+                                    </IonFabButton>
+                                </IonFab>}
                             </IonItem>
                         </IonCol>
                         <IonCol>
@@ -94,6 +127,12 @@ const BRContent: React.FC<Props> = ({qq, setShowActionSheet, setShowPopover, set
             </IonRow>
         </IonCardHeader>
         </>}
+        <IonModal backdropDismiss={false} isOpen={showChatModal.isOpen} className='view-modal-wrap'>
+            { showChatModal.isOpen === true &&  <Chat
+                showChatModal={showChatModal}
+                setShowChatModal={setShowChatModal} 
+           /> }
+        </IonModal>
     </IonCard>);
 };
 

@@ -77,7 +77,7 @@ const AssignRep: React.FC = () => {
         }
     }, [dispatch, onProfileCb, quote]);
 
-    const onCallbackFn = useCallback((res: any) => {
+    const onCallbackFn = useCallback((res: any) => { console.log(res);
         if(res.status === 'SUCCESS'){
             if( res.redirect === true ){
                 setAddQQ({ status: true, memID: res.data.mem_id, ID: res.data.id  });

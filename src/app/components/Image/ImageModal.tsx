@@ -59,7 +59,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     const dd = useSelector( (state:any) => state.deals.localDeal);
     const [basename] = useState(process.env.REACT_APP_BASENAME);
     const { handleSubmit} = useForm();
-    let { title, actionType, memId, frmId } = showImageModal;
+    let { title, actionType, memId, repId, frmId } = showImageModal;
     const [ picture, setPicture ] = useState<ImageData>(initialValues);
     const [zoomValue, setZoomValue] = useState<any>(0);
     const [dragValue, setDragValue] = useState<any>('move');
@@ -114,11 +114,11 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
             const fd = new FormData();
             fd.append("dataFile", new Blob([ u8Image ], {type: "image/jpg"}), picture.name);
             fd.append('memId', memId);
-            fd.append('repId', authUser.repID);
+            fd.append('repId', repId);
             fd.append('formId', frmId);
             fd.append('action', actionType );
             CoreService.onUploadFn('file_upload', fd, onCallbackFn);
-        }    
+        }
     }
 
     // Image Delete
@@ -150,7 +150,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                 action: 'delete_image',
                 formId: frmId,
                 memId: memId,
-                repId: authUser.repID,
+                repId: repId,
                 actionType: actionType
             };
             CoreService.onPostFn('file_upload', formData, deleteImageFnCb);

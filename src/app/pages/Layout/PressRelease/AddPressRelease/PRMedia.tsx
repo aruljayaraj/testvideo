@@ -30,6 +30,7 @@ let initialValues = {
     title: '',
     actionType: '', // new or edit
     memId: '',
+    repId: '',
     frmId: ''
 };
 
@@ -56,6 +57,7 @@ const PRMedia: React.FC = () => {
             title: title,
             actionType: actionType,
             memId: (authUser && Object.keys(authUser).length > 0)? authUser.ID: '',
+            repId: (pr && Object.keys(pr).length > 0)? pr.pr_rep_id: '',
             frmId: (pr && Object.keys(pr).length > 0)? pr.pr_id: ''
         });
     }

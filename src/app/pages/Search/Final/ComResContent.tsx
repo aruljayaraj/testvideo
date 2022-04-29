@@ -27,7 +27,7 @@ const ComResResults: React.FC<Props> = ({title, type, results}) => {
 
         <IonCardContent className="px-0 px-sm-2">
         { results.map((item: any) => { 
-            const logoImage = (Object.keys(item).length > 0 && item.company_logo) ? `${apiBaseURL}uploads/member/${item.mem_id}/${CommonService.getThumbImg(item.company_logo)}` : `${basename}/assets/img/placeholder.png`;
+            const logoImage = (Object.keys(item).length > 0 && item.company_logo) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.company_logo}` : `${basename}/assets/img/placeholder.png`;
             return (
             <IonCard className="mt-3" key={nanoid()}>
                 <IonCardContent className="px-0 px-sm-2">
@@ -38,10 +38,10 @@ const ComResResults: React.FC<Props> = ({title, type, results}) => {
                         <img src={logoImage} alt="Company Logo" />
                         </div>
                         { (!isPlatform('desktop')) && <>
-                        < ViewRepresentatives reps={item.reps} />
+                          <ViewRepresentatives reps={item.reps} />
                         </>}
                     </IonCol>
-                    <IonCol sizeMd="4" sizeXl="4" className="px-3">
+                    <IonCol sizeMd="5" sizeXl="5" className="px-3">
                         <IonRow class="ion-justify-content-center">
                           <IonCol sizeMd="6">
                             <p><strong>{item.company_name}</strong></p>
@@ -56,7 +56,10 @@ const ComResResults: React.FC<Props> = ({title, type, results}) => {
                             { item.fax && <p className="gray-medium"><i className="fa fa-fax fa-lg green" aria-hidden="true"></i> {`${item.fax}`}</p> }
                           </IonCol>
                           <IonCol sizeMd="6">
-                            <div>{item.short_desc}</div>
+                            { item.short_desc && <>
+                              <p className='fw-bold'>Overview</p>
+                              <div>{item.short_desc}</div> 
+                            </>}
                           </IonCol>
                         </IonRow>
                     </IonCol>

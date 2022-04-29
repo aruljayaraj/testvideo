@@ -182,9 +182,9 @@ const BuyerRequestCenter: React.FC = () => {
 
       <IonModal backdropDismiss={false} isOpen={showDeleteModal.isOpen} className='my-custom-class'>
           { qqs && Object.keys(qqs).length > 0 && showDeleteModal.isOpen === true &&  <DeleteModal
-          title="Delete LocalQuote"
-          showDeleteModal={showDeleteModal}
-          setShowDeleteModal={setShowDeleteModal} 
+            title="Delete LocalQuote"
+            showDeleteModal={showDeleteModal}
+            setShowDeleteModal={setShowDeleteModal} 
           /> }
       </IonModal>
     </IonPage>

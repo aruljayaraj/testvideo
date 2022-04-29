@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../Constants';
 import { isPlatform } from '@ionic/react';
 import PartnerAds from '../../components/Common/PartnerAds';
+import CommonService from '../../shared/services/CommonService';
 
 interface Props {
   dwidth: number,
@@ -46,7 +47,7 @@ const HomeItems: React.FC<Props> = ({dwidth, homeResults}) => {
       let typeItem = '';
       let itemLink = '';
       if( item.image && item.image !== '' ){
-        itemImage = `${apiBaseURL}uploads/member/${item.mem_id}/${item.rep_id}/${item.image}`;
+        itemImage = `${apiBaseURL}uploads/member/${item.mem_id}/${item.rep_id}/${item.image}`; // ${CommonService.getThumbImg(item.image)}
       }
       if(item.type === 'localdeals'){
         typeItem = 'Local Deal';

@@ -237,7 +237,7 @@ const CreateQQ: React.FC = () => {
                         </IonCol>
                         <IonCol sizeMd="6" sizeXs="12">
                             <IonItem class="ion-no-padding">
-                            <IonLabel position="stacked">Unit Measure<IonText color="danger">*</IonText></IonLabel>
+                            <IonLabel position="stacked">Unit Measure <IonText color="danger">*</IonText></IonLabel>
                             {listUnitsMeasure && 
                                 <Controller 
                                     name="qq_unit_measure"
@@ -274,7 +274,7 @@ const CreateQQ: React.FC = () => {
                             <IonRow>
                                 <IonCol>
                                     <IonItem class="ion-no-padding">
-                                    <IonLabel position="stacked">Estimated Order Frequency<IonText color="danger">*</IonText></IonLabel>
+                                    <IonLabel position="stacked">Estimated Order Frequency <IonText color="danger">*</IonText></IonLabel>
                                     <Controller 
                                         name="qq_order_frequency"
                                         control={control}
@@ -314,7 +314,7 @@ const CreateQQ: React.FC = () => {
                                 </IonCol>
                                 <IonCol>
                                     <IonItem class="ion-no-padding">
-                                    <IonLabel position="stacked">Distance From Location and Preferrence Settings<IonText color="danger">*</IonText></IonLabel>
+                                    <IonLabel position="stacked">Distance From Location and Preferrence Settings <IonText color="danger">*</IonText></IonLabel>
                                     <Controller 
                                         name="qq_location"
                                         control={control}

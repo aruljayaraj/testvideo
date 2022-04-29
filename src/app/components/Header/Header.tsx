@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { IonHeader,
   IonToolbar,
   IonTitle,
@@ -7,28 +7,33 @@ import { IonHeader,
   IonIcon,
   IonMenuButton,
   IonModal,
-  IonPopover,
-  IonList,
-  IonItem,
-  IonRouterLink
+  IonRouterLink,
+  IonBadge
 } from '@ionic/react';
 import {
   search,
   personCircleOutline,
   notificationsOutline
 } from 'ionicons/icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isPlatform } from '@ionic/react';
 import './Header.scss';
+import * as repActions from '../../store/reducers/dashboard/rep';
+import * as uiActions from '../../store/reducers/ui';
+import CoreService from '../../shared/services/CoreService';
 import LeftMenu from './LeftMenu';
 import RightMenu from './RightMenu';
 import SearchModal from '../Modal/SearchModal/SearchModal';
-import { Redirect } from 'react-router';
+import NotificationModal from '../Modal/Notification/Notification';
 
 const Header: React.FC = (props:any) => { // console.log(props.location.state);
-  
+  const dispatch = useDispatch();
   const authValues = useSelector( (state:any) => state.auth.data);
+  const authUser = useSelector( (state:any) => state.auth.data.user);
+  // const notifications = useSelector( (state:any) => state.rep.notifications);
+  const notificationsCount = useSelector( (state:any) => state.rep.notificationsCount);
   const [searchModal, setSearchModal] = useState(false);
+  const [notificationModal, setNotificationModal] = useState(false);
   const [basename] = useState(process.env.REACT_APP_BASENAME);
   const [showPopover, setShowPopover] = useState(false);
 
@@ -76,6 +81,59 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
     }
   }
 
+  useEffect(() => {
+    let data = {
+        action: 'get_notifications',
+        memID: authUser.ID,
+        repID: authUser.repID,
+        prepID: authUser.prepID
+    };
+    // dispatch(uiActions.setShowLoading({ loading: true }));
+    CoreService.onPostsFn('get_member', data).then((res:any) => {
+        if(res.data.status === 'SUCCESS'){ 
+          dispatch(repActions.setNotifications({ data: res.data.notifications }));
+        }
+        // dispatch(uiActions.setShowLoading({ loading: false }));
+    }).catch((error) => {
+      dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: error.message }));
+    });
+    
+  },[]);
+
+  useEffect(() => {
+    let live = true;
+    const interval = setInterval(async () => {
+      let data = {
+        action: 'get_notifications',
+        memID: authUser.ID,
+        repID: authUser.repID,
+        prepID: authUser.prepID
+      };
+      // dispatch(uiActions.setShowLoading({ loading: true }));
+      CoreService.onPostsFn('get_member', data).then((res:any) => {
+          if(res.data.status === 'SUCCESS'){ 
+            dispatch(repActions.setNotifications({ data: res.data.notifications }));
+          }
+          // dispatch(uiActions.setShowLoading({ loading: false }));
+      }).catch((error) => {
+        dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: error.message }));
+      });
+    }, 60000);
+    return () => {
+      live = false;
+      clearInterval(interval);
+    }
+  },[]);
+  
+  // let totalCount = 0;
+  // if(notifications){
+  //   totalCount = Object.keys(notifications).reduce((prev, curr) => prev + notifications[curr].length, 0);
+  //   // console.log(totalCount);
+  //   // setTotalNotifyCount(()=> totalCount);
+  // }
+
+  // const totalProducts = notifications.reduce((count: number, current: any) => count + current.products.length, 0);
+
   return (
     <>
       <IonHeader>
@@ -91,10 +149,11 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
             <IonButton onClick={() => setSearchModal(true)} className="mr-3">
               <IonIcon slot="icon-only" icon={search}></IonIcon>
             </IonButton>
-            {/* <IonButton className="notify-icon-wrap" onClick={() => setShowPopover(true)}>
+            { (authValues.authenticated && authValues.isVerified &&  authValues.user) &&
+            <IonButton className="notify-icon-wrap" onClick={() => setNotificationModal(true)}>
               <IonIcon slot="icon-only" icon={notificationsOutline}></IonIcon>
-              <IonBadge color="warning">25</IonBadge>
-            </IonButton> */}
+              { notificationsCount > 0 && <IonBadge color="warning">{notificationsCount}</IonBadge> }
+            </IonButton>}
           </IonButtons>
              
           { (isPlatform('desktop')) && (!authValues.authenticated || !authValues.isVerified) &&
@@ -134,21 +193,19 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
             setSearchModal={setSearchModal} 
           /> }
       </IonModal>
+      <IonModal backdropDismiss={false} isOpen={notificationModal} className='notification-modal'>
+          { notificationModal === true &&  <NotificationModal
+            notificationModal={notificationModal}
+            setNotificationModal={setNotificationModal} 
+          /> }
+      </IonModal>
 
-      <IonPopover
-        isOpen={showPopover}
-        className='my-custom-class'
-        onDidDismiss={e => setShowPopover(false)}
-        >
-        <div className="arrow" style={{left: '124px'}}></div>  
-        <IonList>
-            {/* <IonListHeader>Ionic</IonListHeader> */}
-            <IonItem button>Complete Rep Profile</IonItem>
-            <IonItem lines="none" button>Complete Company Profile</IonItem>
-        </IonList>
-      </IonPopover>   
+      
     </> 
   );
 }
 
 export default Header;
+
+
+

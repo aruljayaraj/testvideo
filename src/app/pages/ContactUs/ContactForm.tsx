@@ -8,7 +8,7 @@ import {
     IonRow,
     IonCol
   } from '@ionic/react';
-  import React, { useCallback } from 'react';
+  import React, { useCallback, useEffect } from 'react';
   import { useForm, Controller } from "react-hook-form";
   import { useDispatch } from 'react-redux';
   import * as uiActions from '../../store/reducers/ui';
@@ -23,7 +23,7 @@ import {
     message: string
   }
 
-  const defaultValues = {
+  const initialValues = {
     name: "",
     email: "",
     company: "",
@@ -33,15 +33,21 @@ import {
   
   const ContactForm: React.FC = () => {
     const dispatch = useDispatch();
-    const { control, handleSubmit, reset, formState: { errors }  } = useForm<FormInputs>({
-      defaultValues: { ...defaultValues },
+    const { control, handleSubmit, reset, formState: { errors, isSubmitSuccessful } } = useForm<FormInputs>({
+      defaultValues: { ...initialValues },
       mode: "onChange"
     });
+
+    useEffect(() => {
+        if (isSubmitSuccessful) {
+          reset({ ...initialValues });
+        }
+    }, [isSubmitSuccessful, initialValues, reset]);
   
     const onContactCb = useCallback((res: any) => {
         dispatch(uiActions.setShowLoading({loading: false}));
         if(res.status === 'SUCCESS'){ 
-            reset(defaultValues);
+            reset({...initialValues});
         }
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }, [dispatch, reset]);

@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
   }, [dispatch]);
 
   const getLocation = async () => { // console.log(geolocation);
-    if( geolocation && !geolocation.city){
+    if( geolocation && !geolocation.city && !showLocationModal){
       dispatch(uiActions.setShowLoading({ loading: true }));
       try {
         const position = await Geolocation.getCurrentPosition(); console.log(position);
@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
         
       }
     }
-  }, [geolocation, showLocationModal, location]);
+  }, [geolocation, showLocationModal]);
 
   const updateLocationHandler = (locationValue: any) => {
     if(locationValue){

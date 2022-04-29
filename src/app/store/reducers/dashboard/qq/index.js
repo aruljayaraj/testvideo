@@ -5,6 +5,7 @@ let state = {
     localQuotes: [],
     quotation: {},
     quotations: [],
+    messages: [],
     unit_measure: [],
     fileProgress: {}
 }
@@ -35,6 +36,12 @@ const slice = createSlice({
             if( action.payload.data ){
                 const data = action.payload.data;
                 qqState.quotations = data;
+            }
+        },
+        setMessages: (qqState, action) => {
+            if( action.payload.data ){
+                const data = action.payload.data;
+                qqState.messages = data;
             }
         },
         setBuscat: (qqState, action) => {
@@ -69,5 +76,5 @@ const slice = createSlice({
     }
 });
 
-export const {setQQ, setQQs, setBuscat, setSQ, setSQs, setUnitMeasure, fileProgress, setUploadProgress} = slice.actions;
+export const {setQQ, setQQs, setBuscat, setSQ, setSQs, setMessages, setUnitMeasure, fileProgress, setUploadProgress} = slice.actions;
 export default slice.reducer;

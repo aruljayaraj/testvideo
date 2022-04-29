@@ -36,7 +36,7 @@ const RegionResults: React.FC<Props> = ({ region }) => {
     { isLocalOpen && <IonCardContent className="px-0 px-sm-2">
       { localResults.map((item: any) => { 
           // console.log(item);
-          const logoImage = (Object.keys(item).length > 0 && item.company_logo) ? `${apiBaseURL}uploads/member/${item.mem_id}/${CommonService.getThumbImg(item.company_logo)}` : `${basename}/assets/img/placeholder.png`;
+          const logoImage = (Object.keys(item).length > 0 && item.company_logo) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.company_logo}` : `${basename}/assets/img/placeholder.png`;
           return (
           <IonCard className="mt-3" key={nanoid()}>
             <IonCardContent className="px-0 px-sm-2">
@@ -50,7 +50,7 @@ const RegionResults: React.FC<Props> = ({ region }) => {
                       < ViewRepresentatives reps={item.reps} />
                     </>}
                   </IonCol>
-                  <IonCol sizeMd="5" sizeXl="5" className="border px-3">
+                  <IonCol sizeMd="6" sizeXl="6" className="border px-3">
                     <IonRow class="ion-justify-content-center">
                       <IonCol sizeMd="6">
                         <p><strong>{item.company_name}</strong></p>
@@ -65,13 +65,15 @@ const RegionResults: React.FC<Props> = ({ region }) => {
                         { item.fax && <p className="gray-medium"><i className="fa fa-fax fa-lg green" aria-hidden="true"></i> {`${item.fax}`}</p> }
                       </IonCol>
                         <IonCol sizeMd="6">
-                          <p className='fw-bold'>Overview</p>
-                          <div>{item.short_desc}</div>
+                          { item.short_desc && <>
+                              <p className='fw-bold'>Overview</p>
+                              <div>{item.short_desc}</div> 
+                          </>}
                         </IonCol>
                       </IonRow>
                   </IonCol>
                   
-                  { isPlatform('desktop') && <IonCol sizeSm="4" className="border pl-3">
+                  { isPlatform('desktop') && <IonCol sizeSm="3" className="border pl-3">
                     < ViewRepresentatives reps={item.reps} />
                   </IonCol> }
                 </IonRow>

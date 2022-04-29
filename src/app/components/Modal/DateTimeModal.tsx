@@ -15,6 +15,7 @@ import {
     close
 } from 'ionicons/icons';
 import { format, parseISO, formatISO } from 'date-fns';
+import CommonService from '../../shared/services/CommonService';
 
 interface Props {
     datePickerModal: any,
@@ -58,7 +59,7 @@ const DateTimeModal: React.FC<Props> = ({ datePickerModal, setDatePickerModal, u
                 presentation={datePickerModal.presentation? datePickerModal.presentation: 'date'}
                 min={datePickerModal.min}
                 max={datePickerModal.max}
-                value={ selectDate && datePickerModal.presentation === 'time-date'? formatISO(new Date(selectDate)): selectDate }
+                value={ selectDate && datePickerModal.presentation === 'time-date'? formatISO(new Date(CommonService.mysqlToJsDateFormat(selectDate))): selectDate }
                 onIonChange={(selected: any) => {
                     let selectedDate;
                     if(datePickerModal.presentation === 'time-date'){

@@ -33,7 +33,7 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader';
 const store = createStore();
 
 axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL; // Beta
-// axios.defaults.baseURL = 'https://www.onagon.com/rest/'; //process.env.REACT_APP_API_BASE_URL; // Beta
+// axios.defaults.baseURL = 'https://www.onagon.com/rest/';
 //axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 // axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
@@ -62,13 +62,13 @@ axios.interceptors.response.use((response: any) => {
     return Promise.reject(error);
 });
 
-// Call the element loader after the platform has been bootstrapped
-defineCustomElements(window);  // add this line
-
 ReactDOM.render(
 <Provider store={store}>
     <App />
 </Provider>, document.getElementById('root'));
+
+// Call the element loader after the platform has been bootstrapped
+defineCustomElements(window);  // add this line
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

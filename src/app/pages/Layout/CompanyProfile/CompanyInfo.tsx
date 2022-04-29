@@ -32,7 +32,7 @@ const CompanyInfo: React.FC = () => {
                     <i className="fa fa-pencil float-right green cursor" aria-hidden="true"></i>
                 </IonCardTitle>
                 
-                { !comProfile.country &&
+                { !comProfile.country && !comProfile.address1 && !comProfile.phone &&
                     <IonCardSubtitle>
                         <IonText className="text-10 ml-2" color="danger">(Update required)</IonText>
                     </IonCardSubtitle>        

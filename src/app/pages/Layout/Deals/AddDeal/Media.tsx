@@ -33,6 +33,7 @@ let initialValues = {
     title: '',
     actionType: '', // new or edit
     memId: '',
+    repId: '',
     frmId: ''
 };
 
@@ -61,6 +62,7 @@ const DDMedia: React.FC = () => {
             title: title,
             actionType: actionType,
             memId: (authUser && Object.keys(authUser).length > 0)? authUser.ID: '',
+            repId: (dd && Object.keys(dd).length > 0)? dd.rep_id: '',
             frmId: (dd && Object.keys(dd).length > 0)? dd.id: ''
         });
     }

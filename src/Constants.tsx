@@ -48,6 +48,7 @@ export const lfConfig =  {
         'audio/midi', // mid
         'audio/ogg' // ogg
     ],
+    acceptedVidDuration: 600,
     acceptedVidSize: '314572800',
     acceptedVidSizeMB: '300MB',
     acceptedVidTypes: 'mp4, avi, wmv, swf, mpg, flv, mov, webm, ogg, mts, MTS',

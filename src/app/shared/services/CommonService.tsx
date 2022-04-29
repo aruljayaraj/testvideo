@@ -49,7 +49,7 @@ const CommonService = (function() {
         }
         return;
     }
-    // Mysql date format to normal javascript format
+    // Mysql date format to normal javascript format - Safari Issue
     const mysqlToJsDateFormat = function (cdate: any) {
         if(cdate){ // For safari need to do like this
             return new Date(Date.parse(cdate.replace(/-/g, '/')))
@@ -81,7 +81,7 @@ const CommonService = (function() {
         const getHours = `0${Math.floor(timer / 3600)}`.slice(-2)
       
         return `${getHours} : ${getMinutes} : ${getSeconds}`
-      }
+    }
 
     // On get Tinymce Editor config object
     const onEditorConfig = function(maxLength: number = 250){
@@ -120,6 +120,58 @@ const CommonService = (function() {
         }
     }
 
+    const mimeTypes = function(mime_type: string){
+
+        let extensions = {
+            'audio/ac3': 'ac3',
+            'audio/aiff': 'aif',
+            'audio/midi': 'mid',
+            'audio/mp3': 'mp3',
+            'audio/mp4': 'm4a',
+            'audio/mpeg': 'mp3',
+            'audio/mpeg3': 'mp3',
+            'audio/mpg': 'mp3',
+            'audio/ogg': 'ogg',
+            'audio/wav': 'wav',
+            'audio/wave': 'wav',
+            'audio/x-acc': 'aac',
+            'audio/x-aiff': 'aif',
+            'audio/x-au': 'au',
+            'audio/x-flac': 'flac',
+            'audio/x-m4a': 'm4a',
+            'audio/x-ms-wma': 'wma',
+            'audio/x-pn-realaudio': 'ram',
+            'audio/x-pn-realaudio-plugin': 'rpm',
+            'audio/x-realaudio': 'ra',
+            'audio/x-wav': 'wav',
+            'audio/webm;codecs=opus': 'webm',
+            'audio/webm': 'webm',
+            'video/3gp': '3gp',
+            'video/3gpp': '3gp',
+            'video/3gpp2': '3g2',
+            'video/avi': 'avi',
+            'video/mj2': 'jp2',
+            'video/mp4': 'mp4',
+            'video/mpeg': 'mpeg',
+            'video/msvideo': 'avi',
+            'video/ogg': 'ogg',
+            'video/quicktime': 'mov',
+            'video/vnd.rn-realvideo': 'rv',
+            'video/webm': 'webm',
+            'video/x-f4v': 'f4v',
+            'video/x-flv': 'flv',
+            'video/x-ms-asf': 'wmv',
+            'video/x-ms-wmv': 'wmv',
+            'video/x-msvideo': 'avi',
+            'video/x-sgi-movie': 'movie'
+        };
+    
+        // Add as many other Mime Types / File Extensions as you like
+    
+        return extensions[mime_type];
+    
+    }
+
     
 
     return {
@@ -129,11 +181,12 @@ const CommonService = (function() {
         b64ToUint8Array: b64ToUint8Array,
         dateFormat: dateFormat,
         dateReadFormat: dateReadFormat,
-        mysqlToJsDateFormat: mysqlToJsDateFormat,
+        mysqlToJsDateFormat: mysqlToJsDateFormat, // Safari Issue
         getThumbImg: getThumbImg,
         onImgErr,
         formatTime,
-        onEditorConfig
+        onEditorConfig,
+        mimeTypes
     }
 
 })();

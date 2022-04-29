@@ -110,6 +110,8 @@ const OtherInfo: React.FC = () => {
                     </IonItem> } 
                     
                 </IonList>
+                { !comProfile.linkedin && !comProfile.facebook && !comProfile.facebook &&
+                <p className='py-3'>Other Information items will be displayed</p>}
             </IonCardContent>
         </IonCard>
         }

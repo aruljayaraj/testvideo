@@ -359,7 +359,7 @@ const CompanyInfoModal: React.FC<Props> = ({showCompanyModal, setShowCompanyModa
                   </IonCol>
                   <IonCol sizeMd="6" sizeXs="12">
                     <IonItem class="ion-no-padding">
-                        <IonLabel position="stacked">Short Description</IonLabel>
+                        <IonLabel position="stacked">Short Description <IonText color="danger">*</IonText></IonLabel>
                         <Controller 
                             name="short_desc"
                             control={control}

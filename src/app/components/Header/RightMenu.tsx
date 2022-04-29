@@ -49,13 +49,16 @@ interface Props{
 // };
 
 const RightMenu: React.FC<Props> = ({removeOverlay}) => {
-    // console.log("Right Menu");
+    let repNotify = false;
+    let comNotify = false;
     const dispatch = useDispatch();
     const location = useLocation();
     const history = useHistory();
     const authValues = useSelector( (state:any) => state.auth.data); 
     const menuItems = useSelector( (state:any) => state.auth.menu); // console.log(menuItems.menuOpts);
     const memOpts = useSelector( (state:any) => state.auth.memOptions);
+    const repProfile = useSelector( (state:any) => state.rep.repProfile);
+    const comProfile = useSelector( (state:any) => state.rep.comProfile);
     
     const [basename] = useState(process.env.REACT_APP_BASENAME);
     const [showRepProfile, setShowRepProfile] = useState(false); 
@@ -63,11 +66,19 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
     const [showResource, setShowResource] = useState(false);
     const [showLocalDeal, setShowLocalDeal] = useState(false);
     const [showBusinessQQ, setShowBusinessQQ] = useState(false);
+    const reps = useSelector( (state:any) => state.rep.reps);
     // const [showBusinessSellerQQ, setShowBusinessSellerQQ] = useState(false);
     const [showConsumerQQ, setShowConsumerQQ] = useState(false);
     // const [showConsumerSellerQQ, setShowConsumerSellerQQ] = useState(false);
-
     // const tt = menuItems?.menuOpts?.some((value: any) => value.menu_key === 'get_quotes');
+
+    if(reps && reps.length > 0){
+      repNotify =  reps.every((item: any) => {
+        return (!item.address1 || !item.country || !item.phone || !item.profile_description)
+      });
+      comNotify = comProfile && (!comProfile.address1 || !comProfile.country || !comProfile.description) && authValues.user.accType === 'full' && [1,2,3].includes(+(comProfile.mem_level));
+    }
+    // console.log(repNotify, comNotify);
 
     function logout(e: any){
         removeOverlay(e);
@@ -140,7 +151,10 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </IonItemGroup>}
                 </IonMenuToggle>}
 
-                { authValues.user.accType === 'full' && authValues.user.proComplete && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'press_release' && value.menu_value === 'yes')) && 
+                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'press_release' && value.menu_value === 'yes')) 
+                    && ((memOpts && [3].includes(parseInt(memOpts.profile)) === true && (!repNotify && !comNotify))
+                    || ( memOpts && [2].includes(parseInt(memOpts.profile)) === true && !repNotify)
+                ) &&
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/add-press-release/', '/layout/press-releases/'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowPressRelease(!showPressRelease) }>
                       <IonIcon className="mr-3" slot="start" icon={newspaperOutline}></IonIcon>
@@ -159,8 +173,11 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                     </IonItem>
                   </IonItemGroup>}
                 </IonMenuToggle>}
-
-                { authValues.user.accType === 'full' && authValues.user.proComplete && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'resources' && value.menu_value === 'yes')) &&
+                  
+                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'resources' && value.menu_value === 'yes')) 
+                    && ((memOpts && [3].includes(parseInt(memOpts.profile)) === true && (!repNotify && !comNotify))
+                    || ( memOpts && [2].includes(parseInt(memOpts.profile)) === true && !repNotify)
+                ) && 
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/my-uploads/', '/layout/add-resource/document/', '/layout/resources/video/', '/layout/resources/audio/', '/layout/resources/document/'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowResource(!showResource) }>
                       <IonIcon className="mr-3" slot="start" icon={fileTrayFullOutline}></IonIcon>
@@ -191,7 +208,10 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                     </IonItem>
                   </IonItemGroup>}
                 </IonMenuToggle>}
-                { authValues.user.accType === 'full' && authValues.user.proComplete && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'local_deals' && value.menu_value === 'yes')) && 
+                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'local_deals' && value.menu_value === 'yes')) 
+                    && ((memOpts && [3].includes(parseInt(memOpts.profile)) === true && (!repNotify && !comNotify))
+                    || ( memOpts && [2].includes(parseInt(memOpts.profile)) === true && !repNotify)
+                ) && 
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/deals/local-deal','/layout/deals/add-deal', '/layout/deals/local-deals'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowLocalDeal(!showLocalDeal) }>
                       <IonIcon className="mr-3" slot="start" icon={newspaperOutline}></IonIcon>
@@ -217,7 +237,10 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                   </IonItemGroup>}
                 </IonMenuToggle>}
 
-                { authValues.user.accType === 'full' && authValues.user.proComplete && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'get_quotes' && value.menu_value === 'yes')) &&
+                { authValues.user.accType === 'full' && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'get_quotes' && value.menu_value === 'yes')) 
+                    && ((memOpts && [3].includes(parseInt(memOpts.profile)) === true && (!repNotify && !comNotify))
+                    || ( memOpts && [2].includes(parseInt(memOpts.profile)) === true && !repNotify)
+                ) && 
                 <IonMenuToggle auto-hide="false" >
                   <IonItem className="cursor" button color={['/layout/add-localquote/', '/layout/buyer-request-center', '/layout/my-localquotes-archive'].includes(location.pathname)? 'menuhlbg': 'blackbg'} onClick={ (e) => setShowBusinessQQ(!showBusinessQQ) }>
                       <IonIcon className="mr-3" slot="start" icon={fileTrayFullOutline}></IonIcon>
@@ -242,7 +265,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                         <IonLabel>My Archive</IonLabel>
                     </IonItem>
                   </IonItemGroup>  
-                  { authValues.user.accType === 'full' && authValues.user.proComplete&& ([1,2,3].includes(+(authValues.user.mem_level)) )  && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'submit_quotes' && value.menu_value === 'yes')) &&
+                  { authValues.user.accType === 'full' && ([1,2,3].includes(+(authValues.user.mem_level)) )  && menuItems?.menuOpts?.some((value: any) => (value.menu_key === 'submit_quotes' && value.menu_value === 'yes')) &&
                   <IonItemGroup className="custom-list-sidemenu">  
                     <IonListHeader className="custom-list-header">
                       Submit Quotes

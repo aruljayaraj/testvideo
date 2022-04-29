@@ -23,7 +23,7 @@ interface PropsInterface{
 
 // Only for Resources Document, Audio, Video
 const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => { 
-  
+    const authUser = useSelector( (state:any) => state.auth.data.user);
     const loadingState = useSelector( (state:any) => state.ui.loading);
     const [showViewerModal, setShowViewerModal] = useState(initialValues);
 
@@ -44,7 +44,8 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
     return (<>
         {props.attachments && Object.keys(props.attachments).length > 0 && 
             <IonList>
-            { props.attachments.map((item: any, index: number) => { 
+            { props.attachments.map((item: any, index: number) => {
+                console.log( (+authUser.ID === +item.mem_id || +item.converted === 1) );
                 let title = 'Document';
                 if(item && item.upload_type === 'audio'){
                     title = 'Audio';
@@ -52,14 +53,14 @@ const MediaList: React.FC<PropsInterface> = (props: PropsInterface) => {
                     title = 'Video';
                 }
                 return (<IonItem className="cursor" lines="none" key={index} onClick={() => categoryModalFn(`${title} Viewer`, item.mem_id, item.rep_id, item.form_id, item.upload_type, item.filename, item.converted)} >
-                { item.uploaded_name && <>
+                { item.uploaded_name && (+authUser.ID === +item.mem_id || +item.converted === 1) && <>
                 <IonAvatar slot="start" color="greenbg">
                     { item && ['document', 'article'].includes(item.upload_type) && <IonIcon className="pt-2" color="greenbg" size="large" icon={documentTextOutline}></IonIcon>}
                     { item && item.upload_type === 'audio' && <IonIcon className="pt-2" color="greenbg" size="large" icon={musicalNoteOutline}></IonIcon>}
                     { item && item.upload_type === 'video' && <IonIcon className="pt-2" color="greenbg" size="large" icon={videocamOutline}></IonIcon>}
                 </IonAvatar>
                 <IonLabel>
-                    <h2>{item.uploaded_name}</h2>
+                    <h2>{item.upload_from === 'recording'? item.upload_title: item.uploaded_name}</h2>
                 </IonLabel> 
                 </>}
             </IonItem> )} )}

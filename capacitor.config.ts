@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.localfirstapp.com',
   appName: 'localfirstapp',
   webDir: 'build',
-  bundledWebRuntime: false
+  bundledWebRuntime: true
 };
 
 export default config;

@@ -1,5 +1,5 @@
-import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonGrid, IonRow, IonCol } from '@ionic/react'; 
-import React, {useCallback, useEffect} from 'react';
+import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonGrid, IonRow, IonCol, IonSpinner } from '@ionic/react'; 
+import React, {useCallback, useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import './PressReleases.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +17,7 @@ const HomePR: React.FC = () => {
   const pr = useSelector( (state:any) => state.pr.pressRelease);
   const { apiBaseURL, basename } = lfConfig;
   let { id } = useParams<any>();
+  const [imgloading, setImgLoading] = useState(true);
 
   // Press Release deafult to load callback
   const onPrBuscatCb = useCallback((res: any) => {
@@ -39,6 +40,10 @@ const HomePR: React.FC = () => {
     }
   }, [dispatch, id, onPrBuscatCb]);
 
+  const imageLoaded = () => {
+      setImgLoading(false);
+  }
+
   const prImage = ( pr && Object.keys(pr).length > 0 && pr.pr_image) ? `${apiBaseURL}uploads/member/${pr.pr_mem_id}/${pr.pr_rep_id}/${pr.pr_image}` : `${basename}/assets/img/placeholder.png`;
 
   return (
@@ -57,7 +62,8 @@ const HomePR: React.FC = () => {
                 <IonRow>
                   { pr.pr_image && 
                   <IonCol sizeMd="4" sizeXl="4" sizeXs="12" className="">
-                    <img src={prImage} alt="Press Release Media" />
+                    { imgloading && <IonSpinner name="dots" /> }
+                    <img src={prImage} alt="Press Release Media" onLoad={imageLoaded} />
                   </IonCol> }
                   <IonCol sizeMd={ pr.pr_image? "8": "12" } sizeXs="12" className="">
                     <div className="pl-3">  { /* pt-sm-3 mt-sm-4 */}

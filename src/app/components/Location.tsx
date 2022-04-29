@@ -239,6 +239,7 @@ const LocationModal: React.FC<Props> = ({ showLocationModal, setShowLocationModa
                                 control={control}
                                 render={({ field }) => {
                                     return <Select
+                                        defaultValue = {{value: '', label: ''}}
                                         {...field}
                                         placeholder="Select Country"
                                         options={listCountry}
@@ -269,11 +270,12 @@ const LocationModal: React.FC<Props> = ({ showLocationModal, setShowLocationModa
                     <IonCol>
                         <IonLabel className="mb-2">State <IonText color="danger">*</IonText></IonLabel>
                         <div className="mt-2">
-                            <Controller 
+                            <Controller
                                 name="state"
                                 control={control}
                                 render={({ field }) => {
                                     return <Select
+                                        defaultValue = {{value: '', label: ''}}
                                         {...field}
                                         placeholder="Select State"
                                         options={listState}

@@ -26,6 +26,7 @@ import * as uiActions from '../../../../store/reducers/ui';
 import * as qqActions from '../../../../store/reducers/dashboard/qq';
 import '../LocalQuotes.scss';
 import CoreService from '../../../../shared/services/CoreService';
+import CommonService from '../../../../shared/services/CommonService';
 import QQStepInd from './QQStepInd';
 import Modal from '../../../../components/Modal/Modal';
 import { lfConfig } from '../../../../../Constants';
@@ -70,8 +71,8 @@ const SpecialInstructions: React.FC = () => {
     });
 
     useEffect(()=>{
-        if(qq.quotation_req_date){
-            const QuoDateChange = format(new Date(qq.quotation_req_date), 'yyyy-MM-dd');
+        if(qq.quotation_req_date){ console.log(qq.quotation_req_date);
+            const QuoDateChange = format(new Date(CommonService.mysqlToJsDateFormat(qq.quotation_req_date)), 'yyyy-MM-dd');
             setQuoDate(QuoDateChange);
         }
         if(qq.delivery_date){

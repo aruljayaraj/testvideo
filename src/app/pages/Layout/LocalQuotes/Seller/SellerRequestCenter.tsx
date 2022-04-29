@@ -113,14 +113,16 @@ const SellerRequestCenter: React.FC = () => {
       </IonToolbar>
       { !skeleton.showSkeleton && qqs ? ( 
         <IonContent>
-          { qqs.map((qq: any, index: number) => {
-            return (<SRContent 
-              qq={qq} 
-              key={nanoid()} 
-              setShowActionSheet={setShowActionSheet}
-              setShowPopover={setShowPopover}
-              />)
-          })}  
+          <div>
+            { qqs.map((qq: any, index: number) => {
+              return (<SRContent 
+                qq={qq} 
+                key={nanoid()} 
+                setShowActionSheet={setShowActionSheet}
+                setShowPopover={setShowPopover}
+                />)
+            })}  
+          </div>
           <NoData dataArr={qqs} htmlText={`No requests found.`} />
           <IonAlert
             isOpen={showAlert.status}

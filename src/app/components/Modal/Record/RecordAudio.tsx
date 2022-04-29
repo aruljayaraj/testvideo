@@ -8,7 +8,11 @@ import {
     IonContent,
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IonItem,
+    IonLabel,
+    IonText,
+    IonInput
   } from '@ionic/react';
   import { 
     close,
@@ -20,8 +24,8 @@ import {
     playOutline
   } from 'ionicons/icons';
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useForm } from "react-hook-form";
-
+import { useForm, Controller } from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
 import './Record.scss';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -42,27 +46,41 @@ interface Props {
     setShowRecordAudioModal: Function,
 }
 
-let initialValues: any = {
+type FormInputs = {
+    title_line: string;
+}
+
+let audioInitialValues: any = {
     status: '',
     base64Sound: '',
-    mimeType: ''
+    mimeType: '',
+    ext: ''
 }
 
 const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudioModal }) => {
     const dispatch = useDispatch();
     const [basename] = useState(process.env.REACT_APP_BASENAME);
-    const { handleSubmit} = useForm();
-    let { title, actionType, memId, repId, frmId, resType } = showRecordAudioModal;
+    let { title, actionType, memId, repId, frmId, resType, qqType } = showRecordAudioModal;
     // const qq = useSelector( (state:any) => state.qq.localQuote);
     const { apiBaseURL } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
-
+    const inputRef = useRef<any>(null);
     const { timer, isActive, isPaused, handleStart, handlePause, handleResume, handleReset } = useTimer(0);
 
-    const [audio, setAudio] = useState<any>(initialValues);
+    const [audio, setAudio] = useState<any>(audioInitialValues);
+    // const [audioFileTitle, setAudioFileTitle] = useState<string>('');
     const audioRef = useRef<any>();
 
-    const onRecord = () => { console.log("meow");
+    let initialValues = {
+        title_line: ""
+    };
+
+    const { control, handleSubmit, getValues, setValue, formState: { errors } } = useForm<FormInputs>({
+        defaultValues: { ...initialValues },
+        mode: "onChange"
+    });
+
+    const onRecord = () => { 
         VoiceRecorder.canDeviceVoiceRecord()
         .then((result: GenericResponse) => {
             console.log(result.value);
@@ -134,13 +152,15 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
     const onStop = () => { console.log("stop");
         VoiceRecorder.stopRecording()
         .then((result: RecordingData) => {
-            // console.log(result.value);
+            console.log(result.value);
+            let mime_ext = CommonService.mimeTypes(result.value.mimeType); console.log(mime_ext);
             handlePause();
             handleReset();
             const audDetails = {
                 status: 'recorded',
                 base64Sound: result.value.recordDataBase64,
-                mimeType: result.value.mimeType
+                mimeType: result.value.mimeType,
+                ext: mime_ext
             }
             setAudio(audDetails);
         })
@@ -151,13 +171,19 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
         setAudio({
             status: '',
             base64Sound: '',
-            mimeType: ''
+            mimeType: '',
+            ext: ''
         });
     }
     const onCallbackFn = useCallback((res: any) => { console.log(res);
         if(res.status === 'SUCCESS'){
             if( actionType === 'localquote' ){
-                dispatch(qqActions.setQQ({ data: res.data }));
+                if( qqType === 'buyer' ){
+                    dispatch(qqActions.setQQ({ data: res.data }));
+                }else{
+                    dispatch(qqActions.setSQ({ data: res.data }));
+                }
+                
             }
             setShowRecordAudioModal({ ...showRecordAudioModal, isOpen: false });
         }
@@ -167,19 +193,28 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
         }, 2000 );
         
     }, [dispatch]);
-    const onSubmit = () => {
+    const onSubmit = (data: any) => {
         dispatch(uiActions.setShowLoading({ loading: true }));
+        console.log(audio);
         var u8Audio  = CommonService.b64ToUint8Array(audio.base64Sound); console.log(audio.mimeType);
+        
         const fd = new FormData();
-        fd.append("dataFile", new Blob([ u8Audio ], {type: audio.mimeType}), nanoid()+".webm");
+        fd.append("dataFile", new Blob([ u8Audio ], {type: audio.mimeType}), nanoid()+"."+audio.ext);
         fd.append('memId', memId);
         fd.append('repId', repId);
         fd.append('formId', frmId);
         fd.append('action', actionType); // actionType
         fd.append('resType', resType);
+        fd.append('qqType', qqType);
+        fd.append('uploadFrom', 'recording');
+        fd.append('uploadTitle', data.title_line);
         // console.log(showRecordAudioModal, title, actionType, memId, repId, frmId);
         CoreService.onUploadFn('record_upload', fd, onCallbackFn);
     }
+
+    // if( inputRef && inputRef.current ){
+    //     console.log(inputRef.current.value);
+    // }
 
     return (<>
         <form className="image-crop-modal-container" onSubmit={handleSubmit(onSubmit)}>
@@ -193,7 +228,8 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
                         </IonButton>
                     </IonButtons>
-                    { (!isPlatform('desktop') && audio.base64Sound) &&  
+                    
+                    { (!isPlatform('desktop') && audio.base64Sound && inputRef && inputRef.current && inputRef.current.value) &&  
                         <IonButtons slot="end">
                             <IonButton color="blackbg" type="submit">
                                 <strong>Save</strong>
@@ -207,12 +243,55 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
             <IonContent fullscreen className="ion-padding img-container">
                 <IonIcon color="danger" icon={close} slot="icon-only"></IonIcon>
                 <IonGrid>
+                    <IonRow className="d-flex justify-content-center mb-2">
+                        <IonCol sizeMd="8" sizeXs="12">
+                            <IonItem class="ion-no-padding">
+                            <IonLabel position="stacked">Title for the Audio <IonText color="danger">*</IonText></IonLabel>
+                            <Controller 
+                                name="title_line"
+                                control={control}
+                                render={({ field: {onChange, onBlur, value} }) => {
+                                    return <IonInput type="text"
+                                        ref={inputRef}
+                                        onIonChange={(e: any) => {
+                                            // console.log(getValues('title_line'));
+                                            // setAudio({ ...audio, title_line: e.target.value });
+                                            // inputRef.current = e.target.value;
+                                            onChange(e.target.value); 
+                                        }}
+                                        onBlur={onBlur}
+                                        value={value}
+                                    />
+                                }}
+                                rules={{
+                                    required: {
+                                        value: true,
+                                        message: "Title Line is required"
+                                    },
+                                    minLength: {
+                                        value: 3,
+                                        message: 'Title Line should be minimum 3 characters'
+                                    },
+                                    maxLength: {
+                                        value: 150,
+                                        message: 'Title Line should be lessthan 150 characters'
+                                    }
+                                }}
+                            />
+                            </IonItem>
+                            <ErrorMessage
+                                errors={errors}
+                                name="title_line"
+                                render={({ message }) => <div className="invalid-feedback">{message}</div>}
+                            />
+                        </IonCol>
+                    </IonRow>
                     { !audio.base64Sound && <IonRow>
                         <IonCol className="d-flex justify-content-center mb-4">
                             <p className='fs-20'>{CommonService.formatTime(timer)}</p>
                         </IonCol>
                     </IonRow>}
-                    { audio.base64Sound && <IonRow>
+                    { audio.base64Sound && audio.ext !== 'm4a' && <IonRow>
                         <IonCol className="d-flex justify-content-center my-5">
                             <audio controls ref={audioRef}>
                                 <source src={audio.base64Sound} type="audio/ogg" />
@@ -220,7 +299,9 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
                         </IonCol>
                     </IonRow>}
                     <IonRow>
-                        <IonCol className="d-flex justify-content-center">
+                        {/* <IonCol className="d-flex justify-content-centers" > */}
+                        <IonCol sizeMd="12" sizeXs="12">
+                            <div className="d-flex justify-content-center">
                             <IonButton color="greenbg" shape="round" onClick={onDelete} disabled={audio.base64Sound? false : true}>
                                 <IonIcon icon={trashOutline} />
                             </IonButton>
@@ -236,12 +317,13 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
                             <IonButton color="greenbg" shape="round" onClick={onStop} disabled={['recording', 'paused'].includes(audio.status)? false : true}>
                                 <IonIcon icon={stopOutline} />
                             </IonButton>
+                            </div>
                         </IonCol>
                     </IonRow>
+                       
                 </IonGrid>
                 <div className="float-right">
-                    
-                    { (isPlatform('desktop') && audio.base64Sound) && 
+                    { (isPlatform('desktop') && audio.base64Sound && inputRef && inputRef.current && inputRef.current.value ) && 
                         <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
                             Save
                         </IonButton>

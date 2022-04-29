@@ -1,0 +1,28 @@
+.notification-modal{
+    .notification-container{
+      overflow-y: auto;
+      ul{
+        margin: 0;
+        padding: 0;
+        li{
+          list-style: none;
+          padding: 15px;
+          border-bottom: 1px solid #f2f2f2;
+        }
+        li:last-child(){
+          border-bottom: none;
+        }
+        li:hover{
+          background-color: #F2F2F2;
+        }
+      }
+    }
+    
+}
+
+  // Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .notifiction-modal{
+    
+  }
+}

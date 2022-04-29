@@ -7,7 +7,7 @@
     "start-dev": "env-cmd -e dev react-scripts start",
     "build-dev": "env-cmd -e dev react-scripts build && npx cap sync",
     "start:android": "env-cmd -e dev ionic capacitor run android --livereload --external",
-    "start:ios": "env-cmd -e dev ionic capacitor ios android --livereload --external",
+    "start:ios": "env-cmd -e dev ionic capacitor ios --livereload --external --debug",
     "start-devbeta": "env-cmd -e devbeta react-scripts start",
     "build-devbeta": "env-cmd -e devbeta react-scripts build && npx cap sync",
     "start-devlive": "env-cmd -e devlive react-scripts start",
@@ -42,7 +42,7 @@
     "@ionic-native/file": "^5.36.0",
     "@ionic-native/geolocation": "^5.28.0",
     "@ionic-native/media-capture": "^5.36.0",
-    "@ionic/pwa-elements": "^1.5.2",
+    "@ionic/pwa-elements": "^3.1.1",
     "@ionic/react": "^6.0.4",
     "@ionic/react-hooks": "^0.0.8",
     "@ionic/react-router": "^6.0.4",
@@ -86,7 +86,8 @@
     "rxjs": "^6.5.5",
     "sass": "^1.49.0",
     "styled-components": "^5.3.3",
-    "video.js": "^7.8.4"
+    "video.js": "^7.8.4",
+    "videojs-record": "^4.5.0"
   },
   "devDependencies": {
     "@capacitor/cli": "^3.4.1",
@@ -104,6 +105,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "react-error-overlay": "6.0.9",
     "react-scripts": "^4.0.3",
+    "redux-logger": "^3.0.6",
     "typescript": "^4.2.4"
   },
   "eslintConfig": {

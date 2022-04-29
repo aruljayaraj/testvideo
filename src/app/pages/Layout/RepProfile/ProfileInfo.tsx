@@ -12,6 +12,7 @@ import {
     IonAvatar
   } from '@ionic/react';
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import './RepProfile.scss';
 import { useSelector } from 'react-redux';
@@ -21,6 +22,7 @@ const ProfileInfo: React.FC = () => {
     // console.log('Rep Profile Info Page');
     const repProfile = useSelector( (state:any) => state.rep.repProfile);
     const [showProfileModal, setShowProfileModal] = useState(false);
+    let { memid, repid } = useParams<any>();
 
     return (<>
         { Object.keys(repProfile).length > 0 &&
@@ -56,7 +58,7 @@ const ProfileInfo: React.FC = () => {
                             }
                         </IonLabel>
                     </IonItem>
-                    {repProfile.address1 && <IonItem lines="none">
+                    {repProfile.address1 && repProfile.city && <IonItem lines="none">
                         <IonAvatar slot="start">
                             <i className="fa fa-address-card-o fa-2x green" aria-hidden="true"></i>
                         </IonAvatar>

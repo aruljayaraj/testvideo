@@ -13,6 +13,7 @@ import { cameraOutline, ellipsisHorizontalOutline, imageOutline, close } from 'i
 import React, { useState, useCallback } from 'react';  
 import { isPlatform } from '@ionic/react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams} from 'react-router-dom';
 
 import './RepProfile.scss';
 import CommonService from '../../../shared/services/CommonService';
@@ -34,6 +35,7 @@ const ProfileAndLogo: React.FC = () => {
     const [showImageModal, setShowImageModal] = useState(CommonInitService.initialValuesImageModal(''));
     const [showProfileActSheet, setShowProfileActSheet] = useState(false);
     const { apiBaseURL } = lfConfig;
+    let { memid, repid } = useParams<any>();
 
     const imageModalFn = (title: string, actionType: string) => {
         setShowImageModal({ 
@@ -42,8 +44,8 @@ const ProfileAndLogo: React.FC = () => {
             title: title,
             actionType: actionType,
             memId: (repProfile && Object.keys(repProfile).length > 0)? repProfile.mem_id: '',
-            repId: (repProfile && Object.keys(repProfile).length > 0)? repProfile.id: '',
-            frmId: (repProfile && Object.keys(repProfile).length > 0)? repProfile.id: ''
+            repId: (repProfile && Object.keys(repProfile).length > 0 && repProfile.is_primary)? repProfile.id: repid,
+            frmId: (repProfile && Object.keys(repProfile).length > 0 && repProfile.is_primary)? repProfile.id: repid
         });
     }
 
@@ -75,8 +77,8 @@ const ProfileAndLogo: React.FC = () => {
         }
     }    
 
-    const repImage = (Object.keys(repProfile).length > 0 && repProfile.profile_image) ? `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.id}/${repProfile.profile_image}` : `${basename}/assets/img/avatar.svg`;
-    const logoImage = (Object.keys(repProfile).length > 0 && repProfile.profile_logo) ? `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.id}/${repProfile.profile_logo}` : `${basename}/assets/img/placeholder.png`;
+    const repImage = (Object.keys(repProfile).length > 0 && repProfile.profile_image) ? `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.id}/${CommonService.getThumbImg(repProfile.profile_image)}` : `${basename}/assets/img/avatar.svg`;
+    // const logoImage = (Object.keys(repProfile).length > 0 && repProfile.profile_logo) ? `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.id}/${repProfile.profile_logo}` : `${basename}/assets/img/placeholder.png`;
     return (<>
         { repProfile && Object.keys(repProfile).length > 0 &&
         <IonCard className="card-center mt-4">
@@ -90,7 +92,7 @@ const ProfileAndLogo: React.FC = () => {
                         <IonList>
                             <IonItem className="profile-image-wrap p-0" lines="none" >
                                 <div className="profile-image">
-                                    <img src={repImage} alt="Rep Profile" onError={() => CommonService.onImgErr('profile')} />
+                                    <img src={repImage} alt="Rep Profile" />
                                     <i className="fa fa-pencil fa-lg edit green cursor" aria-hidden="true" onClick={() => setShowProfileActSheet(true)}></i>
                                 </div>    
                             </IonItem>

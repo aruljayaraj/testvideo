@@ -18,8 +18,10 @@ import { lfConfig } from '../../../Constants';
 import HomeItems from './HomeItems';
 import PartnerAds from '../../components/Common/PartnerAds';
 import axios from 'axios';
+import { getPlatforms } from '@ionic/react';
+import { Capacitor } from "@capacitor/core";
 
-const Home: React.FC = () => {
+const Home: React.FC = () => { 
   const dispatch = useDispatch();
   const { basename, ADS } = lfConfig;
   const [filter, setFilter] = useState<any>('all');

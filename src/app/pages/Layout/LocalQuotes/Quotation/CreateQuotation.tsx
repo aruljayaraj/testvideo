@@ -67,7 +67,7 @@ const CreateQuotation: React.FC = () => {
     });
 
     const onCallbackFn = useCallback((res: any) => {
-        if(res.status === 'SUCCESS'){
+        if(res.status === 'SUCCESS'){ 
             dispatch(qqActions.setSQ({ data: res.data }));
             setAddQuote({ status: true, memID: res.data.mem_id, ID: res.data.id  });
         }

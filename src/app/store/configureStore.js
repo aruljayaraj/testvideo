@@ -2,6 +2,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import reducer from './reducers';
 import createSagaMiddleware from 'redux-saga';
 import rootWatchers from './root-saga';
+// import logger from 'redux-logger';
 
 export default function(){
     const sagaMiddleware = createSagaMiddleware();
@@ -15,7 +16,7 @@ export default function(){
             // ignoredPaths: ['items.dates']
         }*/
         serializableCheck: false
-    }), sagaMiddleware];
+    }), sagaMiddleware]; // logger
     const store = configureStore({
         reducer,
         middleware

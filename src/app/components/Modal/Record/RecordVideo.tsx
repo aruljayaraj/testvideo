@@ -15,7 +15,8 @@ import {
     IonInput
   } from '@ionic/react';
   import { 
-    close
+    close,
+    recordingOutline
   } from 'ionicons/icons';
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -25,14 +26,17 @@ import "videojs-record/dist/css/videojs.record.css";
 import videojs from "video.js";
 import "videojs-record/dist/videojs.record.js";
 import RecordRTC from "recordrtc";
+import { nanoid } from 'nanoid';
 import './Record.scss';
+import { useReactMediaRecorder } from "react-media-recorder";
+import { Capacitor } from "@capacitor/core";
+import { isPlatform, getPlatforms } from '@ionic/react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import CoreService from '../../../shared/services/CoreService';
 import { lfConfig } from '../../../../Constants';
 import * as uiActions from '../../../store/reducers/ui';
 import * as qqActions from '../../../store/reducers/dashboard/qq';
-import { isPlatform } from '@ionic/react';
 import CommonService from '../../../shared/services/CommonService';
 
 interface Props {
@@ -81,6 +85,9 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
     const playerRef = useRef(null);
     const inputRef = useRef<any>(null);
     const [video, setVideo] = useState<any>(videoInitialValues);
+    // IosBrowser Only Video
+    const isIosBrowser = Capacitor.getPlatform() === 'web' && isPlatform('ios');
+    const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({ video: true });
 
     let initialValues = {
         title_line: ""
@@ -211,17 +218,16 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
         }
     }, []);  // showRecordVideoModal
     
-    // Dispose the Video.js player when the functional component unmounts
-    // React.useEffect(() => {
-    //     const player = playerRef.current;
-
-    //     return () => {
-    //     if (player) {
-    //         player.dispose();
-    //         playerRef.current = null;
-    //     }
-    //     };
-    // }, [playerRef]);
+    const stopRecordingFn = () => { console.log('Meow', mediaBlobUrl);
+        stopRecording(); 
+        setTimeout(() => {
+            setVideo({
+                ...video,
+                status: 'recorded'
+            });
+        }, 1000);
+        
+    }
 
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
@@ -246,12 +252,22 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
         }, 2000 );
         
     }, [dispatch]);
-    const onSubmit = (data: any) => {
+    const onSubmit = async(data: any) => {
         dispatch(uiActions.setShowLoading({ loading: true }));
+        // For IOSBrowser on Iphone
+        let mediaBlob: any;
+        if( isIosBrowser ){
+            const response = await fetch(mediaBlobUrl);
+            mediaBlob = await response.blob();
+        }
+        const vStream = isIosBrowser? mediaBlob: video.stream;
+        const vStreamName = isIosBrowser? nanoid()+".mp4": video.stream.name;
+        
         const fd = new FormData();
-        console.log(video);
-        console.log(video.stream.name);
-        fd.append("dataFile", video.stream, video.stream.name);
+        /*console.log(video);
+        console.log(video.stream.name);*/
+        
+        fd.append("dataFile", vStream, vStreamName);
         fd.append('memId', memId);
         fd.append('repId', repId);
         fd.append('formId', frmId);
@@ -282,7 +298,8 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
                         </IonButton>
                     </IonButtons>
-                    { (video && video.stream && inputRef && inputRef.current && inputRef.current.value) &&
+                    { (inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3) 
+                        && ((video && video.stream) || mediaBlobUrl ) &&
                         <IonButtons slot="end">
                             <IonButton color="blackbg" type="submit">
                                 <strong>Save</strong>
@@ -341,7 +358,27 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
                     </IonRow>
                     <IonRow>
                         <IonCol>
-                            <video ref={videoRef} id="myVideo" playsInline className="video-js vjs-default-skin" />
+                            { !isIosBrowser && <video ref={videoRef} id="myVideo" playsInline className="video-js vjs-default-skin" />}
+                            <div>
+                                <div className="d-flex justify-content-center mt-2"> 
+                                    { status === 'recording' && 
+                                        <div className="d-flex justify-content-center ion-align-self-center red fw-bold">
+                                            <IonIcon size="large" icon={recordingOutline}></IonIcon> 
+                                            <span className="fs-18 ml-2 pt-1">Recording </span>
+                                        </div> 
+                                    }
+                                    { mediaBlobUrl &&  <video src={mediaBlobUrl} width='100%' height='100%' controls playsInline /> }
+                                </div>
+                                { isIosBrowser && <div className="d-flex justify-content-center mt-4">
+                                    <IonButton color="greenbg" shape="round" onClick={startRecording} disabled={(['idle', 'stopped'].includes(status) && (inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3) )? false : true}>
+                                        Start Recording
+                                    </IonButton>
+                                    <IonButton color="greenbg" shape="round" onClick={stopRecordingFn} disabled={['recording'].includes(status)? false : true} >
+                                        Stop Recording
+                                    </IonButton>
+                                </div> }
+                                
+                            </div>
                         </IonCol>
                     </IonRow>
                     

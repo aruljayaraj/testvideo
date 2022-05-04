@@ -165,7 +165,7 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
           <IonButtons slot="end">
             { (authValues.authenticated && authValues.isVerified &&  authValues.user) &&
               <IonButton onClick={(e) => toggleRightOverlaySidebar(e)}>
-                <span className='ion-float-left'>{`Hi ${authValues.user.firstname}`} </span>
+                { isPlatform('desktop') && <span className='ion-float-left'>{`Hi ${authValues.user.firstname}`} </span>}
                 <IonIcon slot="start" icon={personCircleOutline}></IonIcon>
               </IonButton>  
             }

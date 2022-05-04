@@ -12,12 +12,9 @@ import CoreService from '../../shared/services/CoreService';
 import './AboutUs.scss';
 import { useDispatch } from 'react-redux';
 import * as uiActions from '../../store/reducers/ui';
-
-import {
-  MediaCapture,
-  MediaFile,
-  CaptureVideoOptions,
-} from "@ionic-native/media-capture";
+// import { isPlatform } from '@ionic/react';
+// import { ReactMediaRecorder } from "react-media-recorder";
+// import { Capacitor } from "@capacitor/core";
 
 type PageProps = {
   title: string,
@@ -25,7 +22,8 @@ type PageProps = {
 }
 
 const AboutUs: React.FC = () => {
-  console.log('About Us Page');
+  console.log('About Us Page'); 
+  // console.log(Capacitor.getPlatform() === 'web' && isPlatform('ios'));
   const dispatch = useDispatch();
   const [page, setPage] = useState<PageProps>({ title: '', content: '' });
 
@@ -54,7 +52,19 @@ const AboutUs: React.FC = () => {
 
   return (
     <IonPage className="aboutus-page">
-      {/* <IonButton onClick={doMediaCapture} >Record</IonButton> */}
+      {/* <div style={{width: '400px'}}>
+      <ReactMediaRecorder
+        video
+        render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
+          <div>
+            <p>{status}</p>
+            <button onClick={startRecording}>Start Recording</button>
+            <button onClick={stopRecording}>Stop Recording</button>
+            <video src={mediaBlobUrl} width='100%' height='100%' controls autoPlay playsInline />
+          </div>
+        )}
+      />
+    </div> */}
       { page.title &&
       <IonContent className="ion-padding">
         <IonCard className="card-center mt-2 mb-4">

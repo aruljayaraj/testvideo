@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonRouterLink, IonGrid, IonRow, IonCol } from '@ionic/react'; 
+import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonRouterLink, IonGrid, IonRow, IonCol } from '@ionic/react'; 
 import React, {useCallback, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import './ResourceUpload.scss';
@@ -20,7 +20,7 @@ const Resource: React.FC = () => {
   const authUser = useSelector( (state:any) => state.auth.data.user);
   const loadingState = useSelector( (state:any) => state.ui.loading);
   const resource = useSelector( (state:any) => state.res.resource);
-  const { apiBaseURL, basename } = lfConfig;
+  const { basename } = lfConfig;
   let { id, res_type } = useParams<any>();
   const resTypeText = res_type ? res_type.charAt(0).toUpperCase() + res_type.slice(1): '';
 

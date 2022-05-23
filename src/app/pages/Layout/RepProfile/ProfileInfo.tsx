@@ -12,7 +12,6 @@ import {
     IonAvatar
   } from '@ionic/react';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 import './RepProfile.scss';
 import { useSelector } from 'react-redux';
@@ -22,7 +21,6 @@ const ProfileInfo: React.FC = () => {
     // console.log('Rep Profile Info Page');
     const repProfile = useSelector( (state:any) => state.rep.repProfile);
     const [showProfileModal, setShowProfileModal] = useState(false);
-    let { memid, repid } = useParams<any>();
 
     return (<>
         { Object.keys(repProfile).length > 0 &&

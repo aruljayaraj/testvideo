@@ -59,10 +59,9 @@ let audioInitialValues: any = {
 
 const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudioModal }) => {
     const dispatch = useDispatch();
-    const [basename] = useState(process.env.REACT_APP_BASENAME);
     let { title, actionType, memId, repId, frmId, resType, qqType } = showRecordAudioModal;
     // const qq = useSelector( (state:any) => state.qq.localQuote);
-    const { apiBaseURL } = lfConfig;
+    const { apiBaseURL, basename } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const inputRef = useRef<any>(null);
     const { timer, isActive, isPaused, handleStart, handlePause, handleResume, handleReset } = useTimer(0);

@@ -31,11 +31,10 @@ const ProfileAndLogo: React.FC = () => {
     const { takePhoto } = useCameraPhoto();
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const repProfile = useSelector( (state:any) => state.rep.repProfile);
-    const [basename] = useState(process.env.REACT_APP_BASENAME);
     const [showImageModal, setShowImageModal] = useState(CommonInitService.initialValuesImageModal(''));
     const [showProfileActSheet, setShowProfileActSheet] = useState(false);
-    const { apiBaseURL } = lfConfig;
-    let { memid, repid } = useParams<any>();
+    const { apiBaseURL, basename } = lfConfig;
+    let { repid } = useParams<any>();
 
     const imageModalFn = (title: string, actionType: string) => {
         setShowImageModal({ 

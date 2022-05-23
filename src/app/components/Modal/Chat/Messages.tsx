@@ -38,12 +38,11 @@ interface Props {
 const Messages: React.FC<Props> = ({qq_type}) => {
     
     const dispatch = useDispatch();
-    const [basename] = useState(process.env.REACT_APP_BASENAME);
     // const qq = useSelector( (state:any) => state.qq.localQuote);
     const messages = useSelector( (state:any) => state.qq.messages.messages);
     const qq_mem = useSelector( (state:any) => state.qq.messages.qq_mem); 
     const qt_mem = useSelector( (state:any) => state.qq.messages.qt_mem); 
-    const { apiBaseURL } = lfConfig;
+    const { apiBaseURL, basename } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const loadingState = useSelector( (state:any) => state.ui.loading);
     let senderUrl = `${basename}/assets/img/avatar.svg`;

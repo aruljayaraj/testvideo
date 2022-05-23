@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonRouterLink, IonGrid, IonRow, IonCol } from '@ionic/react'; 
+import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText, IonGrid, IonRow, IonCol } from '@ionic/react'; 
 import React, {useCallback, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import './Resources.scss';
@@ -6,7 +6,6 @@ import './Resources.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as uiActions from '../../store/reducers/ui';
 import * as resActions from '../../store/reducers/dashboard/resource';
-import { lfConfig } from '../../../Constants';
 import CoreService from '../../shared/services/CoreService';
 import CommonService from '../../shared/services/CommonService';
 import MediaList from '../../components/Common/MediaList';
@@ -19,7 +18,6 @@ const HomeResource: React.FC = () => {
   const authUser = useSelector( (state:any) => state.auth.data.user);
   const loadingState = useSelector( (state:any) => state.ui.loading);
   const resource = useSelector( (state:any) => state.res.resource);
-  const { apiBaseURL, basename } = lfConfig;
   let { id, res_type } = useParams<any>();
   const resTypeText = res_type ? res_type.charAt(0).toUpperCase() + res_type.slice(1): '';
 

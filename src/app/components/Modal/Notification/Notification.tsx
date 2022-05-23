@@ -36,10 +36,9 @@ interface Props {
 
 const NotificationModal: React.FC<Props> = ({ notificationModal, setNotificationModal }) => {
   const dispatch = useDispatch();
-  const [basename] = useState(process.env.REACT_APP_BASENAME);
   // let { title, qq_type, bid, sid, mem_id, receiver_id} = setNotificationModal;
   // const qq = useSelector( (state:any) => state.qq.localQuote);
-  const { apiBaseURL } = lfConfig;
+  const { apiBaseURL, basename } = lfConfig;
   const authUser = useSelector( (state:any) => state.auth.data.user);
 
   useEffect(() => {

@@ -176,7 +176,7 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
       );
     }
 
-    if( redirectData.status ){
+    if( redirectData.status ){ 
       if(redirectData.data && Object.keys(redirectData.data).length > 0){
         let itemLink = "";
         let itemData = {};
@@ -193,9 +193,9 @@ const SearchModal: React.FC<Props> = (props) => { // { searchModal, setSearchMod
         }else if(item.type === 'News'){ 
           itemLink = `/press-release/${item.form_id}`; 
         }else if(item.type === 'Comp'){
-          let display = item.display.split(',');
+          let display = item.display.split(','); console.log(redirectData.data, display);
           itemLink = `/company-results`;
-          itemData = { ...searchFilter, company_name: display[0]? display[0]: display };
+          itemData = { ...searchFilter, company_name: display[0]? display[0]: display, city: display[1]? display[1]: '' };
         }
         return <Redirect to={{ pathname: itemLink, state: itemData }} />;
       }

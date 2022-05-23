@@ -1,7 +1,7 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { IonContent } from '@ionic/react';
-import { lfConfig } from './Constants';
+// import { lfConfig } from './Constants';
 import PrivateRoute from './AuthGuard';
 
 import Home from './app/pages/Home/Home';
@@ -69,7 +69,7 @@ import CompanyResults from './app/pages/Search/Final/CompanyResults';
 // }
 
 const Routes: React.FC = () => {
-  const { basename } = lfConfig;
+  // const { basename } = lfConfig;
     /*const PrivateRoute = ({ component: Component, ...rest }) => (
         <Route {...rest} render={props => (
           fakeAuth.isAuthenticated ? (

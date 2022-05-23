@@ -4,7 +4,8 @@ import { IonPage, IonContent, IonToolbar, IonSegment, IonSegmentButton, IonLabel
   useIonViewWillEnter,
   IonList,
   IonItem,
-  IonCard
+  IonCard,
+  IonSpinner
 } from '@ionic/react';
 import React, { useState, useCallback, useEffect, useLayoutEffect } from 'react';
 import './Home.scss';
@@ -27,6 +28,7 @@ const Home: React.FC = () => {
   const [filter, setFilter] = useState<any>('all');
   const [page, setPage] = useState<number>(1);
   const location = useSelector( (state:any) => state.auth.location);
+  const [loading, setLoading] = useState(false);
   // const homeResults = useSelector( (state:any) => state.search.homeResults.items);
   // const homeResTotal = useSelector( (state:any) => state.search.homeResults.total); // console.log(homeResTotal);
   const [width, setWidth] = useState(0);
@@ -120,11 +122,12 @@ const Home: React.FC = () => {
     }
   }, [width]);*/
   useEffect(() => {
-    if(width > 0){
+    // if(width > 0){
+      // setPage(1);
       setHomeResults([]);
       fetchData(true);
-    }
-  }, [filter, width]);
+    // }
+  }, [filter]);
   const handleFilter = useCallback((e: any) => { // console.log('Frome Filter');
     const fltr = e.detail.value;
     setPage(1);
@@ -145,6 +148,7 @@ const Home: React.FC = () => {
   }, []);
 
   async function fetchData(reset?: boolean, $event?:any) {
+    if(page == 1){ setLoading(true); }
     const homeData: any[] = reset ? [] : homeResults;
     const data = {
       action: 'home',
@@ -167,10 +171,12 @@ const Home: React.FC = () => {
           // ($event.target as HTMLIonInfiniteScrollElement).complete();
           ($event.target).complete();
         }
+        if(page == 1){ setLoading(false); }
       })
       .catch( (error: any) => { // console.log(error);
         dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: error }));
         console.error(error);
+        if(page == 1){ setLoading(false); }
       });
   }
 
@@ -182,7 +188,7 @@ const Home: React.FC = () => {
   return (
     <IonPage className="homepage">
       <IonContent>
-        <h3 className="ion-text-center fw-bold fs-20">Shop LocalFirst {location.city? `in ${location.city}`: ''}</h3>
+        <h3 className="ion-text-center fw-bold fs-20">Meow Shop LocalFirst {location.city? `in ${location.city}`: ''}</h3>
         <IonToolbar className="p-3">
           <IonSegment mode="ios" className="filter-toolbar" scrollable value={filter} onIonChange={(e) => handleFilter(e)}>
             <IonSegmentButton className="tb-item" value="all" >
@@ -208,20 +214,23 @@ const Home: React.FC = () => {
                   More Results
                 </IonButton>
               </div>} */}
-                <HomeItems dwidth={width} homeResults={homeResults} />
-                <IonRow>
-                  <IonCol>
-                    <IonInfiniteScroll 
-                      threshold="100px" 
-                      disabled={disableInfiniteScroll}
-                      onIonInfinite={(e: CustomEvent<void>) => searchNext(e)}>
-                        <IonInfiniteScrollContent
-                          loadingSpinner="dots"
-                          loadingText="Loading more data..."
-                        ></IonInfiniteScrollContent>
-                    </IonInfiniteScroll>
-                  </IonCol>
-                </IonRow>    
+              {loading && <div className="d-flex justify-content-center my-3"><IonSpinner name="dots" /></div> }
+              { !loading && filter === 'localdeals' && homeResults.length === 0 && <div className="d-flex justify-content-center my-3 red">No Localdeals found.</div> }
+              { !loading && filter === 'pressreleases' && homeResults.length === 0 && <div className="d-flex justify-content-center my-3 red">No Business News found.</div> }
+              <HomeItems dwidth={width} homeResults={homeResults} />
+              <IonRow>
+                <IonCol>
+                  <IonInfiniteScroll 
+                    threshold="100px" 
+                    disabled={disableInfiniteScroll}
+                    onIonInfinite={(e: CustomEvent<void>) => searchNext(e)}>
+                      <IonInfiniteScrollContent
+                        loadingSpinner="dots"
+                        loadingText="Loading more data..."
+                      ></IonInfiniteScrollContent>
+                  </IonInfiniteScroll>
+                </IonCol>
+              </IonRow>    
 
             </IonCol>
             { (isPlatform('desktop')) && 

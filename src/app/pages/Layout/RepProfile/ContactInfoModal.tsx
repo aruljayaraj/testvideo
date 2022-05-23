@@ -132,7 +132,7 @@ const ContactInfoModal: React.FC<Props> = ({showContactModal, setShowContactModa
 
     if( isdCodes.length > 0 ){ 
         isdCodes.map((cd: any) => {
-            listCodes.push({ value: cd.isd_code, label: cd.display_name });
+            return listCodes.push({ value: cd.isd_code, label: cd.display_name });
         });
     }
 

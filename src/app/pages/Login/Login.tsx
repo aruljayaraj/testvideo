@@ -19,6 +19,7 @@ import { useForm, Controller } from "react-hook-form";
 import './Login.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as authActions from '../../store/reducers/auth';
+import { lfConfig } from '../../../Constants';
 
 type FormInputs = {
   email: string;
@@ -32,6 +33,7 @@ let initialValues = {
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
+  const { baseurl } = lfConfig;
   const authValues = useSelector( (state:any) => state.auth.data);
   const { control, handleSubmit, formState: { errors } } = useForm<FormInputs>({
     defaultValues: { ...initialValues },
@@ -174,10 +176,10 @@ const Login: React.FC = () => {
             <IonRow className="ion-padding">
                 <hr />
                 <IonCol className="ion-text-start">
-                  <IonRouterLink color="blackbg" href={`${process.env.REACT_APP_BASE_URL}/forget-password`} className="text-left">Can't log in?</IonRouterLink>
+                  <IonRouterLink color="blackbg" href={`${baseurl}/forget-password`} className="text-left">Can't log in?</IonRouterLink>
                 </IonCol>
                 <IonCol className="ion-text-end">
-                  <IonRouterLink color="blackbg" href={`${process.env.REACT_APP_BASE_URL}/signup`} className="text-right">Sign up for an account</IonRouterLink>
+                  <IonRouterLink color="blackbg" href={`${baseurl}/signup`} className="text-right">Sign up for an account</IonRouterLink>
                 </IonCol>
             </IonRow>
             

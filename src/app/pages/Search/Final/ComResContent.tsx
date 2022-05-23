@@ -3,7 +3,6 @@ import React from 'react';
 import { nanoid } from 'nanoid';
 import { isPlatform } from '@ionic/react';
 import '../Search.scss';
-import CommonService from '../../../shared/services/CommonService';
 import { lfConfig } from '../../../../Constants';
 import NoData from '../../../components/Common/NoData';
 import ViewRepresentatives from "./ViewRepresentatives";

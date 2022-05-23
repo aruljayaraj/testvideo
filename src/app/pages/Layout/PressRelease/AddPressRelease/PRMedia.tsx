@@ -16,7 +16,6 @@ import React, { useState, useCallback } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import '../PressRelease.scss';
-import CommonService from '../../../../shared/services/CommonService';
 import * as uiActions from '../../../../store/reducers/ui';
 import * as prActions from '../../../../store/reducers/dashboard/pr';
 import { lfConfig } from '../../../../../Constants';

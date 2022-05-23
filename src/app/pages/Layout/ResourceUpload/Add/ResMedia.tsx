@@ -48,7 +48,7 @@ const ResMedia: React.FC = () => {
     const dispatch = useDispatch();
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const resource = useSelector( (state:any) => state.res.resource);
-    const [showImageModal, setShowImageModal] = useState(initialValues);
+    const [showImageModal] = useState(initialValues);
     const [resPreviewModal, setResPreviewModal] = useState(initPreviewValues);
     const [addRes, setAddRes] = useState({ status: false, memID: '', ID: '' });
     let { id, res_type } = useParams<any>();

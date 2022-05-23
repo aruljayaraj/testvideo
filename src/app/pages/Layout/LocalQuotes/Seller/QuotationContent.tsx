@@ -1,7 +1,6 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonRouterLink, IonRow, IonCol, IonItem, IonGrid, IonThumbnail, IonLabel, IonText, IonFabButton, IonIcon, IonFab, IonModal } from '@ionic/react';
 import { chatboxEllipsesOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import '../LocalQuotes.scss';
 import { lfConfig } from '../../../../../Constants';
 import CommonService from '../../../../shared/services/CommonService';

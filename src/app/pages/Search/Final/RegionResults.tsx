@@ -5,7 +5,6 @@ import { isPlatform } from '@ionic/react';
 import '../Search.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../Constants';
-import CommonService from '../../../shared/services/CommonService';
 import NoData from '../../../components/Common/NoData';
 import ViewRepresentatives from "./ViewRepresentatives";
 interface Props{

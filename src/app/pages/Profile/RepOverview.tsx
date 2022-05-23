@@ -5,7 +5,7 @@ import {
     IonText,
     IonCardHeader
 } from '@ionic/react';
-import React, {useState} from 'react';
+import React from 'react';
 import './Profile.scss';
 import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../Constants';
@@ -13,8 +13,7 @@ import CommonService from '../../shared/services/CommonService';
 
 const GeneralInfo: React.FC = () => {
     const repProfile = useSelector( (state:any) => state.rep.repProfile);
-    const [basename] = useState(process.env.REACT_APP_BASENAME);
-    const { apiBaseURL } = lfConfig;
+    const { apiBaseURL, basename } = lfConfig;
 
     const repImage = (Object.keys(repProfile).length > 0 && repProfile.profile_image) ? `${apiBaseURL}uploads/member/${repProfile.mem_id}/${repProfile.id}/${CommonService.getThumbImg(repProfile.profile_image)}` : `${basename}/assets/img/avatar.svg`;
     return (<>
@@ -22,7 +21,10 @@ const GeneralInfo: React.FC = () => {
         <IonCard className="card-center mt-4">
             <IonCardHeader color="titlebg">
                 <IonCardTitle className="card-custom-title">
-                    <span>{`${repProfile.firstname} ${repProfile.lastname}`} - Representative</span>
+                    <span>
+                        {`${repProfile.firstname} ${repProfile.lastname}`} 
+                        { repProfile.rep_title? ` - ${repProfile.rep_title}`: '' }
+                    </span>
                 </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>

@@ -56,18 +56,17 @@ const ContactUs: React.FC = () => {
   }, [dispatch, onGetPageCb]); 
 
   return (
-    <IonPage className="contact-page">
-      { page.title && 
+    <IonPage className="contact-page"> 
       <IonContent className="ion-padding">
         <IonRow>
           <IonCol sizeMd="6" sizeXs="12">
             <IonCard className="card-center mt-2">
               <IonCardHeader color="light">
-                <IonCardTitle className="card-custom-title">{page.title}</IonCardTitle>
+                <IonCardTitle className="card-custom-title">{page? page.title : ''}</IonCardTitle>
               </IonCardHeader>
 
               <IonCardContent className="pt-3">
-                <div className="external_text" dangerouslySetInnerHTML={{ __html: page.content }} ></div>
+                { page && <div className="external_text" dangerouslySetInnerHTML={{ __html: page.content }} ></div> }
                 <div className="mt-4">
                   <ContactForm />
                 </div>
@@ -77,7 +76,7 @@ const ContactUs: React.FC = () => {
           <IonCol sizeMd="6" sizeXs="12">
             <IonCard className="card-center mt-2">
               <IonCardHeader color="light">
-                <IonCardTitle className="card-custom-title">{page.c_title}</IonCardTitle>
+                <IonCardTitle className="card-custom-title">{page? page.c_title: ''}</IonCardTitle>
               </IonCardHeader>
 
               <IonCardContent className="pt-3">
@@ -132,7 +131,6 @@ const ContactUs: React.FC = () => {
         </IonRow>
         
       </IonContent>
-      }
     </IonPage>
   );
 };

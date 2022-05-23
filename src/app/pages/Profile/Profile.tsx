@@ -1,8 +1,7 @@
-import { IonCard, IonCardContent, IonCol, IonContent, IonPage, IonRow } from '@ionic/react'; 
+import { IonCol, IonContent, IonPage, IonRow } from '@ionic/react'; 
 import React, {useCallback, useEffect, useState, useLayoutEffect} from 'react';
 import { useParams } from "react-router-dom";
 import CoreService from '../../shared/services/CoreService';
-import { isPlatform } from '@ionic/react';
 import './Profile.scss';
 import { lfConfig } from '../../../Constants';
 import { useDispatch, useSelector } from 'react-redux';

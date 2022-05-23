@@ -1,10 +1,7 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonFooter, IonGrid, IonModal, IonRouterLink, IonRow } from '@ionic/react'; 
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonModal, IonRouterLink } from '@ionic/react'; 
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
-import { isPlatform } from '@ionic/react';
 import '../Search.scss';
-import { useSelector } from 'react-redux';
-import { lfConfig } from '../../../../Constants';
 import NoData from '../../../components/Common/NoData';
 import ReportModal from '../../../components/Modal/ReportModal';
 interface Props{

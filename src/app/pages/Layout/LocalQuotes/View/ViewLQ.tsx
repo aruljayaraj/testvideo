@@ -42,7 +42,7 @@ const ViewLQ: React.FC = () => {
             formID: id
         }, onCallbackFn);
     }
-  }, [dispatch, id, authUser, onCallbackFn]);
+  }, [dispatch, id, mem_id, authUser, onCallbackFn]);
 
   // const ResFile = ( qq && Object.keys(qq).length > 0 && qq.filename) ? `${apiBaseURL}uploads/member/${resource.mem_id}/${resource.filename}` : `${basename}/assets/img/placeholder.png`;
   // console.log(ResFile);

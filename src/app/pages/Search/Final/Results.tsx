@@ -19,7 +19,7 @@ const FinalResults: React.FC<SearchProps> = (props: any) => {
   const internationalResults = useSelector( (state:any) => state.search.finalResults.international);
 
   const mainSearchSettings = { category: '', keyword: '' };
-  const { category, keyword } = (props.location && props.location.state)? props.location.state : mainSearchSettings;
+  const { category } = (props.location && props.location.state)? props.location.state : mainSearchSettings;
 
   const onCallbackFn = useCallback((res: any) => {
     if(res.status === 'SUCCESS'){

@@ -68,10 +68,10 @@ const RepActions: React.FC = () => {
         };
         CoreService.onPostFn('member_update', fd, onCallbackFn);
     }
-    const onProfileView = () => { // mem_id: number, rep_id: number
+    /*const onProfileView = () => { // mem_id: number, rep_id: number
         console.log('Meow');
         return <Redirect to={`${basename}/profile/${repProfile.mem_id}/${repProfile.id}`} />;
-    }
+    }*/
 
     if( delRep.status  ){
         return <Redirect to={`/layout/rep-profile/${delRep.memID}/${delRep.repID}`} />;

@@ -1,6 +1,5 @@
 import { IonCard, IonCardContent, IonCardHeader, IonRouterLink, IonRow, IonCol, IonButtons, IonItem, IonLabel, IonGrid, IonThumbnail } from '@ionic/react';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import '../LocalQuotes.scss';
 import { lfConfig } from '../../../../../Constants';
 import CommonService from '../../../../shared/services/CommonService';

@@ -75,10 +75,9 @@ let videoInitialValues: any = {
 
 const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideoModal }) => {
     const dispatch = useDispatch();
-    const [basename] = useState(process.env.REACT_APP_BASENAME);
     let { title, actionType, memId, repId, frmId, resType, qqType } = showRecordVideoModal;
     // const qq = useSelector( (state:any) => state.qq.localQuote);
-    const { apiBaseURL } = lfConfig;
+    const { apiBaseURL, basename } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const inputDeviceIdIndex = useRef(0);
     const videoRef = useRef(null);

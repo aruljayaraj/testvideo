@@ -39,6 +39,7 @@ import { useHistory } from "react-router";
 import './Header.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import * as authActions from '../../store/reducers/auth';
+import { lfConfig } from '../../../Constants';
 
 interface Props{
     removeOverlay: Function
@@ -60,7 +61,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
     const repProfile = useSelector( (state:any) => state.rep.repProfile);
     const comProfile = useSelector( (state:any) => state.rep.comProfile);
     
-    const [basename] = useState(process.env.REACT_APP_BASENAME);
+    const { basename } = lfConfig;
     const [showRepProfile, setShowRepProfile] = useState(false); 
     const [showPressRelease, setShowPressRelease] = useState(false);
     const [showResource, setShowResource] = useState(false);

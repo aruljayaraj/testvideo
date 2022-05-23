@@ -12,10 +12,10 @@ import {
     IonSelectOption,
     IonModal
   } from '@ionic/react';
-  import React, { useCallback, useState, useRef } from 'react';
+  import React, { useState, useRef } from 'react';
   import { useForm, Controller } from "react-hook-form";
   import RecordAudio from '../../components/Modal/Record/RecordAudio';
-  import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
+  import { VoiceRecorder, RecordingData } from 'capacitor-voice-recorder';
 
   let initialValues = {
     isOpen: false,
@@ -35,7 +35,7 @@ import {
   };
   
   const Testing: React.FC = () => {
-    const { control, handleSubmit, reset, formState: { errors }  } = useForm<FormInputs>({
+    const { control, handleSubmit, formState: { errors }  } = useForm<FormInputs>({
       defaultValues: { ...defaultValues },
       mode: "onChange"
     });
@@ -59,7 +59,7 @@ import {
         });
     }
 
-    const onRecord = () => { console.log("meow");
+    /* const onRecord = () => {
         VoiceRecorder.canDeviceVoiceRecord()
         .then((result: GenericResponse) => {
             console.log(result.value);
@@ -94,7 +94,7 @@ import {
                 });
             });
         });
-    }
+    }*/
 
     const onStop = () => { console.log("stop");
         VoiceRecorder.stopRecording()

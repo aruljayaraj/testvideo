@@ -46,7 +46,7 @@ const ViewQuotation: React.FC = () => {
        bqID: qq_id, // Buyer QQ ID
      }, onCallbackFn);
    }
-  }, [dispatch, id, onCallbackFn]);
+  }, [dispatch, id, mem_id, qq_mem_id, qq_id, onCallbackFn]);
 
   return (
     <IonPage className="rfq-page">

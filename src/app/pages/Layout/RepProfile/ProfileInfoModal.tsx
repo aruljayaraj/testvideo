@@ -213,19 +213,19 @@ const ProfileInfoModal: React.FC<Props> = ({showProfileModal, setShowProfileModa
     // }
     if( country.length > 0 ){
         country.map((ctry: any) => {
-            listCountry.push({ value: ctry.Country_str_code, label: ctry.Country_str_name });
+            return listCountry.push({ value: ctry.Country_str_code, label: ctry.Country_str_name });
             // <IonSelectOption value={ctry.Country_str_code} key={ctry.Country_str_code}>{ctry.Country_str_name}</IonSelectOption> 
         });
     }
     if( state.length > 0 ){
         state.map((st: any) => {
-            listState.push({ value: st.Admin1_str_code, label: st.Admin1_str_name });
+            return listState.push({ value: st.Admin1_str_code, label: st.Admin1_str_name });
             // <IonSelectOption value={st.Admin1_str_code} key={st.Admin1_str_code}>{st.Admin1_str_name}</IonSelectOption> 
         });
     }
     if( city.length > 0 ){
         city.map((ct: any) => {
-            listCity.push({ value: ct.Feature_str_name, label: ct.Feature_str_name });
+            return listCity.push({ value: ct.Feature_str_name, label: ct.Feature_str_name });
             // <IonSelectOption value={ct.Feature_str_name} key={index}>{ct.Feature_str_name}</IonSelectOption> 
         });
     }

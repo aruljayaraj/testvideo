@@ -1,6 +1,6 @@
 import { IonContent, IonPage, IonActionSheet, IonText, IonPopover, IonIcon, IonButtons, IonButton, IonToolbar, IonTitle } from '@ionic/react';
 import React, {useCallback, useState, useEffect} from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { close, pencilOutline, archiveOutline, trashOutline } from 'ionicons/icons';
 import { isPlatform } from '@ionic/react';
 import '../LocalQuotes.scss';
@@ -64,7 +64,7 @@ const MyQuotationArchive: React.FC = () => {
     CoreService.onPostFn('qq_update', fd, onCommonCb);
   } 
   // For Awarded
-  const onAwardedFn = (id: number, mem_id: number, qq_id: number, qq_mem_id: number) => {
+  /*const onAwardedFn = (id: number, mem_id: number, qq_id: number, qq_mem_id: number) => {
     dispatch(uiActions.setShowSkeleton({ skeleton: true }));
     const fd = {
         action: 'quotation_awarded',
@@ -74,7 +74,7 @@ const MyQuotationArchive: React.FC = () => {
         bqID: qq_id, // Buyer QQ ID
     };
     CoreService.onPostFn('qq_update', fd, onCommonCb);
-  } 
+  } */
   if(showActionSheet.qq && Object.keys(showActionSheet.qq).length > 0 && ![3,4,5,6].includes(parseInt(showActionSheet.qq.is_active))){
     actionsheetButtons.push({
       text: 'Edit',

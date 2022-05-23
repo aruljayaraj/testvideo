@@ -52,10 +52,9 @@ const LocalQuoteUpload: React.FC<Props> = ({ showLocalQuoteUploadModal, setShowL
     const dispatch = useDispatch();
     const { takePhoto } = useCameraPhoto();
     const { checkFileTypes, checkFileSizes } = useFileHook();
-    const [basename] = useState(process.env.REACT_APP_BASENAME);
     let { title, actionType, memId, repId, frmId, resType, qqType } = showLocalQuoteUploadModal;
     let { id } = useParams<any>();
-    const { apiBaseURL } = lfConfig;
+    const { apiBaseURL, basename } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const qq = useSelector( (state:any) => state.qq.localQuote);
     const fileProgress = useSelector( (state:any) => state.qq.fileProgress);

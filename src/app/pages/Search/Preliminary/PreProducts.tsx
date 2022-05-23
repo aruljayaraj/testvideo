@@ -42,11 +42,9 @@ const PreProducts: React.FC<Props> = ({ filters }) => {
             let subCats = item[firstKey] && item[firstKey].length > 0 && item[firstKey].map((subItem: any) => {
             return ( 
                 <h5 className="ml-4 py-2 cursor" key={nanoid()} onClick={()=>onListSelect(subItem)}>
-                {/* <IonRouterLink color="blackbg" href={`${process.env.REACT_APP_BASE_URL}/search-results`}> */}
                 <i className="fa fa-chevron-right fa-lg green mr-2" aria-hidden="true"></i>
                 {subItem.name}
                 <span className="ml-3 gray">{subItem.type}</span>
-                {/* </IonRouterLink> */}
                 </h5>);
             }); 
             return (

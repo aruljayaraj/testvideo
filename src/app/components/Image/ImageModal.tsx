@@ -57,7 +57,6 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     const comProfile = useSelector( (state:any) => state.rep.comProfile);
     const pr = useSelector( (state:any) => state.pr.pressRelease);
     const dd = useSelector( (state:any) => state.deals.localDeal);
-    const [basename] = useState(process.env.REACT_APP_BASENAME);
     const { handleSubmit} = useForm();
     let { title, actionType, memId, repId, frmId } = showImageModal;
     const [ picture, setPicture ] = useState<ImageData>(initialValues);
@@ -65,7 +64,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     const [dragValue, setDragValue] = useState<any>('move');
     // const [ croppedPic, setCroppedPic ] = useState<ImageData>(initialValues);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const { apiBaseURL } = lfConfig;
+    const { apiBaseURL, basename } = lfConfig;
     const rectTypes = ['rep_logo', 'company_logo'];
 
     const cropperRef = useRef<any>(null);
@@ -301,14 +300,14 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                     <IonRow>
                         <IonCol className="d-flex justify-content-center">
                             { !picture.image && 
-                                <img src={`${basename}/assets/img/placeholder.png`} alt="placeholder" width="75%"/>
+                                <img src={`${basename}/assets/img/placeholder.png`} alt="placeholder" />
                             }
                         
                             { picture.image && initialCropValues.height &&
                             <Cropper
                                 ref={cropperRef}
                                 className='cropper-container cropper-bg'
-                                style={{ height: "100%", width: '100%' }}
+                                style={{ height: "100%", width: '100%', maxHeight: '450px' }}
                                 // style={{ minHeight: initialCropValues.minContainerHeight, height: "100%", width: initialCropValues.minContainerWidth }}
                                 // style={{ height: initialCropValues.height, width: initialCropValues.width }}
                                 initialAspectRatio={1}

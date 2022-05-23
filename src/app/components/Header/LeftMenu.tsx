@@ -22,6 +22,7 @@ import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { isPlatform } from '@ionic/react';
 import './Header.scss';
+import { lfConfig } from '../../../Constants';
 interface Props{
     removeOverlay: Function 
 }
@@ -29,7 +30,7 @@ interface Props{
 const LeftMenu: React.FC<Props> = ({removeOverlay}) => {
   const location = useLocation();
   const authValues = useSelector( (state:any) => state.auth.data);
-  const [basename] = useState(process.env.REACT_APP_BASENAME);
+  const { basename, baseurl } = lfConfig;
 
   return (<>
     <IonContent>
@@ -46,7 +47,7 @@ const LeftMenu: React.FC<Props> = ({removeOverlay}) => {
         }
         { !(isPlatform('desktop')) && (!authValues.authenticated || !authValues.isVerified) && 
           (<>
-            <IonItem button color={location.pathname === '/login'? 'menuhlbg': 'blackbg'} routerLink={`${basename}/login`} onClick={ (e) => removeOverlay(e) }>
+            <IonItem button color={location.pathname === '/login'? 'menuhlbg': 'blackbg'} routerLink={`${baseurl}/login`} onClick={ (e) => removeOverlay(e) }>
               <IonIcon slot="start" icon={logIn}></IonIcon>
           <IonLabel>Login</IonLabel>
             </IonItem>

@@ -20,6 +20,7 @@ import { isPlatform } from '@ionic/react';
 import './Header.scss';
 import * as repActions from '../../store/reducers/dashboard/rep';
 import * as uiActions from '../../store/reducers/ui';
+import { lfConfig } from '../../../Constants';
 import CoreService from '../../shared/services/CoreService';
 import LeftMenu from './LeftMenu';
 import RightMenu from './RightMenu';
@@ -34,7 +35,7 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
   const notificationsCount = useSelector( (state:any) => state.rep.notificationsCount);
   const [searchModal, setSearchModal] = useState(false);
   const [notificationModal, setNotificationModal] = useState(false);
-  const [basename] = useState(process.env.REACT_APP_BASENAME);
+  const { basename } = lfConfig;
   const [showPopover, setShowPopover] = useState(false);
 
   const [hSidemenu] = useState({

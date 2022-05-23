@@ -22,6 +22,8 @@ import { useDispatch } from 'react-redux';
 import * as uiActions from '../../store/reducers/ui';
 import CoreService from '../../shared/services/CoreService';
 import './ForgetPassword.scss';
+import { lfConfig } from '../../../Constants';
+
 
 type FormInputs = {
   email: string;
@@ -40,6 +42,7 @@ let initialValues = {
 const ForgetPassword: React.FC = () => {
   const dispatch = useDispatch(); 
   const history = useHistory();
+  const { baseurl } = lfConfig;
   // const authValues = useSelector( (state:any) => state.auth.data);
   const { control, handleSubmit, formState, watch, formState: { errors } } = useForm<FormInputs>({
     defaultValues: { ...initialValues },
@@ -150,7 +153,7 @@ const ForgetPassword: React.FC = () => {
               <IonRow className="ion-padding">
                   <hr />
                   <IonCol className="ion-text-end">
-                    <IonRouterLink color="medium" href={`${process.env.REACT_APP_BASE_URL}/login`} className="text-right">Login to the account</IonRouterLink>
+                    <IonRouterLink color="medium" href={`${baseurl}/login`} className="text-right">Login to the account</IonRouterLink>
                   </IonCol>
               </IonRow>
             </> 
@@ -273,7 +276,7 @@ const ForgetPassword: React.FC = () => {
               <IonRow className="ion-padding">
                   <hr />
                   <IonCol className="ion-text-end">
-                    <IonRouterLink color="medium" href={`${process.env.REACT_APP_BASE_URL}/Login`} className="text-right">Login to the account</IonRouterLink>
+                    <IonRouterLink color="medium" href={`${baseurl}/Login`} className="text-right">Login to the account</IonRouterLink>
                   </IonCol>
               </IonRow>
             </> 

@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { lfConfig } from '../../../Constants';
 const CommonService = (function() {
     // 
     const getBase64Image = function (img: any) {
@@ -67,9 +68,10 @@ const CommonService = (function() {
 
     // on Image loading Error
     const onImgErr = function(type: string = ''){
-        let url = `${process.env.REACT_APP_BASENAME}/assets/img/placeholder.svg`;
+        const { basename } = lfConfig;
+        let url = `${basename}/assets/img/placeholder.svg`;
         if( type === 'profile' ){
-            url = `${process.env.REACT_APP_BASENAME}/assets/img/avatar.svg`;
+            url = `${basename}/assets/img/avatar.svg`;
         }
         return url;
     }

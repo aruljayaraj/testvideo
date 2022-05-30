@@ -1,5 +1,4 @@
 export const lfConfig =  {
-    // baseURL : 'http://localhost:8100',
     // tinymceKey: 'p5k59vuava18l9axn125wa4fl2qsmhmwsxfs6krrtffntke8', // Arul account limited
     tinymceKey: 'pny4jwf7rrrkuio08hit5ojxslw59l941fvv1wvzsfileta1', // Rod Account
     tinymceMaxLength: 500,
@@ -9,6 +8,7 @@ export const lfConfig =  {
     // apiBaseURL: process.env.REACT_APP_API_URL,
     // basename: process.env.REACT_APP_BASENAME,
     // baseurl: process.env.REACT_APP_BASE_URL,
+    // To enable  ANDROID/IOS build
     apiBaseURL: 'https://www.onagon.com/', // process.env.REACT_APP_API_URL,
     basename: '/frontend', // process.env.REACT_APP_BASENAME,
     baseurl: 'https://www.onagon.com/frontend', // process.env.REACT_APP_BASE_URL,

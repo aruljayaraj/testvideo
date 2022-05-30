@@ -17,7 +17,7 @@ import {
     IonModal
 } from '@ionic/react';
 import React, { useState, useCallback, useEffect } from 'react';
-import { useParams, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import { useDispatch, useSelector } from 'react-redux';

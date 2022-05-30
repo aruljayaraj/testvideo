@@ -28,12 +28,12 @@ import CoreService from '../../../../shared/services/CoreService';
 import { lfConfig } from '../../../../../Constants';
 // import useDebounce from '../../../../hooks/useDebounce';
 
-type FormInputs = {
-    location: string;
-    reps: [];
-    duration: number;
-    payment_type: string;
-}
+// type FormInputs = {
+//     location: string;
+//     reps: [];
+//     duration: number;
+//     payment_type: string;
+// }
 
 const BuyDeal: React.FC = () => {
     let listReps: any = null;
@@ -84,23 +84,23 @@ const BuyDeal: React.FC = () => {
             setDealLog({...dealLog, log: res.data });
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
-    }, [dispatch, setReps]);
+    }, [dispatch, setDealLog, dealLog, setValue]);
     useEffect(() => {
         if( authUser.ID ){
             dispatch(uiActions.setShowLoading({ loading: true }));
             CoreService.onPostFn('item_purchase', {'action': 'get_item_purchase', formID: id, memID: authUser.ID, repID: authUser.repID }, onItemCb);
             CoreService.onPostFn('get_member', {'action': 'get_reps', memID: authUser.ID }, onProfileCb);
         }
-    }, [dispatch, onProfileCb, authUser.ID]);
+    }, [dispatch, onProfileCb, authUser.ID, id, authUser.repID, onItemCb]);
 
-    const onFeeCbFn = useCallback((res: any) => {
+    /*const onFeeCbFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
             setDealLog({ ...dealLog, space_total: res.data.space_total, tax: res.data.tax });
         }else{
             dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
-    }, [setDealLog, dispatch]);
+    }, [setDealLog, dispatch]);*/
     const onPremiumDealFeeCalc = useCallback((loading:boolean) => { 
         const data = getValues(); console.log(data);
         console.log(data.location, data.duration, data.reps, data.reps.length);
@@ -116,7 +116,7 @@ const BuyDeal: React.FC = () => {
             };
             CoreService.onPostFn('deal_update', fd, onFeeCbFn);
         } */  
-    },[]);
+    },[getValues]);
     useEffect(() => {
         // Delay calling api on input typing
         if( dealLog.duration ){
@@ -125,7 +125,7 @@ const BuyDeal: React.FC = () => {
             }, 3000);
             return () => clearTimeout(delayDebounceFn);
         }
-    }, [dealLog.duration]);
+    }, [dealLog.duration, onPremiumDealFeeCalc]);
 
     const resetAction = () => {
         setValue('location', "1", { shouldValidate: true });
@@ -144,15 +144,13 @@ const BuyDeal: React.FC = () => {
         console.log('two');
     }
 
-    
-
     const onCallbackFn = useCallback((res: any) => {
         if(res.status === 'SUCCESS'){
             setDealLog({ ...dealLog, id: res.data.id, init: true, log: res.data });
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
-    }, [dispatch]);
+    }, [dispatch, dealLog]);
     
     const onSubmit = (data: any) => {
         dispatch(uiActions.setShowLoading({ loading: true }));

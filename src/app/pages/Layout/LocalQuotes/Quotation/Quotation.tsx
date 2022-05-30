@@ -41,7 +41,7 @@ const Quotation: React.FC = () => {
         bqID: id, // Buyer QQ ID
       }, onCallbackFn);
     }
-  }, [dispatch, authUser, id, onCallbackFn]);
+  }, [dispatch, authUser, id, quote_id, mem_id, onCallbackFn]);
   
   return (
     <IonPage className="rfq-page">

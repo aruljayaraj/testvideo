@@ -1,7 +1,6 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonRouterLink, IonRow, IonCol, IonButton, IonItem, IonGrid, IonThumbnail, IonLabel, IonFab, IonFabButton, IonIcon, IonModal } from '@ionic/react';
 import { chatboxEllipsesOutline } from 'ionicons/icons';
 import React, {useState} from 'react';
-import { useParams } from 'react-router-dom';
 import { isPlatform } from '@ionic/react';
 import '../LocalQuotes.scss';
 import { useSelector } from 'react-redux';

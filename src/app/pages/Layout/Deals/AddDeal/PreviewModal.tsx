@@ -3,7 +3,7 @@ import React from 'react';
 import { isPlatform } from '@ionic/react';
 import { close } from 'ionicons/icons';
 import '../Deals.scss';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { lfConfig } from '../../../../../Constants';
 import CommonService from '../../../../shared/services/CommonService';
 import Status from '../../../../components/Common/Status';
@@ -16,7 +16,6 @@ interface Props {
 }
 
 const PreviewModal: React.FC<Props> = ({ previewModal, setPreviewModal }) => {
-    const dispatch = useDispatch();
     const authUser = useSelector( (state:any) => state.auth.data.user);
     const dd = useSelector( (state:any) => state.deals.localDeal);
     const { apiBaseURL, basename } = lfConfig;

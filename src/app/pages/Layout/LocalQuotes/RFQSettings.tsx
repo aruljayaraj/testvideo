@@ -11,7 +11,6 @@ import {
   IonRadio, IonRadioGroup
 } from '@ionic/react';
 import React, { useCallback, useEffect  } from 'react';
-import { useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import './LocalQuotes.scss'; 
@@ -39,7 +38,7 @@ const RFQSettings: React.FC = () => {
       // defaultValues: { ...initialValues },
       mode: "onChange"
   });
-  const st_email_notify = watch("st_email_notify");
+  // const st_email_notify = watch("st_email_notify");
   const st_sms_notify = watch("st_sms_notify");
   const st_tele_notify = watch("st_tele_notify");
 
@@ -76,7 +75,7 @@ const RFQSettings: React.FC = () => {
         setValue('st_phone_alternate', repProfile.qq_phone_alternate);
         setValue('st_urgent_request', repProfile.qq_urgent_request);
     }
-  }, [repProfile]);
+  }, [repProfile, setValue]);
 
   // Submit Callback
   const onCallbackFn = useCallback((res: any) => { console.log(res.data.user);

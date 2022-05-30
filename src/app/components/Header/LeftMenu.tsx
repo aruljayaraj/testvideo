@@ -47,7 +47,7 @@ const LeftMenu: React.FC<Props> = ({removeOverlay}) => {
         }
         { !(isPlatform('desktop')) && (!authValues.authenticated || !authValues.isVerified) && 
           (<>
-            <IonItem button color={location.pathname === '/login'? 'menuhlbg': 'blackbg'} routerLink={`${baseurl}/login`} onClick={ (e) => removeOverlay(e) }>
+            <IonItem button color={location.pathname === '/login'? 'menuhlbg': 'blackbg'} routerLink={`${basename}/login`} onClick={ (e) => removeOverlay(e) }>
               <IonIcon slot="start" icon={logIn}></IonIcon>
           <IonLabel>Login</IonLabel>
             </IonItem>

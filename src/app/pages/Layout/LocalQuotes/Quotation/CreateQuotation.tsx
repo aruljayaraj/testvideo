@@ -73,7 +73,7 @@ const CreateQuotation: React.FC = () => {
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
-    }, [setAddQuote, dispatch, setAddQuote]);
+    }, [setAddQuote, dispatch]);
     
     const onSubmit = (data: any) => {
         dispatch(uiActions.setShowLoading({ loading: true }));

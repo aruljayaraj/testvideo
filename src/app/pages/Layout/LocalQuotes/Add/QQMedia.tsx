@@ -15,11 +15,12 @@ import {
     IonModal
 } from '@ionic/react';
 import { cameraOutline, micOutline, ellipsisHorizontalOutline, close } from 'ionicons/icons';  
-import { MediaCapture, MediaFile, CaptureError, CaptureAudioOptions, CaptureVideoOptions } from '@awesome-cordova-plugins/media-capture';
+import { MediaCapture, MediaFile, CaptureAudioOptions, CaptureVideoOptions, CaptureError } from '@ionic-native/media-capture';
+// import { MediaCapture, MediaFile, CaptureAudioOptions, CaptureVideoOptions, CaptureError } from '@awesome-cordova-plugins/media-capture';
 import React, {useState, useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+// import axios from 'axios';
 import { toArray } from 'lodash';
 import { File, DirectoryEntry } from "@ionic-native/file";
 import { Capacitor } from "@capacitor/core";
@@ -35,8 +36,8 @@ import LocalQuoteUpload from '../../../../components/Modal/Record/LocalQuoteUplo
 import RecordAudio from '../../../../components/Modal/Record/RecordAudio';
 import RecordVideo from '../../../../components/Modal/Record/RecordVideo';
 
-let cancelToken = axios.CancelToken;
-let source = cancelToken.source();
+// let cancelToken = axios.CancelToken;
+// let source = cancelToken.source();
 
 let initialValues = {
     isOpen: false,
@@ -64,7 +65,7 @@ const QQMedia: React.FC = () => {
     const [showRecordVideoModal, setShowRecordVideoModal] = useState(initialValues);
     // const [showImageModal, setShowImageModal] = useState(initialValues);
     // const [resPreviewModal, setResPreviewModal] = useState(initPreviewValues);
-    const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
+    // const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
     const { basename } = lfConfig;
     let { id } = useParams<any>();
     // const fileDocInputRef = useRef<HTMLInputElement>(null);
@@ -348,12 +349,16 @@ const QQMedia: React.FC = () => {
     const uploadRecoredVideoFn = async (title: string, actionType: string) => { // console.log("Meow 123");
         console.log(Capacitor.getPlatform());
         if(Capacitor.isNativePlatform()){ // For ios, android
-            dispatch(uiActions.setShowLoading({ loading: true }));
+            console.log("Native Platform");
+            // dispatch(uiActions.setShowLoading({ loading: false }));
             let options: CaptureVideoOptions = { limit: 1, duration: lfConfig.acceptedVidDuration };
-            let capture:any = await MediaCapture.captureVideo(options);
-            let media: any = (capture[0] as MediaFile);
+            let capture:any = await MediaCapture.captureVideo(options).then(
+                (data: MediaFile[]) => console.log(data),
+                (err: CaptureError) => console.error(err)
+              );; console.log(capture);
+            // let media: any = (capture[0] as MediaFile);
             // alert((capture[0] as MediaFile).fullPath);
-            let resolvedPath: DirectoryEntry;
+            /*let resolvedPath: DirectoryEntry;
             let path = media.fullPath.substring(0, media.fullPath.lastIndexOf("/"));
             if (Capacitor.getPlatform() === "ios") {
                 resolvedPath = await File.resolveDirectoryUrl("file://" + path);
@@ -386,7 +391,7 @@ const QQMedia: React.FC = () => {
                     console.log(error);
                 }
               )
-            // VideoRecorder.destroy();
+            // VideoRecorder.destroy();*/
        }else{ // For web
             setShowRecordVideoModal({ 
                 ...showRecordVideoModal, 

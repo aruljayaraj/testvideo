@@ -1,6 +1,6 @@
 import { IonContent, IonPage, IonActionSheet, IonText, IonPopover, IonIcon, IonButtons, IonButton, IonToolbar, IonTitle, IonModal } from '@ionic/react';
 import React, {useCallback, useState, useEffect} from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { close, pencilOutline, archiveOutline, trashOutline } from 'ionicons/icons';
 import { isPlatform } from '@ionic/react';
 import '../LocalQuotes.scss';

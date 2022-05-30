@@ -83,27 +83,7 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
   }
 
   useEffect(() => {
-    let data = {
-        action: 'get_notifications',
-        memID: authUser.ID,
-        repID: authUser.repID,
-        prepID: authUser.prepID
-    };
-    // dispatch(uiActions.setShowLoading({ loading: true }));
-    CoreService.onPostsFn('get_member', data).then((res:any) => {
-        if(res.data.status === 'SUCCESS'){ 
-          dispatch(repActions.setNotifications({ data: res.data.notifications }));
-        }
-        // dispatch(uiActions.setShowLoading({ loading: false }));
-    }).catch((error) => {
-      dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: error.message }));
-    });
-    
-  },[]);
-
-  useEffect(() => {
-    let live = true;
-    const interval = setInterval(async () => {
+    if(authUser.ID){
       let data = {
         action: 'get_notifications',
         memID: authUser.ID,
@@ -119,10 +99,33 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
       }).catch((error) => {
         dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: error.message }));
       });
-    }, 60000);
-    return () => {
-      live = false;
-      clearInterval(interval);
+    }
+  },[]);
+
+  useEffect(() => {
+    if(authUser.ID){
+      let live = true;
+      const interval = setInterval(async () => {
+        let data = {
+          action: 'get_notifications',
+          memID: authUser.ID,
+          repID: authUser.repID,
+          prepID: authUser.prepID
+        };
+        // dispatch(uiActions.setShowLoading({ loading: true }));
+        CoreService.onPostsFn('get_member', data).then((res:any) => {
+            if(res.data.status === 'SUCCESS'){ 
+              dispatch(repActions.setNotifications({ data: res.data.notifications }));
+            }
+            // dispatch(uiActions.setShowLoading({ loading: false }));
+        }).catch((error) => {
+          dispatch(uiActions.setShowToast({ isShow: true, status: 'ERROR', message: error.message }));
+        });
+      }, 60000);
+      return () => {
+        live = false;
+        clearInterval(interval);
+      }
     }
   },[]);
   

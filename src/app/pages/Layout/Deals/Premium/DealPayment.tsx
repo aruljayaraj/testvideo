@@ -27,7 +27,7 @@ const DealPayment = () => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         CoreService.onPostFn('item_purchase', {'action': 'get_item_purchase', memID: authValues.ID, repID: authValues.repID, formID: id }, onPurCb);
     }
-  }, [dispatch, authValues.ID, onPurCb ]);
+  }, [dispatch, id, authValues.ID, authValues.repID, onPurCb ]);
 
   return (
     <IonCard className="general-card mt-4">

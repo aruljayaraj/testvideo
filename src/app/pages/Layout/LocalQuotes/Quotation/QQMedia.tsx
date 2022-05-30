@@ -15,11 +15,10 @@ import {
     IonActionSheet
 } from '@ionic/react';
 import { cameraOutline, ellipsisHorizontalOutline, close, micOutline } from 'ionicons/icons';  
-import { MediaCapture, MediaFile, CaptureError, CaptureAudioOptions, CaptureVideoOptions } from '@awesome-cordova-plugins/media-capture';
-import React, { useState, useCallback, useRef} from 'react';
+import { MediaCapture, MediaFile, CaptureAudioOptions, CaptureVideoOptions } from '@awesome-cordova-plugins/media-capture';
+import React, { useState, useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { toArray } from 'lodash';
 import { File, DirectoryEntry } from "@ionic-native/file";
 import { Capacitor } from "@capacitor/core";
@@ -34,9 +33,6 @@ import QuotationStepInd from './QuotationStepInd';
 import LocalQuoteUpload from '../../../../components/Modal/Record/LocalQuoteUpload';
 import RecordAudio from '../../../../components/Modal/Record/RecordAudio';
 import RecordVideo from '../../../../components/Modal/Record/RecordVideo';
-
-let cancelToken = axios.CancelToken;
-let source = cancelToken.source();
 
 let initialValues = {
     isOpen: false,
@@ -60,7 +56,7 @@ const QQMedia: React.FC = () => {
     const [showLocalQuoteUploadModal, setShowLocalQuoteUploadModal] = useState(initialValues);
     const [showRecordAudioModal, setShowRecordAudioModal] = useState(initialValues);
     const [showRecordVideoModal, setShowRecordVideoModal] = useState(initialValues);
-    const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
+    // const [addQQ, setAddQQ] = useState({ status: false, memID: '', ID: '' });
     const { basename } = lfConfig;
     let { id, mem_id, quote_id } = useParams<any>();
 
@@ -71,7 +67,7 @@ const QQMedia: React.FC = () => {
         }
         dispatch(uiActions.setShowLoading({ loading: false }));
         dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
-    }, [dispatch, setAddQQ]);
+    }, [dispatch]);
     const removeQQResource = (attach_id: number) => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         const fd = {

@@ -15,8 +15,8 @@ import {
     IonModal
 } from '@ionic/react';
 import { cameraOutline, micOutline, ellipsisHorizontalOutline, close } from 'ionicons/icons';  
-import { MediaCapture, MediaFile, CaptureAudioOptions, CaptureVideoOptions, CaptureError } from '@ionic-native/media-capture';
-// import { MediaCapture, MediaFile, CaptureAudioOptions, CaptureVideoOptions, CaptureError } from '@awesome-cordova-plugins/media-capture';
+// import { MediaCapture, MediaFile, CaptureAudioOptions, CaptureVideoOptions, CaptureError } from '@ionic-native/media-capture';
+import { MediaCapture, MediaFile, CaptureAudioOptions, CaptureVideoOptions, CaptureError } from '@awesome-cordova-plugins/media-capture';
 import React, {useState, useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -283,7 +283,7 @@ const QQMedia: React.FC = () => {
 
     // Record Audio and Upload
     const uploadRecoredAudioFn = async(title: string, actionType: string) => {
-       if(Capacitor.isNativePlatform()){  // For Real Devices ios, android
+       /*if(Capacitor.isNativePlatform()){  // For Real Devices ios, android
             dispatch(uiActions.setShowLoading({ loading: true }));
             let options: CaptureAudioOptions = { limit: 1, duration: 30 };
             const capture:any = await MediaCapture.captureAudio(options);
@@ -322,7 +322,7 @@ const QQMedia: React.FC = () => {
                     console.log(error);
                 }
             )
-        }else{ // For web, browser
+        }else{ // For web, browser*/
             setShowRecordAudioModal({ 
                 ...showRecordAudioModal, 
                 isOpen: true,
@@ -334,7 +334,7 @@ const QQMedia: React.FC = () => {
                 repId: authUser.repID,
                 frmId: id? id: ''
             }); // console.log(authUser);
-        }    
+        // }    
            
     }
 
@@ -346,19 +346,20 @@ const QQMedia: React.FC = () => {
         dispatch(uiActions.setShowLoading({ loading: false }));
     }, [dispatch]);
     // Record Video and Upload
-    const uploadRecoredVideoFn = async (title: string, actionType: string) => { // console.log("Meow 123");
-        console.log(Capacitor.getPlatform());
-        if(Capacitor.isNativePlatform()){ // For ios, android
-            console.log("Native Platform");
-            // dispatch(uiActions.setShowLoading({ loading: false }));
+    const uploadRecoredVideoFn = async (title: string, actionType: string) => { 
+        // console.log(Capacitor.getPlatform());
+        // alert("Meow");
+        // if(Capacitor.isNativePlatform()){ // For ios, android
+           //  console.log("Native Platform");
+            /*dispatch(uiActions.setShowLoading({ loading: false }));
             let options: CaptureVideoOptions = { limit: 1, duration: lfConfig.acceptedVidDuration };
             let capture:any = await MediaCapture.captureVideo(options).then(
                 (data: MediaFile[]) => console.log(data),
                 (err: CaptureError) => console.error(err)
-              );; console.log(capture);
-            // let media: any = (capture[0] as MediaFile);
+            ); console.log(capture);
+            let media: any = (capture[0] as MediaFile);
             // alert((capture[0] as MediaFile).fullPath);
-            /*let resolvedPath: DirectoryEntry;
+            let resolvedPath: DirectoryEntry;
             let path = media.fullPath.substring(0, media.fullPath.lastIndexOf("/"));
             if (Capacitor.getPlatform() === "ios") {
                 resolvedPath = await File.resolveDirectoryUrl("file://" + path);
@@ -392,7 +393,8 @@ const QQMedia: React.FC = () => {
                 }
               )
             // VideoRecorder.destroy();*/
-       }else{ // For web
+       // }else{ // For web
+        // console.log("Modal one");
             setShowRecordVideoModal({ 
                 ...showRecordVideoModal, 
                 isOpen: true,
@@ -404,7 +406,7 @@ const QQMedia: React.FC = () => {
                 repId: authUser.repID,
                 frmId: id? id: ''
             }); // console.log(authUser);
-        }
+        // }
     };
 
     // if( addQQ.status  ){

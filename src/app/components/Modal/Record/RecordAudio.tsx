@@ -24,10 +24,16 @@ import {
     playOutline
   } from 'ionicons/icons';
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useParams } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import './Record.scss';
 import { useDispatch, useSelector } from 'react-redux';
+import { Capacitor } from "@capacitor/core";
+import { isPlatform } from '@ionic/react';
+import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
+import { MediaCapture, MediaFile, CaptureAudioOptions, CaptureVideoOptions, CaptureError } from '@awesome-cordova-plugins/media-capture';
+import { File, DirectoryEntry } from "@ionic-native/file";
 
 import CoreService from '../../../shared/services/CoreService';
 import CommonService from '../../../shared/services/CommonService';
@@ -38,8 +44,7 @@ import * as uiActions from '../../../store/reducers/ui';
 import * as qqActions from '../../../store/reducers/dashboard/qq';
 // import * as dealActions from '../../store/reducers/dashboard/deal';
 // import Timer from './Timer';
-import { isPlatform } from '@ionic/react';
-import { VoiceRecorder, VoiceRecorderPlugin, RecordingData, GenericResponse, CurrentRecordingStatus } from 'capacitor-voice-recorder';
+
 
 interface Props {
     showRecordAudioModal: any,
@@ -60,6 +65,7 @@ let audioInitialValues: any = {
 const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudioModal }) => {
     const dispatch = useDispatch();
     let { title, actionType, memId, repId, frmId, resType, qqType } = showRecordAudioModal;
+    let { id } = useParams<any>();
     // const qq = useSelector( (state:any) => state.qq.localQuote);
     const { apiBaseURL, basename } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
@@ -174,6 +180,51 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
             ext: ''
         });
     }
+
+    // Native Recording
+    const recordAudioNative = async() => {
+        dispatch(uiActions.setShowLoading({ loading: true }));
+        let options: CaptureAudioOptions = { limit: 1, duration: 30 };
+        const capture:any = await MediaCapture.captureAudio(options);
+        let media: any = (capture[0] as MediaFile);
+        // alert((capture[0] as MediaFile).fullPath);
+        let resolvedPath: DirectoryEntry;
+        let path = media.fullPath.substring(0, media.fullPath.lastIndexOf("/"));
+        if (Capacitor.getPlatform() === "ios") {
+            resolvedPath = await File.resolveDirectoryUrl("file://" + path);
+        } else {
+            resolvedPath = await File.resolveDirectoryUrl(path);
+        }
+        console.log(media);
+        // console.log(resolvedPath);
+        return File.readAsArrayBuffer(resolvedPath.nativeURL, media.name).then(
+        // return File.readAsDataURL(directoryPath.trim()+"/", fileName.trim()).then(
+            (buffer: any) => { // console.log("meow"); console.log(buffer);
+                // get the buffer and make a blob to be saved
+                let imgBlob = new Blob([buffer], {
+                    type: media.type,
+                });
+                // alert(JSON. stringify(imgBlob));
+                console.log(imgBlob);
+                const fd = new FormData();
+                fd.append("dataFile", imgBlob, media.name);
+                fd.append('memId', authUser.ID);
+                fd.append('repId', authUser.repID);
+                fd.append('formId', id? id: '');
+                fd.append('action', 'localquote');
+                fd.append('resType', 'audio');
+                fd.append('qqType', 'buyer');
+                fd.append('uploadFrom', 'recording');
+                fd.append('uploadTitle', getValues('title_line'));
+                CoreService.onUploadFn('record_upload', fd, onCallbackFn);
+            },
+            (error: any) => {
+                dispatch(uiActions.setShowLoading({ loading: false }));
+                console.log(error);
+            }
+        )
+    }
+
     const onCallbackFn = useCallback((res: any) => { console.log(res);
         if(res.status === 'SUCCESS'){
             if( actionType === 'localquote' ){
@@ -285,12 +336,12 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
                             />
                         </IonCol>
                     </IonRow>
-                    { !audio.base64Sound && <IonRow>
+                    { !Capacitor.isNativePlatform() && !audio.base64Sound && <IonRow>
                         <IonCol className="d-flex justify-content-center mb-4">
                             <p className='fs-20'>{CommonService.formatTime(timer)}</p>
                         </IonCol>
                     </IonRow>}
-                    { audio.base64Sound && audio.ext !== 'm4a' && <IonRow>
+                    { !Capacitor.isNativePlatform() && audio.base64Sound && audio.ext !== 'm4a' && <IonRow>
                         <IonCol className="d-flex justify-content-center my-5">
                             <audio controls ref={audioRef}>
                                 <source src={audio.base64Sound} type="audio/ogg" />
@@ -300,23 +351,29 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
                     <IonRow>
                         {/* <IonCol className="d-flex justify-content-centers" > */}
                         <IonCol sizeMd="12" sizeXs="12">
+                            { !Capacitor.isNativePlatform() && 
                             <div className="d-flex justify-content-center">
-                            <IonButton color="greenbg" shape="round" onClick={onDelete} disabled={audio.base64Sound? false : true}>
-                                <IonIcon icon={trashOutline} />
-                            </IonButton>
-                            { !audio.base64Sound && !['recording', 'paused'].includes(audio.status) && <IonButton color="greenbg" shape="round" onClick={onRecord}>
-                                <IonIcon icon={micOutline} />
-                            </IonButton> }
-                            <IonButton color="greenbg" shape="round" onClick={onPause} disabled={['recording'].includes(audio.status)? false : true}>
-                                <IonIcon icon={pauseOutline} />
-                            </IonButton>
-                            <IonButton color="greenbg" shape="round" onClick={onResume} disabled={['paused'].includes(audio.status)? false : true}>
-                                <IonIcon icon={refreshOutline} />
-                            </IonButton>
-                            <IonButton color="greenbg" shape="round" onClick={onStop} disabled={['recording', 'paused'].includes(audio.status)? false : true}>
-                                <IonIcon icon={stopOutline} />
-                            </IonButton>
-                            </div>
+                                <IonButton color="greenbg" shape="round" onClick={onDelete} disabled={audio.base64Sound? false : true}>
+                                    <IonIcon icon={trashOutline} />
+                                </IonButton>
+                                { !audio.base64Sound && !['recording', 'paused'].includes(audio.status) && <IonButton color="greenbg" shape="round" onClick={onRecord}>
+                                    <IonIcon icon={micOutline} />
+                                </IonButton> }
+                                <IonButton color="greenbg" shape="round" onClick={onPause} disabled={['recording'].includes(audio.status)? false : true}>
+                                    <IonIcon icon={pauseOutline} />
+                                </IonButton>
+                                <IonButton color="greenbg" shape="round" onClick={onResume} disabled={['paused'].includes(audio.status)? false : true}>
+                                    <IonIcon icon={refreshOutline} />
+                                </IonButton>
+                                <IonButton color="greenbg" shape="round" onClick={onStop} disabled={['recording', 'paused'].includes(audio.status)? false : true}>
+                                    <IonIcon icon={stopOutline} />
+                                </IonButton>
+                            </div>}
+                            { Capacitor.isNativePlatform() && <div className="d-flex justify-content-center mt-4">
+                                <IonButton color="greenbg" shape="round" onClick={recordAudioNative} disabled={(inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3)? false : true}>
+                                    Record Audio
+                                </IonButton>
+                            </div> }
                         </IonCol>
                     </IonRow>
                        

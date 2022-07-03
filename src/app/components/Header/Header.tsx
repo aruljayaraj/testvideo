@@ -36,7 +36,6 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
   const [searchModal, setSearchModal] = useState(false);
   const [notificationModal, setNotificationModal] = useState(false);
   const { basename } = lfConfig;
-  const [showPopover, setShowPopover] = useState(false);
 
   const [hSidemenu] = useState({
     pushRightClass: 'main-push-right',

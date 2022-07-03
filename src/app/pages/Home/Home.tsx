@@ -188,7 +188,7 @@ const Home: React.FC = () => {
   return (
     <IonPage className="homepage">
       <IonContent>
-        <h3 className="ion-text-center fw-bold fs-20">Meow Shop LocalFirst {location.city? `in ${location.city}`: ''}</h3>
+        <h3 className="ion-text-center fw-bold fs-20">Shop LocalFirst {location.city? `in ${location.city}`: ''}</h3>
         <IonToolbar className="p-3">
           <IonSegment mode="ios" className="filter-toolbar" scrollable value={filter} onIonChange={(e) => handleFilter(e)}>
             <IonSegmentButton className="tb-item" value="all" >

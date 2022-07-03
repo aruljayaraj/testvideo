@@ -21,7 +21,8 @@
     "ios": "npx cap add ios",
     "android": "npx cap add android",
     "ios-open": "npx cap open ios",
-    "android-open": "npx cap open android"
+    "android-open": "npx cap open android",
+    "android-local": "env-cmd -e dev ionic capacitor run android -address=http://192.168.1.33:8100/"
   },
   "dependencies": {
     "@awesome-cordova-plugins/core": "^5.39.1",

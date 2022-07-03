@@ -19,6 +19,7 @@ import {
     recordingOutline
   } from 'ionicons/icons';
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useParams } from 'react-router-dom';
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import "video.js/dist/video-js.min.css";
@@ -31,6 +32,8 @@ import './Record.scss';
 import { useReactMediaRecorder } from "react-media-recorder";
 import { Capacitor } from "@capacitor/core";
 import { isPlatform, getPlatforms } from '@ionic/react';
+import { MediaCapture, MediaFile, CaptureAudioOptions, CaptureVideoOptions, CaptureError } from '@awesome-cordova-plugins/media-capture';
+import { File, DirectoryEntry } from "@ionic-native/file";
 
 import { useDispatch, useSelector } from 'react-redux';
 import CoreService from '../../../shared/services/CoreService';
@@ -76,6 +79,7 @@ let videoInitialValues: any = {
 const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideoModal }) => {
     const dispatch = useDispatch();
     let { title, actionType, memId, repId, frmId, resType, qqType } = showRecordVideoModal;
+    let { id } = useParams<any>();
     // const qq = useSelector( (state:any) => state.qq.localQuote);
     const { apiBaseURL, basename } = lfConfig;
     const authUser = useSelector( (state:any) => state.auth.data.user);
@@ -225,7 +229,66 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
                 status: 'recorded'
             });
         }, 1000);
-        
+    }
+
+    // Native Recording
+    const recordVideoNative = async() => {
+        dispatch(uiActions.setShowLoading({ loading: true }));
+        let capturedFile: any;
+        let options: CaptureVideoOptions = { limit: 1, duration: lfConfig.acceptedVidDuration };
+        await MediaCapture.captureVideo(options).then(
+            (data: MediaFile[]) => {
+                console.log(data);
+                capturedFile = data[0];
+                /*let fileName = capturedFile.name; console.log(fileName);
+                let dir = capturedFile['localURL'].split('/'); console.log(dir);
+                dir.pop();
+                let fromDirectory = dir.join('/');  console.log(fromDirectory);    
+                // var toDirectory = this.file.dataDirectory;*/
+            },
+            (err: CaptureError) => {
+                console.error(err);
+                dispatch(uiActions.setShowLoading({ loading: false }));
+            }
+        ); console.log(capturedFile);
+        let media: any = (capturedFile as MediaFile);
+        // alert((capture[0] as MediaFile).fullPath);
+        let resolvedPath: DirectoryEntry;
+        let path = media.fullPath.substring(0, media.fullPath.lastIndexOf("/"));
+        if (Capacitor.getPlatform() === "ios") {
+            resolvedPath = await File.resolveDirectoryUrl("file://" + path);
+        } else {
+            resolvedPath = await File.resolveDirectoryUrl(path);
+        }
+        console.log(resolvedPath);
+        console.log(media);
+        return File.readAsArrayBuffer(resolvedPath.nativeURL, media.name).then(
+            (buffer: any) => { console.log(buffer);
+                // get the buffer and make a blob to be saved
+                let imgBlob = new Blob([buffer], {
+                type: media.type,
+                });
+                // setFileData(imgBlob);
+                // alert(imgBlob);
+                console.log(imgBlob);
+                const fd = new FormData();
+                fd.append("dataFile", imgBlob, media.name);
+                fd.append('memId', authUser.ID);
+                fd.append('repId', authUser.repID);
+                fd.append('formId', id? id: '');
+                fd.append('action', 'localquote');
+                fd.append('resType', 'video');
+                fd.append('qqType', 'buyer');
+                fd.append('uploadFrom', 'recording');
+                fd.append('uploadTitle', getValues('title_line'));
+                CoreService.onUploadFn('record_upload', fd, onCallbackFn);
+            },
+            (error: any) => {
+                dispatch(uiActions.setShowLoading({ loading: false }));
+                console.log(error);
+            }
+        )
+        // VideoRecorder.destroy();*/
     }
 
     const onCallbackFn = useCallback((res: any) => {
@@ -357,7 +420,7 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
                     </IonRow>
                     <IonRow>
                         <IonCol>
-                            { !isIosBrowser && <video ref={videoRef} id="myVideo" playsInline className="video-js vjs-default-skin" />}
+                            { !Capacitor.isNativePlatform() && !isIosBrowser && <video ref={videoRef} id="myVideo" playsInline className="video-js vjs-default-skin" />}
                             <div>
                                 <div className="d-flex justify-content-center mt-2"> 
                                     { status === 'recording' && 
@@ -378,6 +441,11 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
                                 </div> }
                                 
                             </div>
+                            { Capacitor.isNativePlatform() && <div className="d-flex justify-content-center mt-4">
+                                <IonButton color="greenbg" shape="round" onClick={recordVideoNative} disabled={(['idle', 'stopped'].includes(status) && (inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3) )? false : true}>
+                                    Record Video
+                                </IonButton>
+                            </div> }
                         </IonCol>
                     </IonRow>
                     

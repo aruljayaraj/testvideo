@@ -90,7 +90,7 @@ const Footer: React.FC = () => {
   return (
     <>
       <IonFooter>
-        <IonToolbar color="footerbg" mode="ios">
+        <IonToolbar color="appbg" mode="ios">
           { geolocation && geolocation.city && <IonButtons slot="start"> 
             <IonButton routerLink={`${basename}/signup`}>
               <IonIcon slot="start" icon={eyeOutline}></IonIcon>

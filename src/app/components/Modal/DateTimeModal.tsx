@@ -45,7 +45,7 @@ const DateTimeModal: React.FC<Props> = ({ datePickerModal, setDatePickerModal, u
   
     return (<>
         <IonHeader translucent>
-            <IonToolbar color="greenbg">
+            <IonToolbar color="appbg">
                 <IonTitle className="ion-text-wrap">Select {datePickerModal.title}</IonTitle>
                 <IonButtons slot="end">
                     <IonButton onClick={datePickerHandler}>
@@ -78,7 +78,7 @@ const DateTimeModal: React.FC<Props> = ({ datePickerModal, setDatePickerModal, u
                     Selected Date : {selectDate}
                 </IonCol>}
                 <IonCol className="p-0">
-                    <IonButton className="m-0 p-0 ion-float-right" onClick={datePickerHandler} color="greenbg" type="button">Ok</IonButton>
+                    <IonButton className="m-0 p-0 ion-float-right" onClick={datePickerHandler} color="appbg" type="button">Ok</IonButton>
                 </IonCol>
             </IonRow>
         </IonCardHeader>

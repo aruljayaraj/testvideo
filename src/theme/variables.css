@@ -38,6 +38,13 @@ http://ionicframework.com/docs/theming/ */
   font-weight: normal;
   src: url('./fonts/Roboto/Roboto-Thin.ttf');
 }
+@font-face {
+  font-family: 'SignPainter-HouseScript';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./fonts/SignPainter-HouseScript/SignPainter-HouseScript.ttf');
+}
+
 :root {
   /** Font Family **/
   --ion-font-family: 'Roboto';
@@ -114,13 +121,13 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 
-  /** greenbg **/
-  --ion-color-greenbg: #86c768;
-  --ion-color-greenbg-rgb: 134,199,104;
-  --ion-color-greenbg-contrast: #000000;
-  --ion-color-greenbg-contrast-rgb: 0,0,0;
-  --ion-color-greenbg-shade: #76af5c;
-  --ion-color-greenbg-tint: #92cd77;
+  /** appbg **/
+  --ion-color-appbg: #FECA53;
+	--ion-color-appbg-rgb: 254,202,83;
+	--ion-color-appbg-contrast: #000000;
+	--ion-color-appbg-contrast-rgb: 0,0,0;
+	--ion-color-appbg-shade: #e0b249;
+	--ion-color-appbg-tint: #fecf64;
 
   /** blackbg **/
   --ion-color-blackbg: #424648;
@@ -174,12 +181,14 @@ http://ionicframework.com/docs/theming/ */
   --app-sidebar-bg-color: #424648;
   --app-overlay-bg-color: #B1B1B1;
   --app-popup-bg-color: #F8F9FA;
-  --app-greenbg: #86c768;
+  --app-mainbg: #F2F2F2;
+  --app-appbg: #86c768;
   --app-blackbg: #424648;
   --app-titlebg: #f5f6f9;
   --app-gray: #aaa;
   --app-text: #424242;
-  --app-link: #6975FE;
+  --app-link: #0E2DA7;
+  
   /*--app-green: #09d3ac;*/
 
   /** Location Colors **/
@@ -203,13 +212,13 @@ http://ionicframework.com/docs/theming/ */
   /** App Custom Color Ends **/
 }
 
-.ion-color-greenbg {
-  --ion-color-base: var(--ion-color-greenbg);
-  --ion-color-base-rgb: var(--ion-color-greenbg-rgb);
-  --ion-color-contrast: var(--ion-color-greenbg-contrast);
-  --ion-color-contrast-rgb: var(--ion-color-greenbg-contrast-rgb);
-  --ion-color-shade: var(--ion-color-greenbg-shade);
-  --ion-color-tint: var(--ion-color-greenbg-tint);
+.ion-color-appbg {
+  --ion-color-base: var(--ion-color-appbg);
+  --ion-color-base-rgb: var(--ion-color-appbg-rgb);
+  --ion-color-contrast: var(--ion-color-appbg-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-appbg-contrast-rgb);
+  --ion-color-shade: var(--ion-color-appbg-shade);
+  --ion-color-tint: var(--ion-color-appbg-tint);
 }
 .ion-color-blackbg {
   --ion-color-base: var(--ion-color-blackbg);

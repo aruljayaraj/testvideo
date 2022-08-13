@@ -203,7 +203,7 @@ const ResCategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryM
     return (<>
         <form onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
-                <IonToolbar color="greenbg">
+                <IonToolbar color="appbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowCategoryModal({
                             ...showCategoryModal, 
@@ -338,7 +338,7 @@ const ResCategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryM
                         <IonButton color="medium" className="ion-margin-top mt-4 mb-3 float-left" onClick={() => deleteBuscatFn(id, catId, subcatId)}>
                             Delete
                         </IonButton> }
-                        <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 float-right" type="submit" >
+                        <IonButton color="appbg" className="ion-margin-top mt-4 mb-3 float-right" type="submit" >
                             Submit
                         </IonButton>
                     </>

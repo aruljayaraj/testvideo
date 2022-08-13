@@ -1,3 +1,26 @@
+// 
+.main-toolbar{
+  background-color: var(--app-mainbg);
+  box-shadow: red;
+  .location-wrap{
+    display: flex;
+    color: #000;
+  }
+  .login-btn-wrap{
+    background-color: #fff;
+    margin:0;
+    padding: 6px 6px;
+  }
+  .btn-round-icon{
+    background-color: var(--ion-color-appbg);
+    padding: 6px 0;
+    color: #000;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+
+
 #left-overlay-sidebar {
   display: none;
   width: 240px;
@@ -75,8 +98,6 @@
   z-index:9;
 }
 .notify-icon-wrap{
-  /*margin-right: 15px !important;*/
-  /*padding-right: 0 !important;*/
   ion-badge{
     position: absolute;
     right: -5px; 
@@ -85,6 +106,9 @@
 }
 
 @media (max-width: 575.98px) { 
+  .btn-round-icon{
+    border-radius: 0 5px 5px 0;
+  }
   #right-overlay-sidebar {
     bottom: 144px;
   }
@@ -98,15 +122,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  // .msidebar-overlay.main-push-right{
-  //     position: fixed;
-  //     left:0;
-  //     top:0;
-  //     height:100%;
-  //     width:100%;
-  //     background-color: rgba(0,0,0,0.6);
-  //     z-index:9;
-  // }
 }
 
 @media screen and (max-width: 992px) {
@@ -122,13 +137,13 @@
   .nav-brand {
       width: 100%;
   }
-  //  .msidebar-overlay.main-push-right{
-  //       position: fixed;
-  //       left:0;
-  //       top:44px;
-  //       height:100%;
-  //       width:100%;
-  //       background-color: rgba(0,0,0,0.6);
-  //       z-index:9;
-  //   }
 }
+
+// .btn-round{
+//   background-color: var(--ion-color-appbg);
+//   padding: 6px 6px;
+//   border-radius: 5px;
+//   color: #000;
+// }
+
+

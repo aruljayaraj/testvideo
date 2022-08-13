@@ -211,7 +211,7 @@ const LocationModal: React.FC<Props> = ({ showLocationModal, setShowLocationModa
     return (<>
         <form onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
-                <IonToolbar color="greenbg">
+                <IonToolbar color="appbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowLocationModal(false)}>
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
@@ -339,7 +339,7 @@ const LocationModal: React.FC<Props> = ({ showLocationModal, setShowLocationModa
                 
                 <div className="mt-4">           
                 { (isPlatform('desktop')) && 
-                    <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 float-right" type="submit" >
+                    <IonButton color="appbg" className="ion-margin-top mt-4 mb-3 float-right" type="submit" >
                         Submit
                     </IonButton>
                 }

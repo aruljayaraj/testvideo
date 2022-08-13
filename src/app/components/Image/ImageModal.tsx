@@ -273,7 +273,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
     return (<>
         <form className="image-crop-modal-container" onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
-                <IonToolbar color="greenbg">
+                <IonToolbar color="appbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowImageModal({
                             ...showImageModal, 
@@ -385,7 +385,7 @@ const ImageModal: React.FC<Props> = ({ showImageModal, setShowImageModal }) => {
                                     { !picture.image? 'Add': 'Change' } Picture
                                 </IonButton>
                                 { (isPlatform('desktop')) && 
-                                <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
+                                <IonButton color="appbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
                                     Save
                                 </IonButton>}
                             </div> 

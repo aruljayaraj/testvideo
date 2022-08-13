@@ -7,11 +7,18 @@
   100% {opacity:0;}
 }
 .homepage {
+  --ion-background-color: var(--app-mainbg);
   ion-content {
     ion-toolbar {
-      --background: translucent;
+      background: translucent; 
       --min-height: 42px;
       .filter-toolbar{
+        background: #fff;
+        ion-segment-button {
+          --background-checked: var(--ion-color-appbg) !important;
+          --color-checked: var(--ion-color-appbg-contrast);
+          --indicator-color : transparent!important;
+        }
         .tb-item{
           height: 36px;
           min-width: auto !important;
@@ -53,6 +60,11 @@
         margin: 12px auto;
         padding: 0 !important;
         min-height: 350px;
+        background: #fff;
+        
+        p{
+          color: var(--app-link);
+        }
       }
       
     }
@@ -75,6 +87,7 @@
       }
     }
   }
+  
 }
 
 // Small devices (landscape phones, 576px and up)
@@ -162,3 +175,8 @@
     }
   }
 }
+::part(indicator-background) {
+  background-color: var(--ion-color-appbg);
+  
+}
+

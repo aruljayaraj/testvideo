@@ -323,7 +323,7 @@ export const CreditCardForm = () => {
                 </IonRow>
             </IonGrid>    
             
-            <IonButton color="greenbg" className="ion-margin-top my-4 float-right" type="submit" >
+            <IonButton color="appbg" className="ion-margin-top my-4 float-right" type="submit" >
                 Pay <strong> {itemData && itemData.price ? ` $${itemData.price}`: ''}</strong>
             </IonButton>
         </form> 

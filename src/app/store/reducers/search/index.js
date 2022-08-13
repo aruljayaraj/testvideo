@@ -31,7 +31,7 @@ const slice = createSlice({
                 sState.companyResults = data;
             }
         },
-        setHomeResults: (sState, action) => {
+        setHomeResults: (sState, action) => { console.log("Meow",sState);
             let data;
             if( action.payload.data ){
                 if( action.payload.actionFrom === 'loadmore' ){

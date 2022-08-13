@@ -110,7 +110,7 @@ const Chat: React.FC<Props> = ({ showChatModal, setShowChatModal }) => {
     return (<>
         <form onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
-                <IonToolbar color="greenbg">
+                <IonToolbar color="appbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => {
                             setShowChatModal({
@@ -173,7 +173,7 @@ const Chat: React.FC<Props> = ({ showChatModal, setShowChatModal }) => {
                             />
                         </IonCol>
                         <IonCol size='2' >
-                            <IonButton color="greenbg" className="ion-margin-top mt-5 pl-2" type="submit" >
+                            <IonButton color="appbg" className="ion-margin-top mt-5 pl-2" type="submit" >
                                 Save
                             </IonButton>
                         </IonCol>

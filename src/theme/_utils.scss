@@ -147,7 +147,7 @@ a{
     }
 }
 .green{
-    color: var(--app-greenbg);
+    color: var(--app-appbg);
 }
 .gray{
     color: var(--app-gray);
@@ -254,6 +254,9 @@ p.textbold{
 .status_completed{
     font-weight: bold;
     color: var(--status_completed);
+}
+.title-small{
+    padding-bottom: 6px;
 }
 
 /** Step Indicator start */
@@ -370,6 +373,13 @@ p.textbold{
     padding: 10px;
 }
 
+.btn-round{
+    background-color: var(--ion-color-appbg);
+    padding: 6px 6px;
+    border-radius: 5px;
+    color: #000;
+}
+
 .side-ads-container{
     margin:10px 0px;
     padding:6px;
@@ -439,3 +449,17 @@ p.textbold{
 //         width: 80% !important;
 //     }
 // }
+
+/* Location Button and Text on Header */
+.location-text{
+    font-family: 'SignPainter-HouseScript';
+    font-size:23px;
+}
+.location-subtext{
+    font-family: 'Roboto';
+    font-size:18px;
+}
+/* Location Button and Text on Header */
+.ion-page{
+    --ion-background-color: var(--app-mainbg);
+}

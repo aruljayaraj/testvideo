@@ -75,7 +75,7 @@ const ReportModal: React.FC<Props> = ({ showReportModal, setShowReportModal}) =>
     return (<>
         <form onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
-                <IonToolbar color="greenbg">
+                <IonToolbar color="appbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowReportModal({...showReportModal, isOpen: false})}>
                             <IonIcon icon={close} slot="icon-only"></IonIcon>
@@ -210,7 +210,7 @@ const ReportModal: React.FC<Props> = ({ showReportModal, setShowReportModal}) =>
                 <div className="mt-4">           
                 { (isPlatform('desktop')) && 
                     <>
-                        <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 float-right" type="submit" >
+                        <IonButton color="appbg" className="ion-margin-top mt-4 mb-3 float-right" type="submit" >
                             Submit
                         </IonButton>
                     </>

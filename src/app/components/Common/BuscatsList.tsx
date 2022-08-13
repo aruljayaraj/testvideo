@@ -15,7 +15,7 @@ const BuscatsList: React.FC<PropsInterface> = (props: PropsInterface) => {
             <IonList>
             { props.buscats.map((item: any, index: number) => { 
                 return (<IonItem lines="none" key={nanoid()}>
-                    <IonAvatar slot="start" color="greenbg">
+                    <IonAvatar slot="start" color="appbg">
                         <i className="fa fa-chevron-right fa-lg green" aria-hidden="true"></i>
                     </IonAvatar>
                     <IonLabel>

@@ -1,20 +1,7 @@
 export const lfConfig =  {
-    // tinymceKey: 'p5k59vuava18l9axn125wa4fl2qsmhmwsxfs6krrtffntke8', // Arul account limited
-    tinymceKey: 'pny4jwf7rrrkuio08hit5ojxslw59l941fvv1wvzsfileta1', // Rod Account
-    tinymceMaxLength: 500,
-    tinymceResourceMaxLength: 250,
-    stripePublicKey: 'pk_test_T749JqokJ8nJKey9h8sDC4QZ',
-    stripeSecretKey: 'sk_test_x5JKYvDFuRIY5n75wTzwa8Ne', 
-    // apiBaseURL: process.env.REACT_APP_API_URL,
-    // basename: process.env.REACT_APP_BASENAME,
-    // baseurl: process.env.REACT_APP_BASE_URL,
-    // To enable  ANDROID/IOS build
-    // apiBaseURL: 'http://192.168.1.36:8100/', // process.env.REACT_APP_API_URL,
-    // basename: '', // process.env.REACT_APP_BASENAME,
-    // baseurl: 'http://192.168.1.36:8100', // process.env.REACT_APP_BASE_URL,
-    apiBaseURL: 'https://www.onagon.com/', // process.env.REACT_APP_API_URL,
-    basename: '/frontend', // process.env.REACT_APP_BASENAME,
-    baseurl: 'https://www.onagon.com/frontend', // process.env.REACT_APP_BASE_URL,
+    apiBaseURL: process.env.REACT_APP_API_URL,
+    basename: process.env.REACT_APP_BASENAME,
+    baseurl: process.env.REACT_APP_BASE_URL,
     acceptedDocSize: '104857600',
     acceptedDocSizeMB: '100MB',
     acceptedDocTypes: 'doc, docx, pdf, rtf, txt, ppt, pptx, xls, xlsx, odt, odp, ods, tif, tiff, csv, png, jpg, jpeg, gif',

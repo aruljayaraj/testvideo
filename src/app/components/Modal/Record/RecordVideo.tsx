@@ -235,8 +235,8 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
     const recordVideoNative = async() => {
         dispatch(uiActions.setShowLoading({ loading: true }));
         let capturedFile: any;
-        let options: CaptureVideoOptions = { limit: 1, duration: lfConfig.acceptedVidDuration };
-        await MediaCapture.captureVideo(options).then(
+        // let options: CaptureVideoOptions = { limit: 3, duration: lfConfig.acceptedVidDuration };
+        await MediaCapture.captureVideo({}).then(
             (data: MediaFile[]) => {
                 console.log(data);
                 capturedFile = data[0];
@@ -345,7 +345,7 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
     return (<>
         <form className="image-crop-modal-container" onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
-                <IonToolbar color="greenbg">
+                <IonToolbar color="appbg">
                     <IonButtons slot='start'>
                         <IonButton onClick={() => {
                            if(video.player){
@@ -432,17 +432,17 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
                                     { mediaBlobUrl &&  <video src={mediaBlobUrl} width='100%' height='100%' controls playsInline /> }
                                 </div>
                                 { isIosBrowser && <div className="d-flex justify-content-center mt-4">
-                                    <IonButton color="greenbg" shape="round" onClick={startRecording} disabled={(['idle', 'stopped'].includes(status) && (inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3) )? false : true}>
+                                    <IonButton color="appbg" shape="round" onClick={startRecording} disabled={(['idle', 'stopped'].includes(status) && (inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3) )? false : true}>
                                         Start Recording
                                     </IonButton>
-                                    <IonButton color="greenbg" shape="round" onClick={stopRecordingFn} disabled={['recording'].includes(status)? false : true} >
+                                    <IonButton color="appbg" shape="round" onClick={stopRecordingFn} disabled={['recording'].includes(status)? false : true} >
                                         Stop Recording
                                     </IonButton>
                                 </div> }
                                 
                             </div>
                             { Capacitor.isNativePlatform() && <div className="d-flex justify-content-center mt-4">
-                                <IonButton color="greenbg" shape="round" onClick={recordVideoNative} disabled={(['idle', 'stopped'].includes(status) && (inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3) )? false : true}>
+                                <IonButton color="appbg" shape="round" onClick={recordVideoNative} disabled={(['idle', 'stopped'].includes(status) && (inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3) )? false : true}>
                                     Record Video
                                 </IonButton>
                             </div> }
@@ -453,7 +453,7 @@ const RecordVideo: React.FC<Props> = ({ showRecordVideoModal, setShowRecordVideo
                 {/* <div className="float-right">
                     
                     { (isPlatform('desktop') && video.stream) &&
-                        <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
+                        <IonButton color="appbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
                             Save
                         </IonButton>
                     }

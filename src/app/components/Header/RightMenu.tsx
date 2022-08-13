@@ -106,7 +106,7 @@ const RightMenu: React.FC<Props> = ({removeOverlay}) => {
                     {authValues.user.business_type === 'Seller'? 'Provider': authValues.user.business_type}
                     {`${authValues.user.accType==='sub'? ' (Sub)': ' (Primary)'}`}</h3></IonText>
                   
-                  <IonButton color="greenbg" onClick={(e) => logout(e)}>
+                  <IonButton color="appbg" onClick={(e) => logout(e)}>
                     <IonIcon slot="icon-only" icon={logOut}></IonIcon>
                     <IonLabel>Logout</IonLabel>
                   </IonButton>

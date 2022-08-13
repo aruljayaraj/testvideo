@@ -8,12 +8,12 @@ import { IonHeader,
   IonMenuButton,
   IonModal,
   IonRouterLink,
-  IonBadge
+  IonBadge,
+  IonText
 } from '@ionic/react';
 import {
-  search,
   personCircleOutline,
-  notificationsOutline
+  notificationsOutline,
 } from 'ionicons/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { isPlatform } from '@ionic/react';
@@ -31,6 +31,7 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
   const dispatch = useDispatch();
   const authValues = useSelector( (state:any) => state.auth.data);
   const authUser = useSelector( (state:any) => state.auth.data.user);
+  const location = useSelector( (state:any) => state.auth.location);
   // const notifications = useSelector( (state:any) => state.rep.notifications);
   const notificationsCount = useSelector( (state:any) => state.rep.notificationsCount);
   const [searchModal, setSearchModal] = useState(false);
@@ -140,46 +141,93 @@ const Header: React.FC = (props:any) => { // console.log(props.location.state);
   return (
     <>
       <IonHeader>
-        <IonToolbar 
-          color={ (authValues.authenticated && authValues.isVerified)? "blackbg": "greenbg" }
-          mode="ios">
+        <IonToolbar className="main-toolbar" color="mainbg" mode="ios">
+          <IonButtons slot="start">
+            <IonMenuButton autoHide={false} onClick={(e) => toggleLeftOverlaySidebar(e)}/>
+            { location.city && <div className='location-wrap'>
+              <div className='ion-hide-sm-down ml-5'>
+                <IonText className='location-text'>Shop Local-First</IonText>
+                <i className="fa fa-map-marker fa-lg mx-2" aria-hidden="true"></i>
+                <IonText className='location-subtext'>{`in ${location.city}`}</IonText>
+              </div>
+            </div> }
+          </IonButtons>
+
+          <IonButtons color="appbg" className="mr-2" slot="primary">
+            <IonRouterLink className="btn-round ion-hide-sm-down" color="appbg" href={`${basename}/signup`} > Get Local Quotes</IonRouterLink>
+            { (isPlatform('desktop')) && (!authValues.authenticated || !authValues.isVerified) && <div className="login-btn-wrap ion-hide-sm-down">
+                <IonRouterLink slot="start" href={`${basename}/login`} > Login</IonRouterLink> 
+                <span className="px-2"> | </span>
+                <IonRouterLink slot="start" href={`${basename}/signup`} > Signup </IonRouterLink>
+                </div>
+            }
+            { (authValues.authenticated && authValues.isVerified &&  authValues.user) && <div className="px-md-2">
+            <IonButton className="notify-icon-wrap" onClick={() => setNotificationModal(true)}>
+              <IonIcon slot="icon-only" icon={notificationsOutline}></IonIcon>
+              { notificationsCount > 0 && <IonBadge color="warning">{notificationsCount}</IonBadge> }
+            </IonButton>
+            </div>}
+            <IonRouterLink className="btn-round-icon" color="appbg" onClick={() => setSearchModal(true)}>
+              <i className="fa fa-search fa-lg mx-2" aria-hidden="true"></i>
+            </IonRouterLink>
+            { (authValues.authenticated && authValues.isVerified &&  authValues.user) &&
+              <IonButton className="px-sm-0 d-flex" onClick={(e) => toggleRightOverlaySidebar(e)}>
+                { isPlatform('desktop') && <span className='ion-hide-sm-down'>{`Hi ${authValues.user.firstname}`} </span>}
+                <IonIcon className="px-sm-0" slot="end" icon={personCircleOutline}></IonIcon>
+              </IonButton>  
+            }
+            
+          </IonButtons>
+
+          <IonTitle className="text-center">
+            <img src={`${basename}/assets/img/Logo-BK.svg`} title="Logo" alt="Logo" width="200" height="32"/>
+          </IonTitle>
+        </IonToolbar>
+        {/* <IonToolbar className="main-toolbar" color="mainbg" mode="ios">
           
           <IonButtons slot="start">
             <IonMenuButton autoHide={false} onClick={(e) => toggleLeftOverlaySidebar(e)}/>
           </IonButtons>
-          
-          <IonButtons slot="end">
-            <IonButton onClick={() => setSearchModal(true)} className="mr-3">
-              <IonIcon slot="icon-only" icon={search}></IonIcon>
-            </IonButton>
+           
+          <IonButtons color="appbg" className="mr-2" slot="primary">
+            <IonRouterLink className="btn-round ion-hide-sm-down" color="appbg" href={`${basename}/signup`} > Get Local Quotes</IonRouterLink>
+            { (isPlatform('desktop')) && (!authValues.authenticated || !authValues.isVerified) && <div className="login-btn-wrap">
+                <IonRouterLink slot="start" href={`${basename}/login`} > Login</IonRouterLink> 
+                <span className="px-2"> | </span>
+                <IonRouterLink slot="start" href={`${basename}/signup`} > Signup </IonRouterLink>
+                </div>
+            }
+            <IonRouterLink className="btn-round-icon" color="appbg" onClick={() => setSearchModal(true)}>
+              <i className="fa fa-search fa-lg mx-2" aria-hidden="true"></i>
+            </IonRouterLink>
             { (authValues.authenticated && authValues.isVerified &&  authValues.user) &&
             <IonButton className="notify-icon-wrap" onClick={() => setNotificationModal(true)}>
               <IonIcon slot="icon-only" icon={notificationsOutline}></IonIcon>
               { notificationsCount > 0 && <IonBadge color="warning">{notificationsCount}</IonBadge> }
             </IonButton>}
           </IonButtons>
-             
-          { (isPlatform('desktop')) && (!authValues.authenticated || !authValues.isVerified) &&
-            <IonButtons className="mr-2" slot="primary">
-              <IonRouterLink slot="start" href={`${basename}/login`} > Login</IonRouterLink> 
-              <span className="px-2"> | </span>
-              <IonRouterLink slot="start" href={`${basename}/signup`} > Signup </IonRouterLink>
-          </IonButtons>}
           <IonButtons slot="end">
             { (authValues.authenticated && authValues.isVerified &&  authValues.user) &&
               <IonButton onClick={(e) => toggleRightOverlaySidebar(e)}>
                 { isPlatform('desktop') && <span className='ion-float-left'>{`Hi ${authValues.user.firstname}`} </span>}
-                <IonIcon slot="start" icon={personCircleOutline}></IonIcon>
+                <IonIcon slot="end" icon={personCircleOutline}></IonIcon>
               </IonButton>  
             }
           </IonButtons> 
-          
+
           <IonTitle>
-            <img 
-              src={ (authValues.authenticated && authValues.isVerified)? `${basename}/assets/img/Logo-WH.svg`: `${basename}/assets/img/Logo-BK.svg`} 
-              title="Logo" alt="Logo" width="200" height="32"/>
+            <div className='location-wrap'>
+              <div className='ion-hide-sm-down'>
+                <IonText className='location-text'>Shop Local-First</IonText>
+                <i className="fa fa-map-marker fa-lg mx-2" aria-hidden="true"></i>
+                { location.city && <IonText className='location-subtext'>{`in ${location.city}`}</IonText>}
+              </div>
+              
+              <img src={`${basename}/assets/img/Logo-BK.svg`} title="Logo" alt="Logo" width="200" height="32"/>
+            </div>
+            
           </IonTitle>
-        </IonToolbar>
+        </IonToolbar> */}
 
       </IonHeader>
       <div id="overlay" onClick={ (e) => removeOverlay(e) }></div>

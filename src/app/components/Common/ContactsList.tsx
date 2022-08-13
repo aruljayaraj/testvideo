@@ -18,7 +18,7 @@ const ContactsList: React.FC<PropsInterface> = (props: PropsInterface) => {
             const repImage = (item.profile_image) ? `${apiBaseURL}uploads/member/${item.mem_id}/${item.rep_id}/${CommonService.getThumbImg(item.profile_image)}` : `${basename}/assets/img/avatar.svg`;
             return (<div className="mr-5" key={nanoid()}>
                 <IonRouterLink href={`${basename}/profile/${item.mem_id}/${item.rep_id}`}>
-                  <IonAvatar color="greenbg">
+                  <IonAvatar color="appbg">
                     <img src={repImage} alt={`${item.firstname} ${item.lastname}`} onError={() => CommonService.onImgErr('profile')}/>
                   </IonAvatar>
                   <p className="mb-0"><IonText color="dark" className="mt-2"> {`${item.firstname} ${item.lastname}`}</IonText></p>

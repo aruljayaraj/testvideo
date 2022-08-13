@@ -18,7 +18,7 @@ const slice = createSlice({
                 fdataState[action.payload.key] = data;
             }
         },
-        setAds: (fdataState, action) => { 
+        setAds: (fdataState, action) => {  // console.log(fdataState); console.log(action.payload.ads);
             if( action.payload.ads ){
                 fdataState.ads = action.payload.ads;
                 sessionStorage.setItem('ads', JSON.stringify(fdataState.ads));

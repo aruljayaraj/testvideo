@@ -269,7 +269,7 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
     return (<>
         <form className="image-crop-modal-container" onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
-                <IonToolbar color="greenbg">
+                <IonToolbar color="appbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowRecordAudioModal({
                             ...showRecordAudioModal, 
@@ -353,24 +353,24 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
                         <IonCol sizeMd="12" sizeXs="12">
                             { !Capacitor.isNativePlatform() && 
                             <div className="d-flex justify-content-center">
-                                <IonButton color="greenbg" shape="round" onClick={onDelete} disabled={audio.base64Sound? false : true}>
+                                <IonButton color="appbg" shape="round" onClick={onDelete} disabled={audio.base64Sound? false : true}>
                                     <IonIcon icon={trashOutline} />
                                 </IonButton>
-                                { !audio.base64Sound && !['recording', 'paused'].includes(audio.status) && <IonButton color="greenbg" shape="round" onClick={onRecord}>
+                                { !audio.base64Sound && !['recording', 'paused'].includes(audio.status) && <IonButton color="appbg" shape="round" onClick={onRecord}>
                                     <IonIcon icon={micOutline} />
                                 </IonButton> }
-                                <IonButton color="greenbg" shape="round" onClick={onPause} disabled={['recording'].includes(audio.status)? false : true}>
+                                <IonButton color="appbg" shape="round" onClick={onPause} disabled={['recording'].includes(audio.status)? false : true}>
                                     <IonIcon icon={pauseOutline} />
                                 </IonButton>
-                                <IonButton color="greenbg" shape="round" onClick={onResume} disabled={['paused'].includes(audio.status)? false : true}>
+                                <IonButton color="appbg" shape="round" onClick={onResume} disabled={['paused'].includes(audio.status)? false : true}>
                                     <IonIcon icon={refreshOutline} />
                                 </IonButton>
-                                <IonButton color="greenbg" shape="round" onClick={onStop} disabled={['recording', 'paused'].includes(audio.status)? false : true}>
+                                <IonButton color="appbg" shape="round" onClick={onStop} disabled={['recording', 'paused'].includes(audio.status)? false : true}>
                                     <IonIcon icon={stopOutline} />
                                 </IonButton>
                             </div>}
                             { Capacitor.isNativePlatform() && <div className="d-flex justify-content-center mt-4">
-                                <IonButton color="greenbg" shape="round" onClick={recordAudioNative} disabled={(inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3)? false : true}>
+                                <IonButton color="appbg" shape="round" onClick={recordAudioNative} disabled={(inputRef && inputRef.current && inputRef.current.value && inputRef.current.value.length >= 3)? false : true}>
                                     Record Audio
                                 </IonButton>
                             </div> }
@@ -380,7 +380,7 @@ const RecordAudio: React.FC<Props> = ({ showRecordAudioModal, setShowRecordAudio
                 </IonGrid>
                 <div className="float-right">
                     { (isPlatform('desktop') && audio.base64Sound && inputRef && inputRef.current && inputRef.current.value ) && 
-                        <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
+                        <IonButton color="appbg" className="ion-margin-top mt-4 mb-3 pl-2" type="submit" >
                             Save
                         </IonButton>
                     }

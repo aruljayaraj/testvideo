@@ -22,15 +22,14 @@ type PageProps = {
 }
 
 const AboutUs: React.FC = () => {
-  console.log('About Us Page'); 
-  // console.log(Capacitor.getPlatform() === 'web' && isPlatform('ios'));
   const dispatch = useDispatch();
   const [page, setPage] = useState<PageProps>({ title: '', content: '' });
 
   const onGetPageCb = useCallback((res: any) => { 
     if(res.status === 'SUCCESS'){
       setPage(res.data);
-    }else{
+      dispatch(uiActions.setShowLoading({ loading: false }));
+    }else{ 
       dispatch(uiActions.setShowToast({ isShow: true, status: res.status, message: res.message }));
     }
     dispatch(uiActions.setShowLoading({ loading: false }));

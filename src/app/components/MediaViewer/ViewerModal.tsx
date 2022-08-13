@@ -36,7 +36,7 @@ const ViewerModal: React.FC<PropsInterface> = (props: PropsInterface) => {
     
     return (<>
         <IonHeader translucent>
-            <IonToolbar color="greenbg">
+            <IonToolbar color="appbg">
                 <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                     <IonButton onClick={() => props.setShowViewerModal({
                         ...props.showViewerModal, 

@@ -87,7 +87,7 @@ const NotificationModal: React.FC<Props> = ({ notificationModal, setNotification
 
   return (<>
       <IonHeader translucent>
-          <IonToolbar color="greenbg">
+          <IonToolbar color="appbg">
               <IonButtons slot='end'>
                   <IonButton onClick={() => { setNotificationModal(false); }}>
                       <IonIcon icon={close} slot="icon-only"></IonIcon>

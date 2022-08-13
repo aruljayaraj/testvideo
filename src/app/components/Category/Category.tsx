@@ -338,7 +338,7 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
     
         <form  onSubmit={handleSubmit(onSubmit)}>
             <IonHeader translucent>
-                <IonToolbar color="greenbg">
+                <IonToolbar color="appbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowCategoryModal({
                             ...showCategoryModal, 
@@ -532,7 +532,7 @@ const CategoryModal: React.FC<Props> = ({ showCategoryModal, setShowCategoryModa
                         <IonButton color="medium" className="ion-margin-top mt-4 mb-3 float-left" onClick={() => deleteBuscatFn(selectItem.id, selectItem.buscat_id, selectItem.subBuscat_id)}>
                             Delete
                         </IonButton> }
-                        <IonButton color="greenbg" className="ion-margin-top mt-4 mb-3 float-right" type="submit" >
+                        <IonButton color="appbg" className="ion-margin-top mt-4 mb-3 float-right" type="submit" >
                             Submit
                         </IonButton>
                     </>

@@ -218,7 +218,7 @@ const LocalQuoteUpload: React.FC<Props> = ({ showLocalQuoteUploadModal, setShowL
     return (<>
         <form className="image-crop-modal-container">
             <IonHeader translucent>
-                <IonToolbar color="greenbg">
+                <IonToolbar color="appbg">
                     <IonButtons slot={ isPlatform('desktop')? 'end': 'start' }>
                         <IonButton onClick={() => setShowLocalQuoteUploadModal({
                             ...showLocalQuoteUploadModal, 
@@ -307,14 +307,14 @@ const LocalQuoteUpload: React.FC<Props> = ({ showLocalQuoteUploadModal, setShowL
                             
                             { resType === 'document' && fileProgress && (toArray(fileProgress).length === 0 || toArray(fileProgress)[0].percentage === 100) &&
                             <div className="d-flex justify-content-center">
-                                <IonButton color="greenbg" shape="round" onClick={() => takePhoto(uploadCameraPhotoFn)} disabled={getValues('title_line').length <=2}>
+                                <IonButton color="appbg" shape="round" onClick={() => takePhoto(uploadCameraPhotoFn)} disabled={getValues('title_line').length <=2}>
                                     Take Photo 
                                 </IonButton>
                                 <input id="documentFile" type="file" name="imageFile" hidden multiple
                                         accept={lfConfig.acceptedDocumentTypes.toString()}
                                         ref={fileDocInputRef}
                                         onChange={(e) => { setmSelected('document'); handleFileChange(e, 'document');   }} />
-                                <IonButton color="greenbg" shape="round" onClick={()=> {
+                                <IonButton color="appbg" shape="round" onClick={()=> {
                                     if(fileDocInputRef && fileDocInputRef.current){
                                         fileDocInputRef.current.click();
                                     }
@@ -329,7 +329,7 @@ const LocalQuoteUpload: React.FC<Props> = ({ showLocalQuoteUploadModal, setShowL
                                     accept={lfConfig.acceptedAudioTypes.toString()}
                                     ref={fileAudInputRef}
                                     onChange={(e) => { setmSelected('audio'); handleFileChange(e, 'audio');  }} />
-                                <IonButton color="greenbg" shape="round" onClick={()=> {
+                                <IonButton color="appbg" shape="round" onClick={()=> {
                                     if(fileAudInputRef && fileAudInputRef.current){
                                         fileAudInputRef.current.click();
                                     }
@@ -345,7 +345,7 @@ const LocalQuoteUpload: React.FC<Props> = ({ showLocalQuoteUploadModal, setShowL
                                         accept="video/mp4,video/x-m4v,video/*"
                                         ref={fileVidInputRef}
                                         onChange={(e) => { setmSelected('video'); handleFileChange(e, 'video');  }} />
-                                <IonButton color="greenbg" shape="round" onClick={()=> {
+                                <IonButton color="appbg" shape="round" onClick={()=> {
                                     if(fileVidInputRef && fileVidInputRef.current){
                                         fileVidInputRef.current.click();
                                     }

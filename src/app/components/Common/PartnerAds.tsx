@@ -8,7 +8,7 @@ interface PropsInterface{
 }
 
 const PatnerAds: React.FC<PropsInterface> = ({limit}) => {
-    let adResults = useSelector( (state:any) => state.formdata.ads);
+    let adResults = useSelector( (state:any) => state.formdata.ads); // console.log("ADS"); console.log(adResults);
     adResults = shuffle(adResults);
     if(limit && limit > 0){
         adResults = adResults.slice(0,limit);
@@ -21,7 +21,7 @@ const PatnerAds: React.FC<PropsInterface> = ({limit}) => {
                     <IonCardHeader className="adheader">
                         <IonCardSubtitle className="ion-text-left ion-text-capitalize">Local First Sponsor</IonCardSubtitle>
                     </IonCardHeader>
-                    <div className="ion-no-padding">
+                    <div className="ion-no-padding text-center">
                         <img src={adItem.image} alt="Banner Ads" />
                     </div>
             </IonRouterLink>

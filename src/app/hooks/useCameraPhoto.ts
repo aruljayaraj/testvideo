@@ -17,8 +17,10 @@ export function useCameraPhoto() {
           const base64Image = await base64FromPath(cameraPhoto.webPath);
           var u8Image  = CommonService.b64ToUint8Array(base64Image);
           return callbackFn(u8Image);
+        }else{
+          console.log("PHoto Error");
         }
-      } catch (e) {
+      } catch (e) { console.log(e);
         console.log('No photo');
       }
     };
